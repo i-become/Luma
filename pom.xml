@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.3.2</version>
+	</parent>
+	<groupId>com.luma</groupId>
+	<artifactId>luma</artifactId>
+	<version>1.0.0</version>
+	<packaging>pom</packaging>
+	<name>luma</name>
+	<description>Demo project for Spring Boot</description>
+
+	<properties>
+		<java.version>17</java.version>
+		<mapstruct-plus.version>1.4.5</mapstruct-plus.version>
+		<sa-token.version>1.40.0</sa-token.version>
+	</properties>
+
+	<modules>
+		<module>luma-common</module>
+		<module>luma-framework</module>
+		<module>luma-system</module>
+		<module>luma-admin</module>
+        <module>luma-open-api</module>
+    </modules>
+
+	<dependencies>
+
+		<!-- lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+	</dependencies>
+
+	<dependencyManagement>
+
+		<dependencies>
+			<!-- SpringFramework的依赖配置-->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>${spring-framework.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- SpringBoot的依赖配置-->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>3.3.2</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- spring 状态机 -->
+			<dependency>
+				<groupId>org.springframework.statemachine</groupId>
+				<artifactId>spring-statemachine-bom</artifactId>
+				<version>4.0.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
+<!--			<dependency>-->
+<!--				<groupId>cn.dev33</groupId>-->
+<!--				<artifactId>sa-token-bom</artifactId>-->
+<!--				<version>1.39.0</version>-->
+<!--			</dependency>-->
+			<dependency>
+				<groupId>cn.dev33</groupId>
+				<artifactId>sa-token-spring-boot3-starter</artifactId>
+				<version>${sa-token.version}</version>
+			</dependency>
+
+			<!-- Sa-Token-OAuth2.0 模块 -->
+			<dependency>
+				<groupId>cn.dev33</groupId>
+				<artifactId>sa-token-oauth2</artifactId>
+				<version>${sa-token.version}</version>
+			</dependency>
+
+			<!-- Sa-Token 整合 Redis （使用 jackson 序列化方式） -->
+			<dependency>
+				<groupId>cn.dev33</groupId>
+				<artifactId>sa-token-redis-jackson</artifactId>
+				<version>${sa-token.version}</version>
+			</dependency>
+
+			<!-- Sa-Token jwt模块 -->
+			<dependency>
+				<groupId>cn.dev33</groupId>
+				<artifactId>sa-token-jwt</artifactId>
+				<version>${sa-token.version}</version>
+			</dependency>
+
+			<!-- mysql -->
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>8.0.33</version>
+			</dependency>
+
+			<!-- Mybatis-Plus -->
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+				<version>3.5.7</version>
+			</dependency>
+
+			<!-- 多数据源 -->
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>dynamic-datasource-spring-boot3-starter</artifactId>
+				<version>4.3.1</version>
+			</dependency>
+
+			<!-- hutool -->
+			<dependency>
+				<groupId>cn.hutool</groupId>
+				<artifactId>hutool-bom</artifactId>
+				<version>5.8.26</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- 国密 -->
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcpkix-jdk18on</artifactId>
+				<version>1.78.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.luma</groupId>
+				<artifactId>luma-framework</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.luma</groupId>
+				<artifactId>luma-system</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.luma</groupId>
+				<artifactId>luma-common</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>io.github.linpeilie</groupId>
+				<artifactId>mapstruct-plus-spring-boot-starter</artifactId>
+				<version>${mapstruct-plus.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.paho</groupId>
+				<artifactId>org.eclipse.paho.mqttv5.client</artifactId>
+				<version>1.2.5</version>
+			</dependency>
+
+			<dependency>
+				<groupId>software.amazon.awssdk</groupId>
+				<artifactId>s3</artifactId>
+				<version>2.29.3</version>
+			</dependency>
+
+			<dependency>
+				<groupId>software.amazon.awssdk</groupId>
+				<artifactId>sts</artifactId>
+				<version>2.29.3</version>
+			</dependency>
+
+			<dependency>
+				<groupId>io.sgr</groupId>
+				<artifactId>s2-geometry-library-java</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+
+		</dependencies>
+
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+						<path>
+							<groupId>io.github.linpeilie</groupId>
+							<artifactId>mapstruct-plus-processor</artifactId>
+							<version>${mapstruct-plus.version}</version>
+						</path>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok-mapstruct-binding</artifactId>
+							<version>0.2.0</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

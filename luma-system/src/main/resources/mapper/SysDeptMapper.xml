@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luma.system.mapper.SysDeptMapper">
+
+    <resultMap id="BaseResultMap" type="com.luma.system.domain.entity.SysDept">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="parentId" column="parent_id" jdbcType="BIGINT"/>
+            <result property="ancestors" column="ancestors" jdbcType="VARCHAR"/>
+            <result property="deptName" column="dept_name" jdbcType="VARCHAR"/>
+            <result property="sort" column="sort" jdbcType="INTEGER"/>
+            <result property="leader" column="leader" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="email" column="email" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="delFlag" column="del_flag" jdbcType="TINYINT"/>
+            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="tenantId" column="tenant_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,parent_id,ancestors,
+        dept_name,sort,leader,
+        phone,email,status,
+        del_flag,create_by,create_time,
+        update_by,update_time
+    </sql>
+
+    <select id="selectIdList" resultType="java.lang.Long" >
+        select id from sys_dept
+    </select>
+
+    <select id="selectBaseList" resultType="com.luma.system.domain.vo.SysDeptBaseListResp" >
+        select d.id, d.dept_name, d.parent_id, rd.role_id is not null as checked from sys_dept d
+        left join sys_role_dept rd on d.id = rd.dept_id
+        where d.status = 0 and d.del_flag = false
+        and @isDataScope
+        <if test="roleId != null">
+            and rd.role_id = #{roldId}
+        </if>
+        order by d.sort
+    </select>
+
+    <update id="updateDeptAncestors" >
+        update sys_dept set ancestors = CONCAT(#{parentAncestors}, SUBSTRING(ancestors, #{oldParentAncestorsLength})) WHERE del_flag = false and id = #{id} or find_in_set( #{id} , ancestors )
+    </update>
+
+</mapper>

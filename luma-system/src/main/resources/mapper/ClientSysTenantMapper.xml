@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luma.system.mapper.ClientSysTenantMapper">
+
+    <select id="selectClientsByTenantId" parameterType="java.lang.Long" resultType="com.luma.system.domain.bo.ClientKeyBo">
+        select * from client c
+        inner join client_sys_tenant ct on c.id = ct.client_id
+        where ct.tenant_id = #{tenantId}
+    </select>
+
+</mapper>

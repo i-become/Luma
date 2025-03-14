@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luma.system.mapper.SysDictMapper">
+
+    <select id="selectDictList" resultType="com.luma.system.domain.bo.SysDictTreeBo" >
+        select sd.id, sd.parent_id, sd.name, sd.type, sd.parent_key, sd.key, sd.value, sd.status, sd.sys, sd.sort, sd.remark, sd.create_time
+        from sys_dict sd
+        <if test="key != null and key != ''">
+            join (select id from sys_dict where `key` = #{key} and del_flag = false) tmp
+            on sd.id = tmp.id OR find_in_set(tmp.id, sd.ancestors)
+        </if>
+        where del_flag = false
+        <if test="level != null">
+            and sd.level &lt;= #{level}
+        </if>
+    </select>
+
+    <select id="selectBaseList" resultType="com.luma.system.domain.bo.SysDictTreeBo" >
+        select sd.id, sd.parent_id, sd.name, sd.type, sd.parent_key, sd.key, sd.value, sd.sort
+        from sys_dict sd
+        <if test="key != null and key != ''">
+            join (select id from sys_dict where `key` = #{key} and status = 0 and del_flag = false) tmp
+            on sd.id = tmp.id OR find_in_set(tmp.id, sd.ancestors)
+        </if>
+        where sd.status = 0 and del_flag = false
+        <if test="level != null">
+            and sd.level &lt;= #{level}
+        </if>
+    </select>
+
+</mapper>

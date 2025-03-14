@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luma.system.mapper.SysUserMapper">
+
+    <resultMap id="BaseResultMap" type="com.luma.system.domain.entity.SysUser">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="deptId" column="dept_id" jdbcType="BIGINT"/>
+            <result property="loginName" column="login_name" jdbcType="VARCHAR"/>
+            <result property="username" column="username" jdbcType="VARCHAR"/>
+            <result property="userType" column="user_type" jdbcType="TINYINT"/>
+            <result property="email" column="email" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="sex" column="sex" jdbcType="TINYINT"/>
+            <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="salt" column="salt" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="delFlag" column="del_flag" jdbcType="TINYINT"/>
+            <result property="loginIp" column="login_ip" jdbcType="VARCHAR"/>
+            <result property="loginDate" column="login_date" jdbcType="TIMESTAMP"/>
+            <result property="pwdUpdateDate" column="pwd_update_date" jdbcType="TIMESTAMP"/>
+            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+            <result property="tenantId" column="tenant_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,dept_id,login_name,
+        user_name,user_type,email,
+        phone,sex,avatar,
+        password,salt,status,
+        del_flag,login_ip,login_date,
+        pwd_update_date,create_by,create_time,
+        update_by,update_time,remark
+    </sql>
+
+    <select id="selectUserPage" parameterType="com.luma.system.domain.vo.SysUserPageReq" resultType="com.luma.system.domain.vo.SysUserPageResp" >
+        select distinct u.id, u.dept_id, u.login_name, u.username, u.user_type, u.email, u.phone, u.sex, u.avatar, u.status, u.login_ip, u.login_date, u.create_time, u.create_by, u.update_time, u.update_by
+        from sys_user u
+        inner join sys_dept d on u.dept_id = d.id
+        left join sys_user_role ur on ur.user_id = u.id
+        where u.del_flag = false
+        <if test="req.deptId != null">
+            and d.id IN ( SELECT id FROM sys_dept WHERE id = #{req.deptId} or find_in_set( #{req.deptId} , ancestors ) )
+        </if>
+        <if test="req.status != null">
+            and u.status = #{req.status}
+        </if>
+        <if test="req.loginName != null and req.loginName != ''">
+            and u.login_name like concat('%', #{req.loginName}, '%')
+        </if>
+        <if test="req.phone != null and req.phone != ''">
+            and u.phone like concat('%', #{req.phone}, '%')
+        </if>
+        <if test="req.startCreateTime != null">
+            and u.create_time >= #{req.startCreateTime}
+        </if>
+        <if test="req.endCreateTime != null">
+            and u.create_time &lt;= #{req.endCreateTime}
+        </if>
+        <if test="req.roleId != null">
+            and ur.role_id = #{req.roleId}
+        </if>
+    </select>
+
+    <select id="selectUserinfo" parameterType="java.lang.Long" resultType="com.luma.system.domain.vo.SysUserInfoResp" >
+        select u.id, u.login_name, u.username, u.user_type, u.email, u.phone, u.sex, u.avatar, u.status, u.dept_id, u.tenant_id, d.dept_name from sys_user u
+        inner join sys_dept d on u.dept_id = d.id
+        where u.id = #{id}
+    </select>
+
+</mapper>

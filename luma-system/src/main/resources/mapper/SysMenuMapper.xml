@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luma.system.mapper.SysMenuMapper">
+
+    <select id="selectBaseList" resultType="com.luma.system.domain.vo.SysMenuBaseListResp" >
+        select m.id, m.parent_id, m.sort, m.title, m.is_hide, m.perms, rm.role_id is not null as checked from sys_menu m
+        left join sys_role_menu rm on m.id = rm.menu_id and rm.role_id = #{roldId}
+        order by m.sort
+    </select>
+
+</mapper>
