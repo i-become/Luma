@@ -17,7 +17,7 @@ import com.luma.common.constant.SatokenConstant;
 import com.luma.common.domain.SysUserAuthRoleInfo;
 import com.luma.common.exception.system.ISystemException;
 import com.luma.common.utils.MapstructUtil;
-import com.luma.framework.permission.TenantThreadLocal;
+import com.luma.framework.permission.TenantContextHolder;
 import com.luma.framework.utils.UserUtil;
 import com.luma.system.domain.bo.SysUserLoginClient;
 import com.luma.system.domain.entity.*;
@@ -68,7 +68,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Transactional(rollbackFor = Exception.class)
     public SysUserLoginResp login(SysUserLoginReq req, String loginIp){
         // 密码校验
-        TenantThreadLocal.setTenantId(req.getTenantId());
+        TenantContextHolder.setTenantId(req.getTenantId());
         SysUser user = lambdaQuery().select(SysUser::getId, SysUser::getUsername, SysUser::getPassword, SysUser::getStatus, SysUser::getDeptId, SysUser::getTenantId)
                 .eq(SysUser::getLoginName, req.getLoginName())
                 .one();

@@ -12,7 +12,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.luma.common.domain.R;
 import com.luma.common.exception.system.ISystemException;
 import com.luma.common.utils.ServletUtil;
-import com.luma.framework.permission.TenantThreadLocal;
+import com.luma.framework.permission.TenantContextHolder;
 import com.luma.system.domain.entity.Client;
 import com.luma.system.domain.entity.SysTenant;
 import com.luma.system.domain.vo.SysUserLoginReq;
@@ -91,7 +91,7 @@ public class SaOAuth2ServerController {
             SysUserLoginReq req = new SysUserLoginReq();
             String tenantAlias = SaHolder.getRequest().getParam("tenantAlias");
             if (StringUtils.isBlank(tenantAlias)){
-                req.setTenantId(TenantThreadLocal.SYS_TENANT_ID);
+                req.setTenantId(TenantContextHolder.SYS_TENANT_ID);
             }else {
                 SysTenant tenant = sysTenantService.lambdaQuery().select(SysTenant::getId).eq(SysTenant::getAlias, tenantAlias).one();
                 if (tenant == null){

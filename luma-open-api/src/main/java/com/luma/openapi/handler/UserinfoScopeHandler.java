@@ -7,7 +7,7 @@ import cn.dev33.satoken.oauth2.scope.handler.SaOAuth2ScopeHandlerInterface;
 import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.symmetric.SM4;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.luma.framework.permission.TenantThreadLocal;
+import com.luma.framework.permission.TenantContextHolder;
 import com.luma.system.domain.entity.Client;
 import com.luma.system.domain.entity.SysUser;
 import com.luma.system.service.ClientService;
@@ -42,7 +42,7 @@ public class UserinfoScopeHandler implements SaOAuth2ScopeHandlerInterface {
 
     @Override
     public void workAccessToken(AccessTokenModel at) {
-        TenantThreadLocal.disable();
+        TenantContextHolder.disableNext();
         SysUser user = sysUserService.lambdaQuery().select(SysUser::getId, SysUser::getUsername, SysUser::getLoginName, SysUser::getPhone, SysUser::getTenantId).eq(SysUser::getId, Long.valueOf(String.valueOf(at.getLoginId()))).one();
         Client client = clientService.lambdaQuery().select(Client::getId, Client::getSecret).eq(Client::getId, Long.valueOf(at.getClientId())).one();
         Map<String, Object> map = new LinkedHashMap<>();

@@ -1,7 +1,7 @@
 package com.luma.framework.interceptor;
 import com.luma.framework.permission.DataScopeThreadLocal;
 import com.luma.framework.permission.PermissionThreadLocal;
-import com.luma.framework.permission.TenantThreadLocal;
+import com.luma.framework.permission.TenantContextHolder;
 import com.luma.framework.utils.UserUtil;
 import jakarta.servlet.*;
 
@@ -28,7 +28,7 @@ public class ThreadLocalCleanupFilter implements Filter {
      */
     private void cleanupThreadLocal() {
         // 这里清除所有 ThreadLocal 中的内容
-        TenantThreadLocal.clear();
+        TenantContextHolder.clear();
         PermissionThreadLocal.cleanPermission();
         DataScopeThreadLocal.clean();
         UserUtil.cleanCreateBy();

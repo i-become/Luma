@@ -1,7 +1,7 @@
 package com.luma.framework.interceptor;
 
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
-import com.luma.framework.permission.TenantThreadLocal;
+import com.luma.framework.permission.TenantContextHolder;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +23,7 @@ public class CustomTenantHandler implements TenantLineHandler {
     @Override
     public Expression getTenantId() {
         try {
-            return new LongValue(TenantThreadLocal.getTenantId());
+            return new LongValue(TenantContextHolder.getTenantId());
         }catch (Exception e){
             return null;
         }
@@ -31,16 +31,18 @@ public class CustomTenantHandler implements TenantLineHandler {
 
     @Override
     public boolean ignoreTable(String tableName) {
-        Integer state = TenantThreadLocal.getState();
-        if (state == null) {
+        if (TenantContextHolder.isDefaultState()){
             return ignoreTables.contains("," + tableName + ",");
-        }else if (state == 0) {
-            TenantThreadLocal.clearState();
-            return true;
-        }else if (state == 1) {
-            TenantThreadLocal.clearState();
+        }
+        if (TenantContextHolder.isEnableNext()){
+            TenantContextHolder.clearState();
             return false;
-        }else if (state == -1) {
+        }
+        if (TenantContextHolder.isDisableNext()) {
+            TenantContextHolder.clearState();
+            return true;
+        }
+        if (TenantContextHolder.isDisable()) {
             return true;
         }
         return false;

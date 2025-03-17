@@ -10,7 +10,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.strategy.SaAnnotationStrategy;
 import com.luma.framework.interceptor.PermissionInterceptor;
 import com.luma.framework.interceptor.ThreadLocalCleanupFilter;
-import com.luma.framework.permission.TenantThreadLocal;
+import com.luma.framework.permission.TenantContextHolder;
 import com.luma.framework.utils.OAuth2Util;
 import com.luma.framework.utils.UserUtil;
 import jakarta.annotation.Resource;
@@ -61,7 +61,7 @@ public class WebConfig implements WebMvcConfigurer {
     {
         SaAnnotationStrategy.instance.checkMethodAnnotation = (method) -> {
             StpUtil.checkLogin();
-            TenantThreadLocal.setTenantId(UserUtil.getTenantId());
+            TenantContextHolder.setTenantId(UserUtil.getTenantId());
             UserUtil.setCreateBy(String.valueOf(StpUtil.getExtra("username")));
             // 校验是否为管理员
             if (!UserUtil.isAdmin()){
@@ -103,7 +103,7 @@ public class WebConfig implements WebMvcConfigurer {
                         SaOAuth2Util.checkClientToken(clientToken);
                         String tenantId = request.getHeader("tenant_id");
                         if (tenantId != null) {
-                            TenantThreadLocal.setTenantId(Long.valueOf(tenantId));
+                            TenantContextHolder.setTenantId(Long.valueOf(tenantId));
                         }
                         try {
                             Long clientId = OAuth2Util.getClientId();
