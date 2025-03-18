@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers;
 import com.luma.common.annotation.DataScope;
 import com.luma.common.constant.SatokenConstant;
+import com.luma.common.domain.BaseEntity;
 import com.luma.common.domain.SysUserAuthRoleInfo;
 import com.luma.common.exception.system.ISystemException;
 import com.luma.common.utils.MapstructUtil;

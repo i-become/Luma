@@ -38,42 +38,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     @Resource
     private SysRoleMenuMapper sysRoleMenuMapper;
 
-//    @Override
-//    @Transactional(readOnly = true)
-//    public List<Tree<Long>> trees(){
-//        // 获取我拥有的所有菜单
-//        List<SysMenu> menuList = sysRoleMenuMapper.selectMenuListByRoleIds(stpInterface.getUserAuthInfo(UserUtil.getUserId()).getRoles().stream().map(SysUserAuthRoleInfo::getId).toList());
-//        // 构建菜单树
-//        TreeNodeConfig treeNodeConfig = new TreeNodeConfig();
-//        treeNodeConfig.setWeightKey("sort");
-//        // 最大递归深度
-//        treeNodeConfig.setDeep(5);
-//        //转换器 (含义:找出父节点为字符串零的所有子节点, 并递归查找对应的子节点, 深度最多为 5)
-//        return TreeUtil.build(menuList, BASE_ID, treeNodeConfig,
-//                (menu, tree) -> {
-//                    tree.setId(menu.getId());
-//                    tree.setParentId(menu.getParentId());
-//                    tree.setName(menu.getName());
-//                    // 扩展属性 ...
-//                    tree.putExtra("redirect", menu.getRedirect());
-//                    tree.putExtra("component", menu.getComponent());
-//                    tree.putExtra("icon", menu.getIcon());
-//                    tree.putExtra("sort", menu.getSort());
-//                    tree.putExtra("title", menu.getTitle());
-//                    tree.putExtra("target", menu.getTarget());
-//                    tree.putExtra("active", menu.getActive());
-//                    tree.putExtra("type", menu.getType());
-//                    tree.putExtra("path", menu.getPath());
-//                    tree.putExtra("isHide", menu.getIsHide());
-//                    tree.putExtra("isFull", menu.getIsFull());
-//                    tree.putExtra("isAffix", menu.getIsAffix());
-//                    tree.putExtra("isKeepAlive", menu.getIsKeepAlive());
-//                    tree.putExtra("tag", menu.getTag());
-//                    tree.putExtra("perms", menu.getPerms());
-//                });
-//
-//    }
-
     @Override
     @Transactional(readOnly = true)
     public List<SysMenuListResp> list(String name){
@@ -82,7 +46,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             return lambdaQuery().select(SysMenu::getId, SysMenu::getParentId, SysMenu::getName, SysMenu::getRedirect, SysMenu::getComponent, SysMenu::getIcon, SysMenu::getSort, SysMenu::getTitle,
                     SysMenu::getTarget, SysMenu::getActive, SysMenu::getType, SysMenu::getPath, SysMenu::getIsHide, SysMenu::getIsFull, SysMenu::getIsAffix, SysMenu::getIsKeepAlive, SysMenu::getTag, SysMenu::getPerms)
                     .like(StringUtils.isNotBlank(name), SysMenu::getName, name)
-                    .list().stream().map(o -> MapstructUtil.convert(o, SysMenuListResp.class)).toList();
+                    .list().stream().map(o -> o.to(SysMenuListResp.class)).toList();
         }
         // 获取我拥有的所有菜单
         List<Long> roleIds = stpInterface.getUserAuthInfo(UserUtil.getUserId()).getRoles().stream().map(SysUserAuthRoleInfo::getId).toList();

@@ -8,7 +8,7 @@ import lombok.Data;
  * @author 刘靖
  */
 @Data
-public class TenantEntity {
+public class TenantEntity extends EntityConvert {
 
     /**
      * 租户编号
