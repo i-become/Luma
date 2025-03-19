@@ -9,7 +9,7 @@ import lombok.Data;
 import java.util.Set;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 @Data
 @AutoMapper(target = SysUser.class)

@@ -4,7 +4,7 @@ import cn.hutool.core.util.ArrayUtil;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 public class ServletUtil {
 

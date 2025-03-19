@@ -4,7 +4,7 @@ import com.luma.common.exception.BaseException;
 
 /**
  * 系统模块异常
- * @author 刘靖
+ * @author i-become
  */
 public class ISystemException extends BaseException {
 

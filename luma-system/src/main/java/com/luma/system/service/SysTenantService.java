@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.luma.system.domain.entity.SysTenant;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 public interface SysTenantService extends IService<SysTenant> {
 }

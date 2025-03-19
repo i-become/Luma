@@ -9,7 +9,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 @AutoMapper(target = SysDictTreeBo.class)
 @Data

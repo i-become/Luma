@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
-* @author 刘靖
+* @author i-become
 * @description 针对表【sys_role_menu(角色和菜单关联表)】的数据库操作Mapper
 * @createDate 2024-08-01 15:51:52
 * @Entity com.luma.system.domain.entity.SysRoleMenu

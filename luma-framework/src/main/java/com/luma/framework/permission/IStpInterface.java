@@ -4,7 +4,7 @@ import cn.dev33.satoken.stp.StpInterface;
 import com.luma.common.domain.SysUserAuthInfo;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 public interface IStpInterface extends StpInterface {
 

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 @Data
 public class TenantBaseEntity extends BaseEntity{

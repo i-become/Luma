@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * 部门相关接口
- * @author 刘靖
+ * @author i-become
  */
 @RestController
 @RequestMapping("/sys/dept")

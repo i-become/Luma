@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * 系统字典
- * @author 刘靖
+ * @author i-become
  */
 @RestController
 @RequestMapping("/sys/dict")

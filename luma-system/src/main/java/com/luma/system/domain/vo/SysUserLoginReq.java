@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 @Data
 public class SysUserLoginReq {

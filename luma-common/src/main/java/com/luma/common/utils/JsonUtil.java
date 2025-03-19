@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 
 /**
  * json工具类
- * @author 刘靖
+ * @author i-become
  */
 public class JsonUtil {
 

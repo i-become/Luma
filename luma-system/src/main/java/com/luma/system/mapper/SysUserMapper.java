@@ -9,7 +9,7 @@ import com.luma.system.domain.vo.SysUserPageResp;
 import org.apache.ibatis.annotations.Param;
 
 /**
-* @author 刘靖
+* @author i-become
 * @description 针对表【sys_user(用户信息表)】的数据库操作Mapper
 * @createDate 2024-07-31 12:00:51
 * @Entity com.luma.system.domain.entity.SysUser

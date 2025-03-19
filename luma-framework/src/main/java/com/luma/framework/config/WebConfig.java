@@ -31,7 +31,7 @@ import java.util.Map;
 
 /**
  * web配置
- * @author 刘靖
+ * @author i-become
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {

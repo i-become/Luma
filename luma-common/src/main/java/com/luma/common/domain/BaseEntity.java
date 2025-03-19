@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 @Data
 public class BaseEntity extends EntityConvert implements Serializable {

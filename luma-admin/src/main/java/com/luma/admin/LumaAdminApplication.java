@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 @EnableAsync
 @EnableCaching
@@ -22,7 +22,6 @@ public class LumaAdminApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(LumaAdminApplication.class, args);
-        // https://www.bootschool.net/ascii of 3d
         System.out.println("启动成功");
     }
 

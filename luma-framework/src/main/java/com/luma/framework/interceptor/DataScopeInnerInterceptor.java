@@ -17,7 +17,7 @@ import java.sql.SQLException;
 
 /**
  * 权限范围拦截器，动态拼接权限范围sql
- * @author 刘靖
+ * @author i-become
  */
 public class DataScopeInnerInterceptor implements InnerInterceptor {
 

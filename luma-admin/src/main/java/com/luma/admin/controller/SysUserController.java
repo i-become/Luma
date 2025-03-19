@@ -16,7 +16,7 @@ import java.util.Objects;
 
 /**
  * 系统用户相关接口
- * @author 刘靖
+ * @author i-become
  */
 @RequestMapping("/sys/user")
 @RestController

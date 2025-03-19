@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * 自定义基础异常
- * @author 刘靖
+ * @author i-become
  */
 @Data
 public class BaseException extends RuntimeException{

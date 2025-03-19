@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * web配置属性
- * @author 刘靖
+ * @author i-become
  */
 @ConfigurationProperties(prefix = "luma.api")
 @Data

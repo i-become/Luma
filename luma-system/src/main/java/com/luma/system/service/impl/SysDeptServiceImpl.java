@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
-* @author 刘靖
+* @author i-become
 * @description 针对表【sys_dept(部门表)】的数据库操作Service实现
 * @createDate 2024-08-01 15:51:52
 */

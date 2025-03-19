@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 /**
  * 全局统一包装响应类型
- * @author 刘靖
+ * @author i-become
  */
 @ControllerAdvice
 public class ApiResponseHandler implements ResponseBodyAdvice<Object> {

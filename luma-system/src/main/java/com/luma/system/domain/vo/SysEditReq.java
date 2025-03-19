@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 @AutoMapper(target = SysDict.class)
 @Data

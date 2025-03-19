@@ -17,7 +17,7 @@ import java.util.Objects;
 
 /**
  * 全局异常处理器
- * @author 刘靖
+ * @author i-become
  */
 @Slf4j
 @RestControllerAdvice

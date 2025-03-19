@@ -4,7 +4,7 @@ import com.luma.common.annotation.DataScope;
 
 /**
  * 数据权限范围线程变量
- * @author 刘靖
+ * @author i-become
  */
 public class DataScopeThreadLocal {
 

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 租户相关接口
- * @author 刘靖
+ * @author i-become
  */
 @RestController
 @RequestMapping("/sys/tenant")

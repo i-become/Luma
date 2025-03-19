@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 
 /**
  * 拦截接口权限注解，并把权限要求存入线程
- * @author 刘靖
+ * @author i-become
  */
 public class PermissionInterceptor implements HandlerInterceptor {
 

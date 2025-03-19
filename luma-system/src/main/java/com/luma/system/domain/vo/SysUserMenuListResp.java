@@ -1,7 +1,7 @@
 package com.luma.system.domain.vo;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 public class SysUserMenuListResp {
 

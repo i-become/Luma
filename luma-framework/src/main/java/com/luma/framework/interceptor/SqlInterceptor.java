@@ -16,7 +16,7 @@ import java.sql.Connection;
 
 /**
  * mybatis拦截器，对权限范围进行处理
- * @author 刘靖
+ * @author i-become
  * @deprecated 已弃用，改成使用 {@link DataScopeInnerInterceptor}，主要由于这种方式与mybatis-plus的分页插件顺序关系不对，导致limit拼接在权限sql之前
  */
 //@Component

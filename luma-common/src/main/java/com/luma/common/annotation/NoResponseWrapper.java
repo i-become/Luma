@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * 响应不包装返回注解
  * 被此注解标注的Controller接口将不会进行包装返回
- * @author 刘靖
+ * @author i-become
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

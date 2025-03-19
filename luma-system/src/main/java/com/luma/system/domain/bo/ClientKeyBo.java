@@ -5,7 +5,7 @@ import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 @AutoMapper(target = Client.class)
 @Data

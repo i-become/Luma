@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * spring序列化配置
- * @author 刘靖
+ * @author i-become
  */
 @Configuration
 public class SerializerConfig {

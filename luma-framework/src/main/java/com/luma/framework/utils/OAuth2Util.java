@@ -5,7 +5,7 @@ import cn.dev33.satoken.oauth2.SaOAuth2Manager;
 import cn.dev33.satoken.oauth2.template.SaOAuth2Util;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 public class OAuth2Util {
 

@@ -2,7 +2,7 @@ package com.luma.framework.constant;
 
 /**
  * 推送方法
- * @author 刘靖
+ * @author i-become
  */
 public interface PushMethod {
 

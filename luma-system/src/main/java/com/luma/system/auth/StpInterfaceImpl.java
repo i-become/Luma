@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 /**
  * 自定义权限加载接口实现类，如有自定义权限需求，参考https://sa-token.cc/doc.html#/use/jur-auth
- * @author 刘靖
+ * @author i-become
  */
 @Component
 public class StpInterfaceImpl implements IStpInterface {

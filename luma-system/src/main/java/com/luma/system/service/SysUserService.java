@@ -7,7 +7,7 @@ import com.luma.system.domain.vo.*;
 import com.luma.system.enums.SysStatusEnum;
 
 /**
-* @author 刘靖
+* @author i-become
 * @description 针对表【sys_user(用户信息表)】的数据库操作Service
 * @createDate 2024-07-31 12:00:51
 */

@@ -13,7 +13,7 @@ import lombok.Data;
 
 /**
  * 用户信息表
- * @author 刘靖
+ * @author i-become
  * @TableName sys_user
  */
 @TableName(value ="sys_user")

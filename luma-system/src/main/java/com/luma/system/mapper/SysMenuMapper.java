@@ -7,7 +7,7 @@ import com.luma.system.domain.vo.SysMenuBaseListResp;
 import java.util.List;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 public interface SysMenuMapper extends BaseMapper<SysMenu> {
 

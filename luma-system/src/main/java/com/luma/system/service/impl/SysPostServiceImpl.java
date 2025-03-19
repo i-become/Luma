@@ -7,7 +7,7 @@ import com.luma.system.mapper.SysPostMapper;
 import org.springframework.stereotype.Service;
 
 /**
-* @author 刘靖
+* @author i-become
 * @description 针对表【sys_post(岗位信息表)】的数据库操作Service实现
 * @createDate 2024-08-01 15:51:52
 */

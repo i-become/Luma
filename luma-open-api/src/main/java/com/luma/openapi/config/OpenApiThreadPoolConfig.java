@@ -8,7 +8,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 @Configuration
 public class OpenApiThreadPoolConfig {

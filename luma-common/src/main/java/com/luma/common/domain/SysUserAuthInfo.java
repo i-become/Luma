@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 @Data
 public class SysUserAuthInfo {

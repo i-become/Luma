@@ -1,7 +1,7 @@
 package com.luma.common.constant;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 public class ResultCode {
 

@@ -5,7 +5,7 @@ import lombok.Getter;
 
 /**
  * 字典类型
- * @author 刘靖
+ * @author i-become
  */
 @Getter
 @AllArgsConstructor

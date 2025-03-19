@@ -6,7 +6,7 @@ import lombok.Getter;
 
 /**
  * 系统通用状态
- * @author 刘靖
+ * @author i-become
  */
 @Getter
 @AllArgsConstructor

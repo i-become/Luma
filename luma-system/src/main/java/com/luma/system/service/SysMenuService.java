@@ -9,7 +9,7 @@ import com.luma.system.domain.vo.SysMenuListResp;
 import java.util.List;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 public interface SysMenuService extends IService<SysMenu> {
 

@@ -2,7 +2,7 @@ package com.luma.framework.permission;
 
 /**
  * 接口需要的权限线程变量
- * @author 刘靖
+ * @author i-become
  */
 public class PermissionThreadLocal {
 

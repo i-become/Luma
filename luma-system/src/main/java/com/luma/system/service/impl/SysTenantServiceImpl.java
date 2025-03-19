@@ -7,7 +7,7 @@ import com.luma.system.service.SysTenantService;
 import org.springframework.stereotype.Service;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 @Service
 public class SysTenantServiceImpl extends ServiceImpl<SysTenantMapper, SysTenant> implements SysTenantService {

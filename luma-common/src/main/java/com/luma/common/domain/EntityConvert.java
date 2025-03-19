@@ -18,16 +18,4 @@ public class EntityConvert {
         return MapstructUtil.convert(this, tClass);
     }
 
-    /**
-     * 将对象转换为当前类型对象
-     * 需要在源对象上添加@AutoMapper映射关系注解
-     * @param obj 源对象
-     * @return
-     * @param <T>
-     */
-    @SuppressWarnings("unchecked")
-    public static <T extends BaseEntity> T of(Object obj){
-        return (T)MapstructUtil.convert(obj, StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass());
-    }
-
 }

@@ -9,7 +9,7 @@ import java.io.IOException;
 
 /**
  * 全局ThreadLocal清理过滤器
- * @author 刘靖
+ * @author i-become
  */
 public class ThreadLocalCleanupFilter implements Filter {
     @Override

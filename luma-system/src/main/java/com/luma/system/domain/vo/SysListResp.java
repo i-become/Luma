@@ -5,7 +5,7 @@ import com.luma.system.enums.SysStatusEnum;
 import lombok.Data;
 
 /**
- * @author 刘靖
+ * @author i-become
  */
 @Data
 public class SysListResp {

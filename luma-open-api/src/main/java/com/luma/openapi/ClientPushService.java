@@ -19,7 +19,7 @@ import java.util.*;
 
 /**
  * 推送给应用的服务类
- * @author 刘靖
+ * @author i-become
  */
 @Slf4j
 @Component
