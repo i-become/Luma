@@ -29,6 +29,7 @@ public class DataScopeInnerInterceptor implements InnerInterceptor {
         }
 
         String sql = boundSql.getSql();
+        // 是否包含自定义的权限标识，包含就替换为数据权限sql
         if (sql.contains("@isDataScope")){
             sql = sql.replace("@isDataScope", dataScopeSql);
         }else if (DataScopeThreadLocal.getDataScope().autoSql()){

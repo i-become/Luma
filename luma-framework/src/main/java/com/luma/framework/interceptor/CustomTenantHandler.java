@@ -31,21 +31,22 @@ public class CustomTenantHandler implements TenantLineHandler {
 
     @Override
     public boolean ignoreTable(String tableName) {
+        // 如果是默认状态就采用配置的表判断
         if (TenantContextHolder.isDefaultState()){
             return ignoreTables.contains("," + tableName + ",");
         }
+        // 如果是启用本次查询状态，就返回启用，并清除状态
         if (TenantContextHolder.isEnableNext()){
             TenantContextHolder.clearState();
             return false;
         }
+        // 如果是忽略本次查询状态，就返回忽略，并清除状态
         if (TenantContextHolder.isDisableNext()) {
             TenantContextHolder.clearState();
             return true;
         }
-        if (TenantContextHolder.isDisable()) {
-            return true;
-        }
-        return false;
+        // 返回是否一直禁用多租户查询
+        return TenantContextHolder.isDisable();
     }
 
 }

@@ -23,6 +23,7 @@ public class SerializerConfig {
      */
     @Bean("jackson2ObjectMapperBuilderCustomizer")
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
+        // 主要是对返回给前端的long类型转换为字符串
         return builder -> builder.serializerByType(Long.class, ToStringSerializer.instance)
                 .serializerByType(Long.TYPE, ToStringSerializer.instance);
     }
