@@ -64,12 +64,6 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
     }
 
     @Override
-    @Cacheable(cacheNames = "user:role:auth", key = "#userId", unless = "#result == null")
-    public List<SysUserAuthRoleInfo> getUserRoleAuthList(Long userId){
-        return sysUserRoleMapper.selectUserRoleAuthList(userId);
-    }
-
-    @Override
     @DataScope(deptAlias = "su")
     public IPage<SysRolePageResp> getRolePage(SysRolePageReq req){
         return baseMapper.selectRolePage(req.toMpPage(), req);

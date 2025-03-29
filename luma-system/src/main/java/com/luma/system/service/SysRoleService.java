@@ -35,13 +35,6 @@ public interface SysRoleService extends IService<SysRole> {
     List<String> getRoleKeyListByUserId(Long userId);
 
     /**
-     * 获取用户的角色权限列表
-     * @param userId 用户id
-     * @return
-     */
-    List<SysUserAuthRoleInfo> getUserRoleAuthList(Long userId);
-
-    /**
      * 获取角色分页
      * @param req
      * @return

@@ -1,5 +1,6 @@
 package com.luma.framework.permission;
 
+import com.alibaba.ttl.TransmittableThreadLocal;
 import com.luma.common.annotation.DataScope;
 
 /**
@@ -8,9 +9,9 @@ import com.luma.common.annotation.DataScope;
  */
 public class DataScopeThreadLocal {
 
-    private static final ThreadLocal<String> SQL_LOCAL = new ThreadLocal<>();
+    private static final ThreadLocal<String> SQL_LOCAL = new TransmittableThreadLocal<>();
 
-    private static final ThreadLocal<DataScope> DATA_SCOPE_LOCAL = new ThreadLocal<>();
+    private static final ThreadLocal<DataScope> DATA_SCOPE_LOCAL = new TransmittableThreadLocal<>();
 
     public static void setDataScope(DataScope dataScope){
         DATA_SCOPE_LOCAL.set(dataScope);

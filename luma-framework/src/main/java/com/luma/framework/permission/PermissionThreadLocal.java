@@ -1,12 +1,14 @@
 package com.luma.framework.permission;
 
+import com.alibaba.ttl.TransmittableThreadLocal;
+
 /**
  * 接口需要的权限线程变量
  * @author i-become
  */
 public class PermissionThreadLocal {
 
-    private static final ThreadLocal<String[]> THREAD_LOCAL = new ThreadLocal<>();
+    private static final ThreadLocal<String[]> THREAD_LOCAL = new TransmittableThreadLocal<>();
 
     public static void sePermission(String[] permission){
         THREAD_LOCAL.set(permission);

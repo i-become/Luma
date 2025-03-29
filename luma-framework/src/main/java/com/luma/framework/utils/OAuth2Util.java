@@ -18,9 +18,4 @@ public class OAuth2Util {
         return Long.valueOf(SaOAuth2Util.getClientToken(clientToken).getClientId());
     }
 
-    public static Long getTenantId(){
-        String clientToken = SaOAuth2Manager.getDataResolver().readClientToken(SaHolder.getRequest());
-        return Long.valueOf(String.valueOf(SaOAuth2Util.getClientToken(clientToken).extraData.get("tenant_id")));
-    }
-
 }

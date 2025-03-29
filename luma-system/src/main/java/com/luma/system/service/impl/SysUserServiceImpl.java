@@ -2,6 +2,7 @@ package com.luma.system.service.impl;
 
 import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.stp.parameter.SaLoginParameter;
 import cn.dev33.satoken.util.SaFoxUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
@@ -85,11 +86,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new ISystemException("用户处于被禁用状态");
         }
         // 登录，保存登录信息
-        StpUtil.login(user.getId(), SaLoginModel.create()
+        StpUtil.login(user.getId(), SaLoginParameter.create()
                 .setExtra("deptId", user.getDeptId())
                 .setExtra("tenantId", user.getTenantId())
-                .setExtra("username", user.getUsername())
-                .build());
+                .setExtra("username", user.getUsername()));
         SysUser loginUser = new SysUser();
         loginUser.setId(user.getId());
         loginUser.setLoginIp(loginIp);

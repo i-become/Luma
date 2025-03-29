@@ -1,6 +1,7 @@
 package com.luma.framework.utils;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.alibaba.ttl.TransmittableThreadLocal;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -17,24 +18,43 @@ public class UserUtil {
     /**
      * 用于存储当前线程的createBy
      */
-    private static final ThreadLocal<String> CREATE_BY_THREAD_LOCAL = new ThreadLocal<>();
+    private static final ThreadLocal<String> CREATE_BY_THREAD_LOCAL = new TransmittableThreadLocal<>();
 
+    /**
+     * 设置创建人
+     * @param createBy 创建人名称
+     */
     public static void setCreateBy(String createBy) {
         CREATE_BY_THREAD_LOCAL.set(createBy);
     }
 
+    /**
+     * 获取创建人
+     * @return
+     */
     public static String getCreateBy(){
         return CREATE_BY_THREAD_LOCAL.get();
     }
 
+    /**
+     * 清除线程中创建人信息
+     */
     public static void cleanCreateBy(){
         CREATE_BY_THREAD_LOCAL.remove();
     }
 
+    /**
+     * 获取用户编号
+     * @return
+     */
     public static Long getUserId() {
         return StpUtil.getLoginIdAsLong();
     }
 
+    /**
+     * 获取用户名称
+     * @return
+     */
     public static String getUsername(){
         try {
             return String.valueOf(StpUtil.getExtra("username"));
@@ -43,6 +63,10 @@ public class UserUtil {
         }
     }
 
+    /**
+     * 获取用户部门编号
+     * @return
+     */
     public static Long getDeptId(){
         try {
             return Long.valueOf(String.valueOf(StpUtil.getExtra("deptId")));
@@ -51,29 +75,13 @@ public class UserUtil {
         }
     }
 
+    /**
+     * 获取用户租户编号
+     * @return
+     */
     public static Long getTenantId(){
-        try {
-            return Long.valueOf(String.valueOf(StpUtil.getExtra("tenantId")));
-       }catch (Exception e){
-            return null;
-        }
+        return Long.valueOf(String.valueOf(StpUtil.getExtra("tenantId")));
     }
-
-//    public static String getCreateBy(){
-//        // TODO 这里是为了MyMetaObjectHandler中获取当前创建人信息使用，有优化空间
-//        if (!isWebThread()){
-//            return null;
-//        }
-//        try {
-//            return String.valueOf(StpUtil.getExtra("username"));
-//        }catch (Exception e){
-//            try {
-//                return String.valueOf(OAuth2Util.getClientId());
-//            }catch (Exception e1){
-//                return null;
-//            }
-//        }
-//    }
 
     public static boolean isAdmin(){
         return getUserId().equals(ADMIN_ID);
@@ -81,11 +89,6 @@ public class UserUtil {
 
     public static List<String> getPermissionList(){
         return StpUtil.getPermissionList();
-    }
-
-    public static boolean isWebThread() {
-        RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
-        return attributes instanceof ServletRequestAttributes;
     }
 
 }
