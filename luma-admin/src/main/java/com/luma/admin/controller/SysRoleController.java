@@ -49,7 +49,7 @@ public class SysRoleController {
     }
 
     /**
-     * 获取用户角色列表 （简易列表，主要用于下拉框）
+     * 获取指定用户角色列表 （简易列表，主要用于下拉框）
      * @return
      */
     @GetMapping("/user_role/base_list")

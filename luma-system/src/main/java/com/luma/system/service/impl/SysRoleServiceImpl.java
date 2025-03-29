@@ -11,6 +11,7 @@ import com.luma.common.domain.UserRolePermission;
 import com.luma.common.enums.DataScopeEnum;
 import com.luma.common.exception.system.ISystemException;
 import com.luma.common.utils.MapstructUtil;
+import com.luma.framework.permission.IStpInterface;
 import com.luma.framework.utils.UserUtil;
 import com.luma.system.domain.entity.SysRole;
 import com.luma.system.domain.entity.SysRoleMenu;
@@ -51,6 +52,9 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
     @Resource
     private SysDeptMapper sysDeptMapper;
 
+    @Resource
+    private IStpInterface stpInterface;
+
     @Override
     @Cacheable(cacheNames = "luma:role:perms", key = "#roleKey", unless = "#result == null")
     public List<UserRolePermission> getRolePermissionListByRoleKey(String roleKey){
@@ -70,6 +74,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
     }
 
     @Override
+    @DataScope(deptAlias = "su", autoSql = false)
     public List<SysRoleBaseListResp> getRoleList(){
         return baseMapper.selectRoleList();
     }
@@ -86,10 +91,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
         if (lambdaQuery().eq(SysRole::getRoleKey, req.getRoleKey()).exists()){
             throw new ISystemException("角色权限标识已经存在");
         }
-
-        if (!UserUtil.isAdmin()){
-            check(req);
-        }
+        // 校验当前用户是否有权限添加该角色
+        check(req);
 
         // 保存角色
         SysRole sysRole = MapstructUtil.convert(req, SysRole.class);
@@ -127,9 +130,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
             throw new ISystemException("角色权限标识已经存在");
         }
 
-        if (!UserUtil.isAdmin()){
-            check(req);
-        }
+        // 校验当前用户是否有权限编辑当前角色
+        check(req);
 
         // 更新角色
         SysRole sysRole = MapstructUtil.convert(req, SysRole.class);
@@ -156,8 +158,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
     @Cacheable(cacheNames = "user:role:auth")
     public void remove(Long id){
         // 权限校验
-        List<SysRoleBaseListResp> roleList = baseMapper.selectRoleList();
-        if (!roleList.stream().map(SysRoleBaseListResp::getId).toList().contains(id)){
+        List<UserRolePermission> userRolePermissionList = stpInterface.getRolePermissionList(UserUtil.getUserId());
+        if (!userRolePermissionList.stream().map(UserRolePermission::getId).toList().contains(id)){
             throw new ISystemException("没有该角色权限");
         }
         baseMapper.deleteById(id);
@@ -171,8 +173,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
     @Cacheable(cacheNames = "user:role:auth")
     public void updateStatus(Long id, SysStatusEnum status){
         // 权限校验
-        List<SysRoleBaseListResp> roleList = baseMapper.selectRoleList();
-        if (!roleList.stream().map(SysRoleBaseListResp::getId).toList().contains(id)){
+        List<UserRolePermission> userRolePermissionList = stpInterface.getRolePermissionList(UserUtil.getUserId());
+        if (!userRolePermissionList.stream().map(UserRolePermission::getId).toList().contains(id)){
             throw new ISystemException("没有该角色权限");
         }
         // 更新状态
@@ -187,10 +189,11 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
         // 要求新增的角色权限范围和菜单权限不能大于添加者本身
         DataScopeEnum reqDataScope = req.getDataScope();
         // 获取当前用户所有的数据权限
-        List<SysUserAuthRoleInfo> roleList = sysUserRoleMapper.selectUserRoleAuthList(UserUtil.getUserId());
-        List<DataScopeEnum> userDataScopeList = roleList.stream().map(SysUserAuthRoleInfo::getDataScope).distinct().toList();
-        if (userDataScopeList.contains(DataScopeEnum.ALL)){
-            // 如果用户的权限不包含全部数据权限，那需要做进一步判断，先判断是否为自定义权限，自定义权限需要判断部门的包含关系
+        List<UserRolePermission> userRolePermissionList = stpInterface.getRolePermissionList(UserUtil.getUserId());
+        List<DataScopeEnum> userDataScopeList = userRolePermissionList.stream().map(UserRolePermission::getDataScope).distinct().toList();
+        // 如果当前用户拥有全部数据权限，那不需要数据权限范围部分的判断
+        if (!userDataScopeList.contains(DataScopeEnum.ALL)){
+            // 先判断是否为自定义权限，自定义权限需要判断部门的包含关系
             if (reqDataScope == DataScopeEnum.CUSTOM){
                 // 自定义权限，本人的部门必须全包含添加的角色的部门
                 Set<Long> deptIdList = req.getDeptIdList();
@@ -202,8 +205,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
                 }
             }else {
                 // 非自定义权限，那就只剩下 1、3、4、5三种权限可能，使用大小进行判断
-                DataScopeEnum userMaxDataScope = userDataScopeList.stream().filter(o -> o != DataScopeEnum.CUSTOM).min((o1, o2) -> CompareUtil.compare(o1.getCode(), o2.getCode())).get();
-                if (reqDataScope.getCode() < userMaxDataScope.getCode()){
+                DataScopeEnum userDataScopeMax = userDataScopeList.stream().filter(o -> o != DataScopeEnum.CUSTOM).min((o1, o2) -> CompareUtil.compare(o1.getCode(), o2.getCode())).get();
+                if (reqDataScope.getCode() < userDataScopeMax.getCode()){
                     // 超出本人权限范围
                     throw new ISystemException("超出本人权限范围");
                 }
@@ -213,7 +216,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
         // 判断菜单权限
         if (req.getMenuIdList() != null && !req.getMenuIdList().isEmpty()){
             // 获取我拥有的所有菜单
-            List<SysMenuListResp> menuList = sysRoleMenuMapper.selectMenuListByRoleIds(sysUserRoleMapper.selectUserRoleAuthList(UserUtil.getUserId()).stream().map(SysUserAuthRoleInfo::getId).toList(), null);
+            List<Long> userRoleIdList = stpInterface.getRolePermissionList(UserUtil.getUserId()).stream().map(UserRolePermission::getId).toList();
+            List<SysMenuListResp> menuList = sysRoleMenuMapper.selectMenuListByRoleIds(userRoleIdList, null);
             if (!new HashSet<>(menuList.stream().map(SysMenuListResp::getId).toList()).containsAll(req.getMenuIdList())){
                 throw new ISystemException("超出本人菜单权限");
             }

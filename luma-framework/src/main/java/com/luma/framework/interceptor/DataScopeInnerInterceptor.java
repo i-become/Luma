@@ -30,8 +30,8 @@ public class DataScopeInnerInterceptor implements InnerInterceptor {
 
         String sql = boundSql.getSql();
         // 是否包含自定义的权限标识，包含就替换为数据权限sql
-        if (sql.contains("@isDataScope")){
-            sql = sql.replace("@isDataScope", dataScopeSql);
+        if (sql.contains("@dataScopeSql")){
+            sql = sql.replace("@dataScopeSql", dataScopeSql);
         }else if (DataScopeThreadLocal.getDataScope().autoSql()){
             // 自动拼接
             sql = sql + dataScopeSql;
@@ -55,8 +55,8 @@ public class DataScopeInnerInterceptor implements InnerInterceptor {
         if (sct == SqlCommandType.INSERT || sct == SqlCommandType.UPDATE || sct == SqlCommandType.DELETE) {
             PluginUtils.MPBoundSql mpBs = mpSh.mPBoundSql();
             String sql = mpBs.sql();
-            if (sql.contains("@isDataScope")){
-                sql = sql.replace("@isDataScope", dataScopeSql);
+            if (sql.contains("@dataScopeSql")){
+                sql = sql.replace("@dataScopeSql", dataScopeSql);
             }else if (DataScopeThreadLocal.getDataScope().autoSql()){
                 // 自动拼接
                 sql = sql + dataScopeSql;

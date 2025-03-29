@@ -31,7 +31,6 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
      * 查询角色列表
      * @return
      */
-    @DataScope(deptAlias = "su", autoSql = false)
     List<SysRoleBaseListResp> selectRoleList();
 
     /**

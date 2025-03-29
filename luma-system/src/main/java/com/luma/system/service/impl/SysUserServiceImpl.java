@@ -16,8 +16,10 @@ import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers;
 import com.luma.common.annotation.DataScope;
 import com.luma.common.constant.SatokenConstant;
 import com.luma.common.domain.SysUserAuthRoleInfo;
+import com.luma.common.domain.UserRolePermission;
 import com.luma.common.exception.system.ISystemException;
 import com.luma.common.utils.MapstructUtil;
+import com.luma.framework.permission.IStpInterface;
 import com.luma.framework.permission.TenantContextHolder;
 import com.luma.framework.utils.UserUtil;
 import com.luma.system.domain.bo.SysUserLoginClient;
@@ -64,6 +66,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Resource
     private SysTenantMapper sysTenantMapper;
+
+    @Resource
+    private IStpInterface stpInterface;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -334,8 +339,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
         // 角色有效性校验
         if (roleIdList != null && !roleIdList.isEmpty()){
-            List<SysUserAuthRoleInfo> roleList = sysUserRoleMapper.selectUserRoleAuthList(UserUtil.getUserId());
-            if (!new HashSet<>(roleList.stream().map(SysUserAuthRoleInfo::getId).toList()).containsAll(roleIdList)){
+            List<UserRolePermission> userRolePermissionList = stpInterface.getRolePermissionList(UserUtil.getUserId());
+            if (!new HashSet<>(userRolePermissionList.stream().map(UserRolePermission::getId).toList()).containsAll(roleIdList)){
                 throw new ISystemException("角色填写错误，超出本人权限");
             }
         }

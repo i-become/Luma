@@ -51,7 +51,7 @@ public class DataScopeAspect {
     private void handleDataScope(DataScope dataScope){
         // 生成权限范围sql
         String sql = sql(dataScope);
-        // 自动拼接和手动拼接的区别就是前面有没有and符号，因为手动拼接需要在sql中添加@isDataScope占位符，需要在占位符前面使用and符号，比如and @isDataScope,这样才不会报错
+        // 自动拼接和手动拼接的区别就是前面有没有and符号，因为手动拼接需要在sql中添加@dataScopeSql，需要在占位符前面使用and符号，比如and @isDataScope,这样才不会报错
         if (dataScope.autoSql()){
             DataScopeThreadLocal.setSql(" AND (" + sql.substring(4) + ")");
         }else {

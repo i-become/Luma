@@ -4,29 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.luma.system.mapper.SysRoleMapper">
 
-    <resultMap id="BaseResultMap" type="com.luma.system.domain.entity.SysRole">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="roleName" column="role_name" jdbcType="VARCHAR"/>
-            <result property="roleKey" column="role_key" jdbcType="VARCHAR"/>
-            <result property="sort" column="sort" jdbcType="INTEGER"/>
-            <result property="dataScope" column="data_scope" jdbcType="TINYINT"/>
-            <result property="status" column="status" jdbcType="TINYINT"/>
-            <result property="delFlag" column="del_flag" jdbcType="TINYINT"/>
-            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="remark" column="remark" jdbcType="VARCHAR"/>
-            <result property="tenantId" column="tenant_id" jdbcType="BIGINT"/>
-    </resultMap>
-
-    <sql id="Base_Column_List">
-        id,role_name,role_key,
-        sort,data_scope,status,
-        del_flag,create_by,create_time,
-        update_by,update_time,remark
-    </sql>
-
     <select id="selectRolePage" parameterType="com.luma.system.domain.vo.SysRolePageReq" resultType="com.luma.system.domain.vo.SysRolePageResp" >
         select distinct sr.id, sr.role_name, sr.role_key, sr.sort, sr.data_scope, sr.status, sr.create_time, sr.create_by, sr.update_time, sr.update_by, sr.remark from sys_role sr
         left join sys_user_role sur on sr.id = sur.role_id
@@ -57,7 +34,7 @@
         left join sys_user_role sur on sr.id = sur.role_id
         left join sys_user su on sur.user_id = su.id
         where sr.del_flag = false
-        and @isDataScope
+        and @dataScopeSql
         group by sr.id
         order by sort
     </select>

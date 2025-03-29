@@ -73,5 +73,10 @@ public interface SysRoleService extends IService<SysRole> {
      */
     void remove(Long id);
 
+    /**
+     * 更新角色状态
+     * @param id 角色编号
+     * @param status 角色状态
+     */
     void updateStatus(Long id, SysStatusEnum status);
 }
