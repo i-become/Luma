@@ -18,4 +18,12 @@
             and sr.status = 0
     </select>
 
+    <select id="selectRoleKeyListByUserId" parameterType="java.lang.Long" resultType="java.lang.String" >
+        select sr.role_key from sys_role sr
+        inner join sys_user_role sur on sr.id = sur.role_id
+        where sur.user_id = #{userId}
+          and sr.del_flag = false
+          and sr.status = 0
+    </select>
+
 </mapper>

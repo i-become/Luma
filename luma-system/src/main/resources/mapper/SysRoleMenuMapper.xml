@@ -9,10 +9,10 @@
             <id property="menuId" column="menu_id" jdbcType="BIGINT"/>
     </resultMap>
 
-    <select id="selectRoleMenuPermsList" parameterType="Long" resultType="java.lang.String" >
+    <select id="selectRolePermissionListByRoleKey" parameterType="java.lang.String" resultType="com.luma.common.domain.UserRolePermission" >
         select sm.perms from sys_menu sm
-            inner join sys_role_menu srm on sm.id = srm.menu_id
-        where srm.role_id = #{roleId}
+        inner join sys_role_menu srm on sm.id = srm.menu_id
+        where srm.role_key = #{roleKey} and sm.perms is not null
     </select>
 
     <select id="selectMenuListByRoleIds" resultType="com.luma.system.domain.vo.SysMenuListResp" >

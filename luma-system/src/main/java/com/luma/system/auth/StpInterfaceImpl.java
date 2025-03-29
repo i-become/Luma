@@ -1,20 +1,20 @@
 package com.luma.system.auth;
 
-import com.luma.common.domain.SysUserAuthInfo;
-import com.luma.common.domain.SysUserAuthRoleInfo;
+import cn.dev33.satoken.model.wrapperInfo.SaDisableWrapperInfo;
+import cn.dev33.satoken.util.SaTokenConsts;
+import com.luma.common.domain.UserRolePermission;
 import com.luma.framework.permission.IStpInterface;
-import com.luma.framework.utils.UserUtil;
-import com.luma.system.domain.entity.SysRole;
 import com.luma.system.service.SysRoleService;
+import com.luma.system.service.SysUserService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 自定义权限加载接口实现类，如有自定义权限需求，参考https://sa-token.cc/doc.html#/use/jur-auth
+ * satoken对于用户权限信息获取的实现
  * @author i-become
  */
 @Component
@@ -23,55 +23,40 @@ public class StpInterfaceImpl implements IStpInterface {
     @Resource
     private SysRoleService sysRoleService;
 
-    /**
-     * 返回一个账号所拥有的权限码集合
-     */
+    @Resource
+    private SysUserService sysUserService;
+
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
-        return getSysUserAuthInfoList(Long.valueOf(String.valueOf(loginId))).stream()
-                .map(SysUserAuthRoleInfo::getPermissionList)
-                .flatMap(Collection::stream)
+        return getRolePermissionList((Long) loginId).stream()
+                // 提取每个角色对应的菜单权限标识列表
+                .map(UserRolePermission::getPermissionList)
+                // 将每个菜单权限标识列表合成一个流
+                .flatMap(List::stream)
+                // 去重
+                .distinct()
                 .collect(Collectors.toList());
     }
 
-    /**
-     * 返回一个账号所拥有的角色标识集合
-     */
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
-        return getSysUserAuthInfoList(Long.valueOf(String.valueOf(loginId))).stream()
-                .map(SysUserAuthRoleInfo::getRoleKey)
-                .collect(Collectors.toList());
+        return sysRoleService.getRoleKeyListByUserId((Long) loginId);
     }
 
     @Override
-    public SysUserAuthInfo getUserAuthInfo(Object loginId){
-        if (loginId == null){
-            return new SysUserAuthInfo();
-        }
-        Long userId = Long.valueOf(String.valueOf(loginId));
-        SysUserAuthInfo authInfo = new SysUserAuthInfo();
-        authInfo.setId(userId);
-        authInfo.setTenantId(UserUtil.getTenantId());
-        authInfo.setDeptId(UserUtil.getDeptId());
-        authInfo.setRoles(getSysUserAuthInfoList(Long.valueOf(String.valueOf(loginId))));
-        return authInfo;
+    public SaDisableWrapperInfo isDisabled(Object loginId, String service) {
+        return sysUserService.isDisable((Long) loginId) ?
+                SaDisableWrapperInfo.createDisabled(-1, SaTokenConsts.MIN_DISABLE_LEVEL) :
+                SaDisableWrapperInfo.createNotDisabled();
     }
 
-    public List<SysUserAuthRoleInfo> getSysUserAuthInfoList(Long userId){
-        if (UserUtil.ADMIN_ID.equals(userId)){
-            return sysRoleService.lambdaQuery().select(SysRole::getId, SysRole::getRoleKey, SysRole::getDataScope).list().stream().map(o -> {
-                SysUserAuthRoleInfo info = new SysUserAuthRoleInfo();
-                info.setId(o.getId());
-                info.setRoleKey(o.getRoleKey());
-                info.setDataScope(o.getDataScope());
-                info.setPermissionList(sysRoleService.getRoleMenuPermsList(o.getId()));
-                return info;
-            }).toList();
+    @Override
+    public List<UserRolePermission> getRolePermissionList(Long userId) {
+        List<UserRolePermission> list = new ArrayList<>();
+        // 获取每个角色的权限信息，这里要一个个获取，因为这里会命中缓存，要保证权限缓归属权限模型
+        for (String roleKey : getRoleList(userId, null)) {
+            list.addAll(sysRoleService.getRolePermissionListByRoleKey(roleKey));
         }
-        List<SysUserAuthRoleInfo> list = sysRoleService.getUserRoleAuthList(userId);
-        list.forEach(role -> role.setPermissionList(sysRoleService.getRoleMenuPermsList(role.getId())));
         return list;
     }
-
 }

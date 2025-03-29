@@ -1,19 +1,13 @@
 package com.luma.framework.aspect;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.luma.common.annotation.DataScope;
-import com.luma.common.domain.SysUserAuthInfo;
-import com.luma.common.domain.SysUserAuthRoleInfo;
+import com.luma.common.domain.UserRolePermission;
 import com.luma.common.enums.DataScopeEnum;
 import com.luma.framework.permission.DataScopeThreadLocal;
-import com.luma.framework.permission.PermissionThreadLocal;
 import com.luma.framework.permission.IStpInterface;
+import com.luma.framework.permission.PermissionThreadLocal;
 import com.luma.framework.utils.UserUtil;
 import jakarta.annotation.Resource;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -21,164 +15,118 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 数据过滤处理
- * 拦截DataScope注解，更具当前用户的角色和权限结合接口上要求的权限注解生成权限范围查询的sql条件，并存入线程中
- * @author ruoyi
+ * @author i-become
  */
 @Aspect
 @Component
-public class DataScopeAspect
-{
+public class DataScopeAspect {
 
     @Resource
     private IStpInterface stpInterface;
 
-    @Around("@annotation(controllerDataScope)")
-    public Object doBefore(ProceedingJoinPoint pjp, DataScope controllerDataScope) throws Throwable {
+    @Around("@annotation(dataScope)")
+    public Object doAround(ProceedingJoinPoint pjp, DataScope dataScope) throws Throwable {
+        // 首先清除线程中的数据权限信息
         DataScopeThreadLocal.clean();
-        handleDataScope(controllerDataScope);
-
-        Object result = pjp.proceed();
-
-        // 清除线程中的sql
-        DataScopeThreadLocal.clean();
-        return result;
-    }
-
-    protected void handleDataScope(DataScope controllerDataScope)
-    {
-        // 获取当前的用户
-        if (StpUtil.getLoginId() != null)
-        {
-
-            // 管理员的操作要做单独处理
-            if (UserUtil.isAdmin()){
-                // 这一步是为了兼容手动拼接权限的sql
-                if (!controllerDataScope.autoSql()){
-                    DataScopeThreadLocal.setSql(" ( 1 = 1 )");
-                }
-                return;
-            }
-
-            String permission = controllerDataScope.permission();
-            String[] permissions;
-            if(StrUtil.isNotBlank(permission)){
-                permissions = Convert.toStrArray(permission);
-            }else {
-                permissions = PermissionThreadLocal.getPermission();
-            }
-            dataScopeFilter(controllerDataScope.deptAlias(),
-                    controllerDataScope.userAlias(), permissions, controllerDataScope);
+        try {
+            // 数据权限处理
+            handleDataScope(dataScope);
+            // 继续执行方法
+            return pjp.proceed();
+        }finally {
+            // 清除线程中的数据权限信息
+            DataScopeThreadLocal.clean();
         }
     }
 
     /**
-     * 数据范围过滤
-     * @param deptAlias
-     * @param userAlias
-     * @param permissions
-     * @param controllerDataScope
+     * 处理数据权限范围逻辑
+     * @param dataScope 数据权限注解
      */
-    public void dataScopeFilter(String deptAlias, String userAlias, String[] permissions, DataScope controllerDataScope)
-    {
-
-        // 预处理一下别名
-        if (StrUtil.isNotBlank(deptAlias)){
-            deptAlias = deptAlias + ".";
+    private void handleDataScope(DataScope dataScope){
+        // 生成权限范围sql
+        String sql = sql(dataScope);
+        // 自动拼接和手动拼接的区别就是前面有没有and符号，因为手动拼接需要在sql中添加@isDataScope占位符，需要在占位符前面使用and符号，比如and @isDataScope,这样才不会报错
+        if (dataScope.autoSql()){
+            DataScopeThreadLocal.setSql(" AND (" + sql.substring(4) + ")");
         }else {
-            deptAlias = "";
-        }
-        if (StrUtil.isNotBlank(userAlias)){
-            userAlias = userAlias + ".";
-        }else {
-            userAlias = "";
-        }
-        String deptIdColumnName = controllerDataScope.deptIdColumnName();
-
-        StringBuilder sqlString = new StringBuilder();
-        List<DataScopeEnum> conditions = new ArrayList<>();
-        List<String> scopeCustomIds = new ArrayList<>();
-        SysUserAuthInfo user = stpInterface.getUserAuthInfo(StpUtil.getLoginId());
-        List<SysUserAuthRoleInfo> roles = user.getRoles();
-        roles.forEach(role -> {
-            if (DataScopeEnum.CUSTOM.equals(role.getDataScope()) && role.getPermissionList().stream().anyMatch(r -> StrUtil.containsAny(r, permissions)))
-            {
-                scopeCustomIds.add(String.valueOf(role.getId()));
-            }
-        });
-
-
-        for (SysUserAuthRoleInfo role : roles)
-        {
-            DataScopeEnum dataScope = role.getDataScope();
-            if (conditions.contains(dataScope))
-            {
-                continue;
-            }
-            if (permissions != null && permissions.length > 0 && role.getPermissionList().stream().filter(StringUtils::isNotBlank).noneMatch(r -> StrUtil.containsAny(r, permissions)))
-            {
-                continue;
-            }
-            if (DataScopeEnum.ALL.equals(dataScope))
-            {
-                sqlString = new StringBuilder();
-                sqlString.append("AND 0 = 0");
-                conditions.add(dataScope);
-                break;
-            }
-            else if (DataScopeEnum.CUSTOM.equals(dataScope))
-            {
-                if (scopeCustomIds.size() > 1)
-                {
-                    // 多个自定数据权限使用in查询，避免多次拼接。
-                    sqlString.append(StrUtil.format(" OR {}{} IN ( SELECT dept_id FROM sys_role_dept WHERE role_id in ({}) ) ", deptAlias, deptIdColumnName, String.join(",", scopeCustomIds)));
-                }
-                else
-                {
-                    sqlString.append(StrUtil.format(" OR {}{} IN ( SELECT dept_id FROM sys_role_dept WHERE role_id = {} ) ", deptAlias, deptIdColumnName, role.getId()));
-                }
-            }
-            else if (DataScopeEnum.DEPT.equals(dataScope))
-            {
-                sqlString.append(StrUtil.format(" OR {}{} = {} ", deptAlias, deptIdColumnName, user.getDeptId()));
-            }
-            else if (DataScopeEnum.DEPT_AND_CHILD.equals(dataScope))
-            {
-                sqlString.append(StrUtil.format(" OR {}{} IN ( SELECT id FROM sys_dept WHERE id = {} or find_in_set( {} , ancestors ) )", deptAlias, deptIdColumnName, user.getDeptId(), user.getDeptId()));
-            }
-            else if (DataScopeEnum.SELF.equals(dataScope))
-            {
-                if (StrUtil.isNotBlank(userAlias))
-                {
-                    sqlString.append(StrUtil.format(" OR {}{} = {} ", userAlias, controllerDataScope.userIdColumnName(), user.getId()));
-                }
-                else
-                {
-                    // 数据权限为仅本人且没有userAlias别名不查询任何数据
-                    sqlString.append(StrUtil.format(" OR {}{} = 0 ", deptAlias, deptIdColumnName));
-                }
-            }
-            conditions.add(dataScope);
-        }
-
-        // 角色都不包含传递过来的权限字符，这个时候sqlString也会为空，所以要限制一下,不查询任何数据
-        if (conditions.isEmpty())
-        {
-            sqlString.append(StrUtil.format(" OR {}{} = 0 ", deptAlias, deptIdColumnName));
-        }
-
-        if (StrUtil.isNotBlank(sqlString.toString()))
-        {
-            DataScopeThreadLocal.setDataScope(controllerDataScope);
-            // 自动拼接和手动拼接的区别就是前面有没有and符号，因为手动拼接需要在sql中添加@isDataScope占位符，需要在占位符前面使用and符号，比如and @isDataScope,这样才不会报错
-            if (controllerDataScope.autoSql()){
-                DataScopeThreadLocal.setSql(" AND (" + sqlString.substring(4) + ")");
-            }else {
-                DataScopeThreadLocal.setSql(" (" + sqlString.substring(4) + ")");
-            }
+            DataScopeThreadLocal.setSql(" (" + sql.substring(4) + ")");
         }
     }
 
-}
+    /**
+     * 生成用户权限范围sql
+     * @param dataScope 权限范围注解
+     * @return
+     */
+    private String sql(DataScope dataScope){
+        // 预处理一下别名
+        String deptAlias = dataScope.deptAlias();
+        if (StrUtil.isNotBlank(deptAlias)){
+            deptAlias = deptAlias + StrUtil.DOT;
+        }
+        String userAlias = dataScope.userAlias();
 
+        String userIdColumnName = dataScope.userIdColumnName();
+        String deptIdColumnName = dataScope.deptIdColumnName();
+        Long deptId = UserUtil.getDeptId();
+        Long userId = UserUtil.getUserId();
+
+        // 预处理需要的权限，先获取注解中的权限数据，如果没有则获取线程中的数据，线程中的数据来自接口上的权限注解
+        String[] permissions;
+        if (StringUtils.isNotBlank(dataScope.permission())){
+            permissions = dataScope.permission().split(StrUtil.COMMA);
+        }else {
+            permissions = PermissionThreadLocal.getPermission();
+        }
+
+        // 角色关联的数据权限分为以下几种
+        // 1.全部权限
+        // 2.本部门及部门以下权限
+        // 3.仅当前部门权限
+        // 4.仅自己权限
+        // 5.自定义权限（角色关联的指定n个部门）
+        // 获取用户所有关联的有效角色和角色对应的权限范围
+        List<UserRolePermission> roleList = stpInterface.getRolePermissionList(userId);
+        List<String> customRoleIdList = new ArrayList<>();
+        DataScopeEnum otherDataScopeMax = DataScopeEnum.NONE;
+        for (UserRolePermission role: roleList) {
+            DataScopeEnum roleDataScope = role.getDataScope();
+            List<String> rolePermissionList = role.getPermissionList();
+            // 判断接口权限是否满足，如果用户已有权限不包含当前权限要求，那么跳过此角色的判断
+            if (permissions != null && rolePermissionList.stream().noneMatch(p -> StrUtil.containsAny(p, permissions))){
+                continue;
+            }
+            // 角色符合接口权限条件，然后根据不同的角色范围做不同的处理
+            switch (roleDataScope) {
+                // 拥有全部数据权限，那直接返回全部数据权限sql
+                case ALL -> {
+                    return roleDataScope.getSqlTemplate();
+                }
+                // 拥有自定义的数据权限，那先记录这个角色编号，用于后面步骤进行sql处理
+                case CUSTOM -> customRoleIdList.add(String.valueOf(role.getId()));
+                // 其余三种权限范围是依次包含关系，直接取一个最大的就行
+                default -> otherDataScopeMax = roleDataScope.getCode() < otherDataScopeMax.getCode() ? roleDataScope : otherDataScopeMax;
+            }
+        }
+
+        StringBuilder sqlBuilder = new StringBuilder();
+        // 如果自定义权限角色编号列表不为空，那说明有自定义的角色信息，要添加自定义的权限数据
+        if (!customRoleIdList.isEmpty()){
+            sqlBuilder.append(DataScopeEnum.CUSTOM.generateSql(deptAlias, deptIdColumnName, customRoleIdList, deptId, userAlias, userIdColumnName, userId));
+            // 自定义权限存在的情况下可以不拼接无权限的sql
+            if (otherDataScopeMax == DataScopeEnum.NONE){
+                return sqlBuilder.toString();
+            }
+        }
+        // 添加其它sql权限
+        sqlBuilder.append(otherDataScopeMax.generateSql(deptAlias, deptIdColumnName, customRoleIdList, deptId, userAlias, userIdColumnName, userId));
+        return sqlBuilder.toString();
+    }
+
+}

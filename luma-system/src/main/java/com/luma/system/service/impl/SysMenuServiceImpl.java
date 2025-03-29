@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luma.common.domain.SysUserAuthRoleInfo;
 import com.luma.common.exception.system.ISystemException;
 import com.luma.common.utils.MapstructUtil;
-import com.luma.framework.permission.IStpInterface;
 import com.luma.framework.utils.UserUtil;
 import com.luma.system.domain.entity.SysMenu;
 import com.luma.system.domain.vo.SysMenuAddReq;
@@ -33,7 +32,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     public static final Long BASE_ID = 0L;
 
     @Resource
-    private IStpInterface stpInterface;
+    private IStpInterface1 stpInterface;
 
     @Resource
     private SysRoleMenuMapper sysRoleMenuMapper;

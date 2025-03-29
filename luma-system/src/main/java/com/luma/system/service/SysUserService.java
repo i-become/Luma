@@ -41,6 +41,13 @@ public interface SysUserService extends IService<SysUser> {
     SysUserInfoResp userInfo(Long id);
 
     /**
+     * 用户是否被禁用
+     * @param userId 用户编号
+     * @return
+     */
+    Boolean isDisable(Long userId);
+
+    /**
      * 添加用户
      * @param req
      * @return

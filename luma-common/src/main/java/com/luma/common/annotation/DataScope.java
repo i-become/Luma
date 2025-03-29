@@ -5,12 +5,13 @@ import java.lang.annotation.*;
 /**
  * 数据权限过滤注解
  *
- * @author ruoyi
+ * @author i-become
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface DataScope {
+
     /**
      * 需要判断的带有dept_id表的别名
      */

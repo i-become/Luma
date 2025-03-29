@@ -14,7 +14,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers;
 import com.luma.common.annotation.DataScope;
 import com.luma.common.constant.SatokenConstant;
-import com.luma.common.domain.BaseEntity;
 import com.luma.common.domain.SysUserAuthRoleInfo;
 import com.luma.common.exception.system.ISystemException;
 import com.luma.common.utils.MapstructUtil;
@@ -180,6 +179,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
         resp.setTenantAlias(ChainWrappers.lambdaQueryChain(sysTenantMapper).select(SysTenant::getId, SysTenant::getAlias).eq(SysTenant::getId, resp.getTenantId()).one().getAlias());
         return resp;
+    }
+
+    @Override
+    public Boolean isDisable(Long userId){
+        return lambdaQuery().select(SysUser::getStatus).one().getStatus() == SysStatusEnum.DISABLED;
     }
 
     @Override

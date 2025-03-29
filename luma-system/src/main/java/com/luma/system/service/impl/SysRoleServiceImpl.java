@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers;
 import com.luma.common.annotation.DataScope;
 import com.luma.common.domain.SysUserAuthRoleInfo;
+import com.luma.common.domain.UserRolePermission;
 import com.luma.common.enums.DataScopeEnum;
 import com.luma.common.exception.system.ISystemException;
 import com.luma.common.utils.MapstructUtil;
@@ -51,9 +52,15 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
     private SysDeptMapper sysDeptMapper;
 
     @Override
-    @Cacheable(cacheNames = "role:menu:perms", key = "#roleId", unless = "#result == null")
-    public List<String> getRoleMenuPermsList(Long roleId){
-        return sysRoleMenuMapper.selectRoleMenuPermsList(roleId);
+    @Cacheable(cacheNames = "luma:role:perms", key = "#roleKey", unless = "#result == null")
+    public List<UserRolePermission> getRolePermissionListByRoleKey(String roleKey){
+        return sysRoleMenuMapper.selectRolePermissionListByRoleKey(roleKey);
+    }
+
+    @Override
+    @Cacheable(cacheNames = "luma:user:roles", key = "#userId", unless = "#result == null")
+    public List<String> getRoleKeyListByUserId(Long userId){
+        return sysUserRoleMapper.selectRoleKeyListByUserId(userId);
     }
 
     @Override

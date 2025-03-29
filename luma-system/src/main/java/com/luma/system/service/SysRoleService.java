@@ -2,6 +2,7 @@ package com.luma.system.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.luma.common.domain.SysUserAuthRoleInfo;
+import com.luma.common.domain.UserRolePermission;
 import com.luma.system.domain.entity.SysRole;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.luma.system.domain.vo.SysRoleAddReq;
@@ -21,10 +22,17 @@ public interface SysRoleService extends IService<SysRole> {
 
     /**
      * 获取角色菜单权限标识列表
-     * @param roleId
+     * @param roleKey 角色标识
      * @return
      */
-    List<String> getRoleMenuPermsList(Long roleId);
+    List<UserRolePermission> getRolePermissionListByRoleKey(String roleKey);
+
+    /**
+     * 获取用户的角色标识列表
+     * @param userId 用户id
+     * @return
+     */
+    List<String> getRoleKeyListByUserId(Long userId);
 
     /**
      * 获取用户的角色权限列表
