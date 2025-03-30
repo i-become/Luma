@@ -74,14 +74,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
     }
 
     @Override
-    @DataScope(deptAlias = "su", autoSql = false)
-    public List<SysRoleBaseListResp> getRoleList(){
-        return baseMapper.selectRoleList();
-    }
-
-    @Override
-    public List<SysRoleBaseListResp> getRoleListByUserId(Long userId){
-        return baseMapper.selectRoleListByUserId(userId);
+    public List<SysRoleBaseListResp> getRoleList(Long userId){
+        return baseMapper.selectRoleList(userId);
     }
 
     @Override

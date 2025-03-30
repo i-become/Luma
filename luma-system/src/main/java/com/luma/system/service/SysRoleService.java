@@ -43,16 +43,10 @@ public interface SysRoleService extends IService<SysRole> {
 
     /**
      * 获取角色列表
+     * @param userId 用户编号 不传为查询权限范围内数据
      * @return
      */
-    List<SysRoleBaseListResp> getRoleList();
-
-    /**
-     * 获取角色列表
-     * @param userId 用户编号
-     * @return
-     */
-    List<SysRoleBaseListResp> getRoleListByUserId(Long userId);
+    List<SysRoleBaseListResp> getRoleList(Long userId);
 
     /**
      * 添加角色

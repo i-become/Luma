@@ -63,24 +63,6 @@ public class WebConfig implements WebMvcConfigurer {
             StpUtil.checkLogin();
             TenantContextHolder.setTenantId(UserUtil.getTenantId());
             UserUtil.setCreateBy(UserUtil.getUsername());
-            // 校验是否为管理员
-            if (!UserUtil.isAdmin()){
-                // 遍历所有的注解处理器，检查此 method 是否具有这些指定的注解
-                for (Map.Entry<Class<?>, SaAnnotationHandlerInterface<?>> entry: SaAnnotationStrategy.instance.annotationHandlerMap.entrySet()) {
-
-                    // 先校验 Method 所属 Class 上的注解
-                    Annotation classTakeAnnotation = SaAnnotationStrategy.instance.getAnnotation.apply(method.getDeclaringClass(), (Class<Annotation>)entry.getKey());
-                    if(classTakeAnnotation != null) {
-                        entry.getValue().check(classTakeAnnotation, method);
-                    }
-
-                    // 再校验 Method 上的注解
-                    Annotation methodTakeAnnotation = SaAnnotationStrategy.instance.getAnnotation.apply(method, (Class<Annotation>)entry.getKey());
-                    if(methodTakeAnnotation != null) {
-                        entry.getValue().check(methodTakeAnnotation, method);
-                    }
-                }
-            }
         };
         // 登录拦截
         registry.addInterceptor(new SaInterceptor())

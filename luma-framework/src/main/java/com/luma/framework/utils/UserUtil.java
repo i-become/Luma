@@ -13,8 +13,6 @@ import java.util.List;
  */
 public class UserUtil {
 
-    public static final Long ADMIN_ID = 0L;
-
     /**
      * 用于存储当前线程的createBy
      */
@@ -81,14 +79,6 @@ public class UserUtil {
      */
     public static Long getTenantId(){
         return Long.valueOf(String.valueOf(StpUtil.getExtra("tenantId")));
-    }
-
-    public static boolean isAdmin(){
-        return getUserId().equals(ADMIN_ID);
-    }
-
-    public static List<String> getPermissionList(){
-        return StpUtil.getPermissionList();
     }
 
 }

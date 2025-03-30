@@ -12,11 +12,9 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
-* @author i-become
-* @description 针对表【sys_role(角色信息表)】的数据库操作Mapper
-* @createDate 2024-08-01 15:51:52
-* @Entity com.luma.system.domain.entity.SysRole
-*/
+ * 针对表【sys_role(角色信息表)】的数据库操作Mapper
+ * @author i-become
+ */
 public interface SysRoleMapper extends BaseMapper<SysRole> {
 
     /**
@@ -29,16 +27,11 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
 
     /**
      * 查询角色列表
+     * @param userId 用户编号 不传为查权限范围内数据
      * @return
      */
-    List<SysRoleBaseListResp> selectRoleList();
-
-    /**
-     * 查询角色列表
-     * @param userId 用户编号 不传为查所有
-     * @return
-     */
-    List<SysRoleBaseListResp> selectRoleListByUserId(Long userId);
+    @DataScope(deptAlias = "su", autoSql = false)
+    List<SysRoleBaseListResp> selectRoleList(Long userId);
 
 }
 

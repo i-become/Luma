@@ -45,7 +45,7 @@ public class SysRoleController {
      */
     @GetMapping("/base_list")
     public List<SysRoleBaseListResp> list(){
-        return sysRoleService.getRoleListByUserId(UserUtil.isAdmin() ? null : UserUtil.getUserId());
+        return sysRoleService.getRoleList(null);
     }
 
     /**
@@ -54,7 +54,7 @@ public class SysRoleController {
      */
     @GetMapping("/user_role/base_list")
     public List<SysRoleBaseListResp> list(@NotNull(message = "userId不能为空") Long userId){
-        return sysRoleService.getRoleListByUserId(userId);
+        return sysRoleService.getRoleList(userId);
     }
 
     /**

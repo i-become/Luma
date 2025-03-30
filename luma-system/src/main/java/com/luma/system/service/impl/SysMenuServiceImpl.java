@@ -4,14 +4,18 @@ import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luma.common.domain.SysUserAuthRoleInfo;
+import com.luma.common.domain.UserRolePermission;
 import com.luma.common.exception.system.ISystemException;
 import com.luma.common.utils.MapstructUtil;
+import com.luma.framework.permission.IStpInterface;
 import com.luma.framework.utils.UserUtil;
 import com.luma.system.domain.entity.SysMenu;
 import com.luma.system.domain.vo.SysMenuAddReq;
 import com.luma.system.domain.vo.SysMenuBaseListResp;
 import com.luma.system.domain.vo.SysMenuListResp;
+import com.luma.system.domain.vo.SysRoleBaseListResp;
 import com.luma.system.mapper.SysMenuMapper;
+import com.luma.system.mapper.SysRoleMapper;
 import com.luma.system.mapper.SysRoleMenuMapper;
 import com.luma.system.service.SysMenuService;
 import jakarta.annotation.Resource;
@@ -32,23 +36,19 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     public static final Long BASE_ID = 0L;
 
     @Resource
-    private IStpInterface1 stpInterface;
+    private IStpInterface stpInterface;
 
     @Resource
     private SysRoleMenuMapper sysRoleMenuMapper;
 
+    @Resource
+    private SysRoleMapper sysRoleMapper;
+
     @Override
     @Transactional(readOnly = true)
     public List<SysMenuListResp> list(String name){
-        // 是否为管理员
-        if (UserUtil.isAdmin()){
-            return lambdaQuery().select(SysMenu::getId, SysMenu::getParentId, SysMenu::getName, SysMenu::getRedirect, SysMenu::getComponent, SysMenu::getIcon, SysMenu::getSort, SysMenu::getTitle,
-                    SysMenu::getTarget, SysMenu::getActive, SysMenu::getType, SysMenu::getPath, SysMenu::getIsHide, SysMenu::getIsFull, SysMenu::getIsAffix, SysMenu::getIsKeepAlive, SysMenu::getTag, SysMenu::getPerms)
-                    .like(StringUtils.isNotBlank(name), SysMenu::getName, name)
-                    .list().stream().map(o -> o.to(SysMenuListResp.class)).toList();
-        }
         // 获取我拥有的所有菜单
-        List<Long> roleIds = stpInterface.getUserAuthInfo(UserUtil.getUserId()).getRoles().stream().map(SysUserAuthRoleInfo::getId).toList();
+        List<Long> roleIds = stpInterface.getRolePermissionList(UserUtil.getUserId()).stream().map(UserRolePermission::getId).toList();
         return sysRoleMenuMapper.selectMenuListByRoleIds(roleIds, name);
     }
 
@@ -56,7 +56,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     @Transactional(readOnly = true)
     public List<SysMenuBaseListResp> baseList(Long roleId){
         // 判断是否有该角色权限
-        if (!UserUtil.isAdmin() && !stpInterface.getUserAuthInfo(UserUtil.getUserId()).getRoles().stream().map(SysUserAuthRoleInfo::getId).toList().contains(roleId)) {
+        if (!sysRoleMapper.selectRoleList(null).stream().map(SysRoleBaseListResp::getId).toList().contains(roleId)) {
             throw new ISystemException("没有该角色权限");
         }
         return baseMapper.selectBaseList(roleId);

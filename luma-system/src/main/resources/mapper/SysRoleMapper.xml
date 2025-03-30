@@ -34,18 +34,13 @@
         left join sys_user_role sur on sr.id = sur.role_id
         left join sys_user su on sur.user_id = su.id
         where sr.del_flag = false
-        and @dataScopeSql
         group by sr.id
-        order by sort
-    </select>
-
-    <select id="selectRoleListByUserId" resultType="com.luma.system.domain.vo.SysRoleBaseListResp" >
-        select distinct sr.id, sr.role_name, sr.role_key, sr.data_scope, sr.create_time from sys_role sr
-        left join sys_user_role sur on sr.id = sur.role_id
-        where sr.del_flag = false
         <if test="userId != null">
             and sur.user_id = #{userId}
         </if>
+        and @dataScopeSql
+        group by sr.id
+        order by sort
     </select>
 
 </mapper>

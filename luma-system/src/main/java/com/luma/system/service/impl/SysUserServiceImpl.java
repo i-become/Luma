@@ -173,15 +173,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new ISystemException("用户信息不存在");
         }
         // 角色信息
-        resp.setRoleList(sysRoleMapper.selectRoleListByUserId(UserUtil.isAdmin() ? null : id));
+        resp.setRoleList(sysRoleMapper.selectRoleList(UserUtil.getUserId().equals(id) ? null : id));
         // 岗位信息
         resp.setPostList(sysPostMapper.selectPostListByUserId(id));
         // 权限信息
-        if (UserUtil.isAdmin()){
-            resp.setPermList(ChainWrappers.lambdaQueryChain(sysMenuMapper).select(SysMenu::getPerms).isNotNull(SysMenu::getPerms).list().stream().map(SysMenu::getPerms).filter(StringUtils::isNotBlank).toList());
-        }else {
-            resp.setPermList(UserUtil.getPermissionList().stream().filter(StringUtils::isNotBlank).toList());
-        }
+        resp.setPermList(stpInterface.getPermissionList(id, null));
+        // 租户别名
         resp.setTenantAlias(ChainWrappers.lambdaQueryChain(sysTenantMapper).select(SysTenant::getId, SysTenant::getAlias).eq(SysTenant::getId, resp.getTenantId()).one().getAlias());
         return resp;
     }
@@ -198,9 +195,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (lambdaQuery().eq(SysUser::getLoginName, req.getLoginName()).exists()){
             throw new ISystemException("该账号已存在");
         }
-        if (!UserUtil.isAdmin()){
-            checkData(req.getDeptId(), req.getRoleIdList(), req.getPostIdList());
-        }
+        checkData(req.getDeptId(), req.getRoleIdList(), req.getPostIdList());
         // 保存用户
         SysUser sysUser = MapstructUtil.convert(req, SysUser.class);
         sysUser.setId(IdUtil.getSnowflake().nextId());
@@ -246,9 +241,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (!iDeptIdList.contains(sysUser.getDeptId())){
             throw new ISystemException("权限不够");
         }
-        if (!UserUtil.isAdmin()){
-            checkData(req.getDeptId(), req.getRoleIdList(), req.getPostIdList());
-        }
+        checkData(req.getDeptId(), req.getRoleIdList(), req.getPostIdList());
         // 如果是自己，不能修改启用状态
         if (Objects.equals(id, UserUtil.getUserId())){
             sysUser.setStatus(null);
@@ -339,8 +332,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
         // 角色有效性校验
         if (roleIdList != null && !roleIdList.isEmpty()){
-            List<UserRolePermission> userRolePermissionList = stpInterface.getRolePermissionList(UserUtil.getUserId());
-            if (!new HashSet<>(userRolePermissionList.stream().map(UserRolePermission::getId).toList()).containsAll(roleIdList)){
+            if (!new HashSet<>(sysRoleMapper.selectRoleList(null).stream().map(SysRoleBaseListResp::getId).toList()).containsAll(roleIdList)){
                 throw new ISystemException("角色填写错误，超出本人权限");
             }
         }
