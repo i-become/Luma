@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * 鉴权相关接口
  */
+@Validated
 @RestController
 public class AuthController {
 
@@ -34,7 +35,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/login")
-    public SysUserLoginResp login(HttpServletRequest request, @Validated SysUserLoginReq req){
+    public SysUserLoginResp login(HttpServletRequest request, SysUserLoginReq req){
         if (StringUtils.isBlank(req.getTenantAlias())){
             req.setTenantId(TenantContextHolder.SYS_TENANT_ID);
         }else {

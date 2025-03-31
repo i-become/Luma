@@ -1,21 +1,16 @@
 package com.luma.common.domain;
 
 import com.luma.common.enums.DataScopeEnum;
+import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.List;
-
 /**
- * 用户角色权限实体
- * @author i-become
+ * 系统角色数据权限范围信息
+ * @author 刘靖
  */
 @Data
-public class UserRolePermission implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+@AutoMapper(target = SysUserRolePermission.class)
+public class SysRoleDataScopeInfo {
 
     /**
      * 角色编号
@@ -31,10 +26,5 @@ public class UserRolePermission implements Serializable {
      * 角色的数据权限范围
      */
     private DataScopeEnum dataScope;
-
-    /**
-     * 权限标识列表
-     */
-    private List<String> permissionList;
 
 }

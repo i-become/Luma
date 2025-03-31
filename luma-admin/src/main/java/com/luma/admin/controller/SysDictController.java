@@ -18,6 +18,7 @@ import java.util.List;
  * 系统字典
  * @author i-become
  */
+@Validated
 @RestController
 @RequestMapping("/sys/dict")
 public class SysDictController {
@@ -31,7 +32,7 @@ public class SysDictController {
      */
     @PostMapping
     @SaCheckPermission("system:dict:add")
-    public void add(@Validated @RequestBody SysAddReq req){
+    public void add(@RequestBody SysAddReq req){
         sysDictService.add(req);
     }
 
@@ -42,7 +43,7 @@ public class SysDictController {
      */
     @PutMapping("/{id}")
     @SaCheckPermission("system:dict:edit")
-    public void edit(@PathVariable Integer id, @Validated @RequestBody SysEditReq req){
+    public void edit(@PathVariable Integer id, @RequestBody SysEditReq req){
         SysDict sysDict = MapstructUtil.convert(req, SysDict.class);
         sysDict.setId(id);
         sysDictService.updateById(sysDict);

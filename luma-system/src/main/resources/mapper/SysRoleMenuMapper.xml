@@ -9,18 +9,10 @@
             <id property="menuId" column="menu_id" jdbcType="BIGINT"/>
     </resultMap>
 
-    <resultMap id="RolePermissionResultMap" type="com.luma.common.domain.UserRolePermission" >
-        <id property="id" column="id" jdbcType="BIGINT" />
-        <result property="roleKey" column="role_key" jdbcType="VARCHAR" />
-        <result property="dataScope" column="data_scope" jdbcType="TINYINT" />
-        <collection property="permissionList" ofType="java.lang.String" column="perms" />
-    </resultMap>
-
-    <select id="selectRolePermissionListByRoleKey" parameterType="java.lang.String" resultMap="RolePermissionResultMap" >
-        select sr.id, sr.role_key, sr.data_scope, sm.perms from sys_menu sm
+    <select id="selectRolePermissionListByRoleId" parameterType="java.lang.String" resultType="java.lang.String" >
+        select sm.perms from sys_menu sm
         inner join sys_role_menu srm on sm.id = srm.menu_id
-        inner join sys_role sr on sr.id = srm.role_id
-        where sr.role_key = #{roleKey} and sm.perms is not null
+        where srm.role_id = #{roleId} and sm.perms is not null
     </select>
 
     <select id="selectMenuListByRoleIds" resultType="com.luma.system.domain.vo.SysMenuListResp" >

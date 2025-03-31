@@ -1,5 +1,6 @@
 package com.luma.system.mapper;
 
+import com.luma.common.domain.SysRoleDataScopeInfo;
 import com.luma.system.domain.entity.SysUserRole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -12,11 +13,11 @@ import java.util.List;
 public interface SysUserRoleMapper extends BaseMapper<SysUserRole> {
 
     /**
-     * 获取用户的角色标识列表
-     * @param userId 用户id
+     * 获取用户的角色数据权限列表
+     * @param userId 用户编号
      * @return
      */
-    List<String> selectRoleKeyListByUserId(Long userId);
+    List<SysRoleDataScopeInfo> selectRoleDataScopeInfoListByUserId(Long userId);
 
 }
 

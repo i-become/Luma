@@ -1,7 +1,7 @@
 package com.luma.framework.permission;
 
 import cn.dev33.satoken.stp.StpInterface;
-import com.luma.common.domain.UserRolePermission;
+import com.luma.common.domain.SysUserRolePermission;
 
 import java.util.List;
 
@@ -15,6 +15,6 @@ public interface IStpInterface extends StpInterface {
      * @param userId 用户编号
      * @return
      */
-    List<UserRolePermission> getRolePermissionList(Long userId);
+    List<SysUserRolePermission> getRolePermissionList(Long userId);
 
 }

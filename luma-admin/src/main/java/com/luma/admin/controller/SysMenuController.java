@@ -15,21 +15,13 @@ import java.util.List;
  * 菜单相关接口
  * @author i-become
  */
+@Validated
 @RestController
 @RequestMapping("/sys/menu")
 public class SysMenuController {
 
     @Resource
     private SysMenuService sysMenuService;
-
-//    /**
-//     * 获取当前登录用户自己的菜单树
-//     * @return
-//     */
-//    @GetMapping("/trees")
-//    public List<Tree<Long>> trees(){
-//        return sysMenuService.trees();
-//    }
 
     /**
      * 获取当前用户的菜单列表
@@ -57,7 +49,7 @@ public class SysMenuController {
      */
     @PostMapping
     @SaCheckPermission("system:menu:add")
-    public void add(@Validated @RequestBody SysMenuAddReq req){
+    public void add(@RequestBody SysMenuAddReq req){
         sysMenuService.add(req);
     }
 
@@ -78,7 +70,7 @@ public class SysMenuController {
      */
     @PutMapping("/{id}")
     @SaCheckPermission("system:menu:edit")
-    public void edit(@PathVariable Long id, @Validated @RequestBody SysMenuAddReq req){
+    public void edit(@PathVariable Long id, @RequestBody SysMenuAddReq req){
         sysMenuService.edit(id, req);
     }
 

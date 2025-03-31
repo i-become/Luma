@@ -20,9 +20,9 @@ import java.util.List;
  * 系统角色相关接口
  * @author i-become
  */
+@Validated
 @RestController
 @RequestMapping("/sys/role")
-@Validated
 public class SysRoleController {
 
     @Resource

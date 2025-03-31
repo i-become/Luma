@@ -18,8 +18,9 @@ import java.util.Objects;
  * 系统用户相关接口
  * @author i-become
  */
-@RequestMapping("/sys/user")
+@Validated
 @RestController
+@RequestMapping("/sys/user")
 public class SysUserController {
 
     @Resource
@@ -63,7 +64,7 @@ public class SysUserController {
      */
     @PostMapping
     @SaCheckPermission("system:user:add")
-    public Long add(@Validated @RequestBody SysUserAddReq req){
+    public Long add(@RequestBody SysUserAddReq req){
         return sysUserService.add(req);
     }
 
@@ -74,7 +75,7 @@ public class SysUserController {
      */
     @PutMapping("/{id}")
     @SaCheckPermission("system:user:edit")
-    public void edit(@PathVariable Long id, @Validated @RequestBody SysUserEditReq req){
+    public void edit(@PathVariable Long id, @RequestBody SysUserEditReq req){
         Long oldDeptId = sysUserService.lambdaQuery().select(SysUser::getId, SysUser::getDeptId).eq(SysUser::getId, id).one().getDeptId();
         sysUserService.edit(id, req);
         // 是否修改部门，如果修改，需要将目标用户踢出下线

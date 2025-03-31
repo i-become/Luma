@@ -1,10 +1,8 @@
 package com.luma.system.service.impl;
 
 import cn.hutool.core.util.IdUtil;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.luma.common.domain.SysUserAuthRoleInfo;
-import com.luma.common.domain.UserRolePermission;
+import com.luma.common.domain.SysUserRolePermission;
 import com.luma.common.exception.system.ISystemException;
 import com.luma.common.utils.MapstructUtil;
 import com.luma.framework.permission.IStpInterface;
@@ -48,7 +46,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     @Transactional(readOnly = true)
     public List<SysMenuListResp> list(String name){
         // 获取我拥有的所有菜单
-        List<Long> roleIds = stpInterface.getRolePermissionList(UserUtil.getUserId()).stream().map(UserRolePermission::getId).toList();
+        List<Long> roleIds = stpInterface.getRolePermissionList(UserUtil.getUserId()).stream().map(SysUserRolePermission::getId).toList();
         return sysRoleMenuMapper.selectMenuListByRoleIds(roleIds, name);
     }
 

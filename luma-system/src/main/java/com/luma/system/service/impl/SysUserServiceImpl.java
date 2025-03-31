@@ -1,6 +1,5 @@
 package com.luma.system.service.impl;
 
-import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.stp.parameter.SaLoginParameter;
 import cn.dev33.satoken.util.SaFoxUtil;
@@ -10,13 +9,10 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.SmUtil;
 import cn.hutool.http.HttpUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers;
 import com.luma.common.annotation.DataScope;
 import com.luma.common.constant.SatokenConstant;
-import com.luma.common.domain.SysUserAuthRoleInfo;
-import com.luma.common.domain.UserRolePermission;
 import com.luma.common.exception.system.ISystemException;
 import com.luma.common.utils.MapstructUtil;
 import com.luma.framework.permission.IStpInterface;

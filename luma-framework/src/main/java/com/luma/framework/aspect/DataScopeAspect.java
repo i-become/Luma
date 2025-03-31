@@ -3,7 +3,7 @@ package com.luma.framework.aspect;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.luma.common.annotation.DataScope;
-import com.luma.common.domain.UserRolePermission;
+import com.luma.common.domain.SysUserRolePermission;
 import com.luma.common.enums.DataScopeEnum;
 import com.luma.framework.permission.DataScopeThreadLocal;
 import com.luma.framework.permission.IStpInterface;
@@ -90,10 +90,10 @@ public class DataScopeAspect {
         // 4.仅自己权限
         // 5.自定义权限（角色关联的指定n个部门）
         // 获取用户所有关联的有效角色和角色对应的权限范围
-        List<UserRolePermission> roleList = stpInterface.getRolePermissionList(userId);
+        List<SysUserRolePermission> roleList = stpInterface.getRolePermissionList(userId);
         List<String> customRoleIdList = new ArrayList<>();
         DataScopeEnum otherDataScopeMax = DataScopeEnum.NONE;
-        for (UserRolePermission role: roleList) {
+        for (SysUserRolePermission role: roleList) {
             DataScopeEnum roleDataScope = role.getDataScope();
             List<String> rolePermissionList = role.getPermissionList();
             // 判断接口权限是否满足，如果用户已有权限不包含当前权限要求，那么跳过此角色的判断

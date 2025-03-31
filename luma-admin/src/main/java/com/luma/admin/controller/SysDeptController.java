@@ -16,6 +16,7 @@ import java.util.List;
  * 部门相关接口
  * @author i-become
  */
+@Validated
 @RestController
 @RequestMapping("/sys/dept")
 public class SysDeptController {
@@ -52,7 +53,7 @@ public class SysDeptController {
      */
     @PostMapping
     @SaCheckPermission("system:dept:add")
-    public void add(@Validated @RequestBody SysDeptAddReq req){
+    public void add(@RequestBody SysDeptAddReq req){
         sysDeptService.add(req);
     }
 
@@ -63,7 +64,7 @@ public class SysDeptController {
      */
     @PutMapping("/{id}")
     @SaCheckPermission("system:dept:edit")
-    public void edit(@PathVariable Long id, @Validated @RequestBody SysDeptAddReq req){
+    public void edit(@PathVariable Long id, @RequestBody SysDeptAddReq req){
         sysDeptService.edit(id, req);
     }
 
