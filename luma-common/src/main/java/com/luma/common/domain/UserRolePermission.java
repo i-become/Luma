@@ -3,6 +3,8 @@ package com.luma.common.domain;
 import com.luma.common.enums.DataScopeEnum;
 import lombok.Data;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +12,10 @@ import java.util.List;
  * @author i-become
  */
 @Data
-public class UserRolePermission {
+public class UserRolePermission implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 角色编号

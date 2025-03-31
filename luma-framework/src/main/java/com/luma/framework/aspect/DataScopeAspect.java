@@ -10,6 +10,8 @@ import com.luma.framework.permission.IStpInterface;
 import com.luma.framework.permission.PermissionThreadLocal;
 import com.luma.framework.utils.UserUtil;
 import jakarta.annotation.Resource;
+import net.sf.jsqlparser.JSQLParserException;
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -48,15 +50,11 @@ public class DataScopeAspect {
      * 处理数据权限范围逻辑
      * @param dataScope 数据权限注解
      */
-    private void handleDataScope(DataScope dataScope){
+    private void handleDataScope(DataScope dataScope) throws JSQLParserException {
         // 生成权限范围sql
         String sql = sql(dataScope);
-        // 自动拼接和手动拼接的区别就是前面有没有and符号，因为手动拼接需要在sql中添加@dataScopeSql，需要在占位符前面使用and符号，比如and @isDataScope,这样才不会报错
-        if (dataScope.autoSql()){
-            DataScopeThreadLocal.setSql(" AND (" + sql.substring(4) + ")");
-        }else {
-            DataScopeThreadLocal.setSql(" (" + sql.substring(4) + ")");
-        }
+        // 将sql转换为mybatis的查询表达式存入线程中，等待后面查询使用
+        DataScopeThreadLocal.setSqlSegment(CCJSqlParserUtil.parseCondExpression(sql.substring(4)));
     }
 
     /**

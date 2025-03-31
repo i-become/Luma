@@ -7,6 +7,7 @@ import com.luma.framework.permission.IStpInterface;
 import com.luma.system.service.SysRoleService;
 import com.luma.system.service.SysUserService;
 import jakarta.annotation.Resource;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -20,15 +21,17 @@ import java.util.stream.Collectors;
 @Component
 public class StpInterfaceImpl implements IStpInterface {
 
+    @Lazy
     @Resource
     private SysRoleService sysRoleService;
 
+    @Lazy
     @Resource
     private SysUserService sysUserService;
 
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
-        return getRolePermissionList((Long) loginId).stream()
+        return getRolePermissionList(Long.valueOf(String.valueOf(loginId))).stream()
                 // 提取每个角色对应的菜单权限标识列表
                 .map(UserRolePermission::getPermissionList)
                 // 将每个菜单权限标识列表合成一个流
@@ -40,12 +43,12 @@ public class StpInterfaceImpl implements IStpInterface {
 
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
-        return sysRoleService.getRoleKeyListByUserId((Long) loginId);
+        return sysRoleService.getRoleKeyListByUserId(Long.valueOf(String.valueOf(loginId)));
     }
 
     @Override
     public SaDisableWrapperInfo isDisabled(Object loginId, String service) {
-        return sysUserService.isDisable((Long) loginId) ?
+        return sysUserService.isDisable(Long.valueOf(String.valueOf(loginId))) ?
                 SaDisableWrapperInfo.createDisabled(-1, SaTokenConsts.MIN_DISABLE_LEVEL) :
                 SaDisableWrapperInfo.createNotDisabled();
     }

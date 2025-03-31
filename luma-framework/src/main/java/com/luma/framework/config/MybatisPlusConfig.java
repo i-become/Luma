@@ -2,8 +2,10 @@ package com.luma.framework.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.DataPermissionInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
+//import com.luma.framework.interceptor.CustomDataPermissionHandler;
 import com.luma.framework.interceptor.CustomTenantHandler;
 import com.luma.framework.interceptor.DataScopeInnerInterceptor;
 import jakarta.annotation.Resource;

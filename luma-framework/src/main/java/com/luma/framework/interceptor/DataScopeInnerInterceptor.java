@@ -4,6 +4,11 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import com.luma.framework.permission.DataScopeThreadLocal;
+import net.sf.jsqlparser.JSQLParserException;
+import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.select.PlainSelect;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -23,22 +28,8 @@ public class DataScopeInnerInterceptor implements InnerInterceptor {
 
     @Override
     public void beforeQuery(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
-        String dataScopeSql = DataScopeThreadLocal.getSql();
-        if (StrUtil.isBlank(dataScopeSql)){
-            return;
-        }
-
-        String sql = boundSql.getSql();
-        // 是否包含自定义的权限标识，包含就替换为数据权限sql
-        if (sql.contains("@dataScopeSql")){
-            sql = sql.replace("@dataScopeSql", dataScopeSql);
-        }else if (DataScopeThreadLocal.getDataScope().autoSql()){
-            // 自动拼接
-            sql = sql + dataScopeSql;
-        }
         PluginUtils.MPBoundSql mpBoundSql = PluginUtils.mpBoundSql(boundSql);
-        mpBoundSql.sql(sql);
-
+        mpBoundSql.sql(getSetDataScopeSqlSegment(boundSql.getSql()));
     }
 
     @Override
@@ -47,22 +38,31 @@ public class DataScopeInnerInterceptor implements InnerInterceptor {
         MappedStatement ms = mpSh.mappedStatement();
         SqlCommandType sct = ms.getSqlCommandType();
 
-        String dataScopeSql = DataScopeThreadLocal.getSql();
-        if (StrUtil.isBlank(dataScopeSql)){
-            return;
-        }
-
         if (sct == SqlCommandType.INSERT || sct == SqlCommandType.UPDATE || sct == SqlCommandType.DELETE) {
             PluginUtils.MPBoundSql mpBs = mpSh.mPBoundSql();
-            String sql = mpBs.sql();
-            if (sql.contains("@dataScopeSql")){
-                sql = sql.replace("@dataScopeSql", dataScopeSql);
-            }else if (DataScopeThreadLocal.getDataScope().autoSql()){
-                // 自动拼接
-                sql = sql + dataScopeSql;
-            }
-            mpBs.sql(sql);
+            mpBs.sql(getSetDataScopeSqlSegment(mpBs.sql()));
         }
+    }
+
+    /**
+     * 获取设置了权限范围数据的sql
+     * @param sql 原始sql
+     * @return 带权限范围数据的sql
+     */
+    private String getSetDataScopeSqlSegment(String sql){
+        Expression sqlSegment = DataScopeThreadLocal.getSqlSegment();
+        if (sqlSegment == null){
+            return sql;
+        }
+        // 将权限条件加入到sql中
+        Statement parse;
+        try {
+            parse = CCJSqlParserUtil.parse(sql);
+        } catch (JSQLParserException e) {
+            throw new RuntimeException(e);
+        }
+        ((PlainSelect) parse).withWhere(sqlSegment);
+        return parse.toString();
     }
 
 }

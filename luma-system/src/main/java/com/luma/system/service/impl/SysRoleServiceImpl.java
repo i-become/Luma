@@ -112,8 +112,6 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = "role:menu:perms", key = "#id", condition = "#req.menuIdList != null")
-    @Cacheable(cacheNames = "user:role:auth")
     public void edit(Long id, SysRoleAddReq req){
         // 对原有的角色进行判断
         if (!lambdaQuery().eq(SysRole::getId, id).exists()){
@@ -148,8 +146,6 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = "role:menu:perms", key = "#id")
-    @Cacheable(cacheNames = "user:role:auth")
     public void remove(Long id){
         // 权限校验
         List<UserRolePermission> userRolePermissionList = stpInterface.getRolePermissionList(UserUtil.getUserId());
@@ -164,7 +160,6 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
     }
 
     @Override
-    @Cacheable(cacheNames = "user:role:auth")
     public void updateStatus(Long id, SysStatusEnum status){
         // 权限校验
         List<UserRolePermission> userRolePermissionList = stpInterface.getRolePermissionList(UserUtil.getUserId());
