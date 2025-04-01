@@ -7,6 +7,8 @@ import com.luma.system.domain.vo.SysDeptListResp;
 import com.luma.system.enums.SysStatusEnum;
 import com.luma.system.service.SysDeptService;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,7 +55,7 @@ public class SysDeptController {
      */
     @PostMapping
     @SaCheckPermission("system:dept:add")
-    public void add(@RequestBody SysDeptAddReq req){
+    public void add(@Valid @RequestBody SysDeptAddReq req){
         sysDeptService.add(req);
     }
 
@@ -64,7 +66,7 @@ public class SysDeptController {
      */
     @PutMapping("/{id}")
     @SaCheckPermission("system:dept:edit")
-    public void edit(@PathVariable Long id, @RequestBody SysDeptAddReq req){
+    public void edit(@NotNull(message = "部门id不能为空") @PathVariable Long id, @Valid @RequestBody SysDeptAddReq req){
         sysDeptService.edit(id, req);
     }
 
@@ -74,7 +76,7 @@ public class SysDeptController {
      */
     @DeleteMapping
     @SaCheckPermission("system:dept:remove")
-    public void remove(Long id){
+    public void remove(@NotNull(message = "部门id不能为空") Long id){
         sysDeptService.remove(id);
     }
 

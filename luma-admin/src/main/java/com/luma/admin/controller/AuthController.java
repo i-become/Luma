@@ -12,13 +12,13 @@ import com.luma.system.service.SysTenantService;
 import com.luma.system.service.SysUserService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * 鉴权相关接口
  */
-@Validated
 @RestController
 public class AuthController {
 
@@ -35,7 +35,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/login")
-    public SysUserLoginResp login(HttpServletRequest request, SysUserLoginReq req){
+    public SysUserLoginResp login(HttpServletRequest request, @Valid SysUserLoginReq req){
         if (StringUtils.isBlank(req.getTenantAlias())){
             req.setTenantId(TenantContextHolder.SYS_TENANT_ID);
         }else {
