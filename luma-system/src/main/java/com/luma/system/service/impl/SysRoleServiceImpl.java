@@ -67,7 +67,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
 
     @Override
     @DataScope(deptAlias = "su")
-    public IPage<SysRolePageResp> getRolePage(SysRolePageReq req){
+    public IPage<SysRolePageResp> page(SysRolePageReq req){
         return baseMapper.selectRolePage(req.toMpPage(), req);
     }
 

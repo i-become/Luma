@@ -39,7 +39,7 @@ public interface SysRoleService extends IService<SysRole> {
      * @param req
      * @return
      */
-    IPage<SysRolePageResp> getRolePage(SysRolePageReq req);
+    IPage<SysRolePageResp> page(SysRolePageReq req);
 
     /**
      * 获取角色列表

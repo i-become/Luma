@@ -17,7 +17,7 @@ public enum DataScopeEnum {
     /**
      * 全部数据权限
      */
-    ALL(1, " ( 1 == 1 ) ") {
+    ALL(1, " AND ( 1 = 1 ) ") {
         @Override
         public String generateSql(String deptAlias, String deptIdColumnName, List<String> customRoleIdList, Long deptId, String userAlias, String userIdColumnName, Long userId) {
             return this.getSqlTemplate();

@@ -36,7 +36,7 @@ public class SysRoleController {
     @GetMapping("/page")
     @SaCheckPermission("system:role:query")
     public IPage<SysRolePageResp> page(SysRolePageReq req){
-        return sysRoleService.getRolePage(req);
+        return sysRoleService.page(req);
     }
 
     /**

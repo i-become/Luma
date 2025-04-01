@@ -9,7 +9,7 @@
             <id property="menuId" column="menu_id" jdbcType="BIGINT"/>
     </resultMap>
 
-    <select id="selectRolePermissionListByRoleId" parameterType="java.lang.String" resultType="java.lang.String" >
+    <select id="selectRolePermissionListByRoleId" parameterType="java.lang.Long" resultType="java.lang.String" >
         select sm.perms from sys_menu sm
         inner join sys_role_menu srm on sm.id = srm.menu_id
         where srm.role_id = #{roleId} and sm.perms is not null
