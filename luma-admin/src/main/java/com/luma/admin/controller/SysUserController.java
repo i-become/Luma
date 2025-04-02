@@ -8,6 +8,7 @@ import com.luma.system.domain.vo.*;
 import com.luma.system.enums.SysStatusEnum;
 import com.luma.system.service.SysUserService;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +45,7 @@ public class SysUserController {
      */
     @GetMapping
     @SaCheckPermission("system:user:query")
-    public SysUserInfoResp userinfo(Long id){
+    public SysUserInfoResp userinfo(@NotNull(message = "{validation.user.id.NotNull}") Long id){
         return sysUserService.userInfo(id);
     }
 
@@ -64,7 +65,7 @@ public class SysUserController {
      */
     @PostMapping
     @SaCheckPermission("system:user:add")
-    public Long add(@RequestBody SysUserAddReq req){
+    public Long add(@Valid @RequestBody SysUserAddReq req){
         return sysUserService.add(req);
     }
 
@@ -75,7 +76,7 @@ public class SysUserController {
      */
     @PutMapping("/{id}")
     @SaCheckPermission("system:user:edit")
-    public void edit(@PathVariable Long id, @RequestBody SysUserEditReq req){
+    public void edit(@NotNull(message = "{validation.user.id.NotNull}") @PathVariable Long id, @Valid @RequestBody SysUserEditReq req){
         Long oldDeptId = sysUserService.lambdaQuery().select(SysUser::getId, SysUser::getDeptId).eq(SysUser::getId, id).one().getDeptId();
         sysUserService.edit(id, req);
         // 是否修改部门，如果修改，需要将目标用户踢出下线
@@ -90,7 +91,7 @@ public class SysUserController {
      */
     @DeleteMapping
     @SaCheckPermission("system:user:remove")
-    public void remove(Long id){
+    public void remove(@NotNull(message = "{validation.user.id.NotNull}") Long id){
         sysUserService.remove(id);
     }
 
@@ -101,7 +102,7 @@ public class SysUserController {
      * @param newPassword 新密码
      */
     @PostMapping("/rest_password")
-    public void restPassword(Long id, @NotNull(message = "密码不能为空") String newPassword){
+    public void restPassword(@NotNull(message = "{validation.user.id.NotNull}") Long id, @NotNull(message = "{validation.user.password.NotBlank}") String newPassword){
         sysUserService.restPassword(id, newPassword);
         // 登出用户
         sysUserService.logout(String.valueOf(id));
@@ -113,7 +114,7 @@ public class SysUserController {
      */
     @PostMapping("/enable")
     @SaCheckPermission("system:user:edit")
-    public void enable(Long id){
+    public void enable(@NotNull(message = "{validation.user.id.NotNull}") Long id){
         sysUserService.updateStatus(id, SysStatusEnum.NORMAL);
     }
 
@@ -123,7 +124,7 @@ public class SysUserController {
      */
     @PostMapping("/disable")
     @SaCheckPermission("system:user:edit")
-    public void disable(Long id){
+    public void disable(@NotNull(message = "{validation.user.id.NotNull}") Long id){
         sysUserService.updateStatus(id, SysStatusEnum.DISABLED);
     }
 

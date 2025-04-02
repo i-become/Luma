@@ -18,13 +18,13 @@ public class SysUserEditReq {
     /**
      * 部门ID
      */
-    @NotNull(message = "部门编号不能为空")
+    @NotNull(message = "{validation.dept.id.NotNull}")
     private Long deptId;
 
     /**
      * 用户昵称
      */
-    @NotNull(message = "用户昵称不能为空")
+    @NotNull(message = "{validation.user.username.NotBlank}")
     private String username;
 
     /**

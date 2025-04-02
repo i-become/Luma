@@ -3,6 +3,7 @@ package com.luma.system.domain.vo;
 import com.luma.system.domain.entity.SysUser;
 import com.luma.system.enums.SysStatusEnum;
 import io.github.linpeilie.annotations.AutoMapper;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -18,19 +19,19 @@ public class SysUserAddReq {
     /**
      * 部门ID
      */
-    @NotNull(message = "部门编号不能为空")
+    @NotNull(message = "{validation.dept.id.NotNull}")
     private Long deptId;
 
     /**
      * 登录账号
      */
-    @NotNull(message = "登录账号不能为空")
+    @NotBlank(message = "{validation.user.loginName.NotBlank}")
     private String loginName;
 
     /**
      * 用户昵称
      */
-    @NotNull(message = "用户昵称不能为空")
+    @NotBlank(message = "{validation.user.username.NotBlank}")
     private String username;
 
     /**
@@ -61,7 +62,7 @@ public class SysUserAddReq {
     /**
      * 密码
      */
-    @NotNull(message = "密码不能为空")
+    @NotBlank(message = "{validation.user.password.NotBlank}")
     private String password;
 
     /**

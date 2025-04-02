@@ -2,6 +2,7 @@ package com.luma.system.domain.vo;
 
 import com.luma.system.domain.entity.SysMenu;
 import io.github.linpeilie.annotations.AutoMapper;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -20,7 +21,7 @@ public class SysMenuAddReq {
     /**
      * 路由 name (对应页面组件 name, 可用作 KeepAlive 缓存标识 && 按钮权限筛选)
      */
-    @NotNull(message = "路由名称不能为空")
+    @NotBlank(message = "{validation.menu.name.NotBlank}")
     private String name;
 
     /**
@@ -41,7 +42,7 @@ public class SysMenuAddReq {
     /**
      * 显示顺序
      */
-    @NotNull(message = "显示顺序不能为空")
+    @NotNull(message = "{validation.sort.NotNull}")
     private Integer sort;
 
     /**
@@ -62,7 +63,7 @@ public class SysMenuAddReq {
     /**
      * 菜单类型（M目录 C菜单 F按钮 L外链）
      */
-    @NotNull(message = "菜单类型不能为空")
+    @NotNull(message = "{validation.menu.type.NotNull}")
     private String type;
 
     /**

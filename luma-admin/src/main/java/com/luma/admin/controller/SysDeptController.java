@@ -66,7 +66,7 @@ public class SysDeptController {
      */
     @PutMapping("/{id}")
     @SaCheckPermission("system:dept:edit")
-    public void edit(@NotNull(message = "部门id不能为空") @PathVariable Long id, @Valid @RequestBody SysDeptAddReq req){
+    public void edit(@NotNull(message = "{validation.dept.id.NotNull}") @PathVariable Long id, @Valid @RequestBody SysDeptAddReq req){
         sysDeptService.edit(id, req);
     }
 
@@ -76,7 +76,7 @@ public class SysDeptController {
      */
     @DeleteMapping
     @SaCheckPermission("system:dept:remove")
-    public void remove(@NotNull(message = "部门id不能为空") Long id){
+    public void remove(@NotNull(message = "{validation.dept.id.NotNull}") Long id){
         sysDeptService.remove(id);
     }
 

@@ -1,6 +1,6 @@
 package com.luma.system.domain.vo;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
@@ -22,13 +22,13 @@ public class SysUserLoginReq {
     /**
      * 账号
      */
-    @NotNull(message = "账号不能为空")
+    @NotBlank(message = "{validation.auth.loginName.NotBlank}")
     private String loginName;
 
     /**
      * 密码
      */
-    @NotNull(message = "密码不能为空")
+    @NotBlank(message = "{validation.auth.password.NotBlank}")
     private String password;
 
     /**

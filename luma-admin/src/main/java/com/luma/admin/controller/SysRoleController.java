@@ -10,6 +10,7 @@ import com.luma.system.domain.vo.SysRolePageResp;
 import com.luma.system.enums.SysStatusEnum;
 import com.luma.system.service.SysRoleService;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +54,7 @@ public class SysRoleController {
      * @return
      */
     @GetMapping("/user_role/base_list")
-    public List<SysRoleBaseListResp> list(@NotNull(message = "userId不能为空") Long userId){
+    public List<SysRoleBaseListResp> list(@NotNull(message = "{validation.user.id.NotNull}") Long userId){
         return sysRoleService.getRoleList(userId);
     }
 
@@ -63,7 +64,7 @@ public class SysRoleController {
      */
     @PostMapping
     @SaCheckPermission("system:role:add")
-    public void add(@RequestBody SysRoleAddReq req){
+    public void add(@Valid @RequestBody SysRoleAddReq req){
         sysRoleService.add(req);
     }
 
@@ -74,7 +75,7 @@ public class SysRoleController {
      */
     @PutMapping("/{id}")
     @SaCheckPermission("system:role:edit")
-    public void edit(@PathVariable Long id, @RequestBody SysRoleAddReq req){
+    public void edit(@NotNull(message = "{validation.role.id.NotNull}") @PathVariable Long id, @Valid @RequestBody SysRoleAddReq req){
         sysRoleService.edit(id, req);
     }
 
@@ -84,7 +85,7 @@ public class SysRoleController {
      */
     @DeleteMapping
     @SaCheckPermission("system:role:remove")
-    public void remove(Long id){
+    public void remove(@NotNull(message = "{validation.role.id.NotNull}") Long id){
         sysRoleService.remove(id);
     }
 
@@ -94,7 +95,7 @@ public class SysRoleController {
      */
     @PostMapping("/enable")
     @SaCheckPermission("system:role:edit")
-    public void enable(Long id){
+    public void enable(@NotNull(message = "{validation.role.id.NotNull}") Long id){
         sysRoleService.updateStatus(id, SysStatusEnum.NORMAL);
     }
 
@@ -104,7 +105,7 @@ public class SysRoleController {
      */
     @PostMapping("/disable")
     @SaCheckPermission("system:role:edit")
-    public void disable(Long id){
+    public void disable(@NotNull(message = "{validation.role.id.NotNull}") Long id){
         sysRoleService.updateStatus(id, SysStatusEnum.DISABLED);
     }
 

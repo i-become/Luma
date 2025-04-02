@@ -6,6 +6,8 @@ import com.luma.system.domain.vo.SysMenuBaseListResp;
 import com.luma.system.domain.vo.SysMenuListResp;
 import com.luma.system.service.SysMenuService;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +41,7 @@ public class SysMenuController {
      * @return
      */
     @GetMapping("/base_list")
-    public List<SysMenuBaseListResp> baseList(Long roleId){
+    public List<SysMenuBaseListResp> baseList(@NotNull(message = "{validation.role.id.NotNull}") Long roleId){
         return sysMenuService.baseList(roleId);
     }
 
@@ -49,7 +51,7 @@ public class SysMenuController {
      */
     @PostMapping
     @SaCheckPermission("system:menu:add")
-    public void add(@RequestBody SysMenuAddReq req){
+    public void add(@Valid @RequestBody SysMenuAddReq req){
         sysMenuService.add(req);
     }
 
@@ -59,7 +61,7 @@ public class SysMenuController {
      */
     @DeleteMapping
     @SaCheckPermission("system:menu:remove")
-    public void remove(Long id){
+    public void remove(@NotNull(message = "{validation.menu.id.NotNull}") Long id){
         sysMenuService.removeById(id);
     }
 
@@ -70,7 +72,7 @@ public class SysMenuController {
      */
     @PutMapping("/{id}")
     @SaCheckPermission("system:menu:edit")
-    public void edit(@PathVariable Long id, @RequestBody SysMenuAddReq req){
+    public void edit(@NotNull(message = "{validation.menu.id.NotNull}") @PathVariable Long id, @RequestBody SysMenuAddReq req){
         sysMenuService.edit(id, req);
     }
 
