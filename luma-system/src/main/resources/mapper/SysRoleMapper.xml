@@ -34,11 +34,9 @@
         left join sys_user_role sur on sr.id = sur.role_id
         left join sys_user su on sur.user_id = su.id
         where sr.del_flag = false
-        group by sr.id
         <if test="userId != null">
             and sur.user_id = #{userId}
         </if>
-        and @dataScopeSql
         group by sr.id
         order by sort
     </select>
