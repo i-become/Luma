@@ -32,7 +32,7 @@ public class SysDeptController {
      * @param status 部门状态 不传为所有
      * @return
      */
-    @GetMapping("/list")
+    @GetMapping
     @SaCheckPermission("system:dept:query")
     public List<SysDeptListResp> list(String name, SysStatusEnum status){
         return sysDeptService.list(name, status);
@@ -44,7 +44,7 @@ public class SysDeptController {
      * @param roleId 角色编号
      * @return
      */
-    @GetMapping("/base_list")
+    @GetMapping("/list")
     public List<SysDeptBaseListResp> baseList(Long roleId){
         return sysDeptService.baseList(roleId);
     }
@@ -74,9 +74,9 @@ public class SysDeptController {
      * 删除部门
      * @param id 部门编号
      */
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @SaCheckPermission("system:dept:remove")
-    public void remove(@NotNull(message = "{validation.dept.id.NotNull}") Long id){
+    public void remove(@NotNull(message = "{validation.dept.id.NotNull}") @PathVariable Long id){
         sysDeptService.remove(id);
     }
 
