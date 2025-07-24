@@ -43,9 +43,9 @@ public class SysUserController {
      * @param id 用户编号
      * @return
      */
-    @GetMapping
+    @GetMapping("/{id}")
     @SaCheckPermission("system:user:query")
-    public SysUserInfoResp userinfo(@NotNull(message = "{validation.user.id.NotNull}") Long id){
+    public SysUserInfoResp userinfo(@NotNull(message = "{validation.user.id.NotNull}") @PathVariable Long id){
         return sysUserService.userInfo(id);
     }
 
@@ -53,7 +53,7 @@ public class SysUserController {
      * 获取当前登录人的用户信息
      * @return
      */
-    @GetMapping("/self_info")
+    @GetMapping("/self")
     public SysUserInfoResp selfInfo(){
         return sysUserService.userInfo(UserUtil.getUserId());
     }
@@ -89,9 +89,9 @@ public class SysUserController {
      * 删除用户
      * @param id 用户编号
      */
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @SaCheckPermission("system:user:remove")
-    public void remove(@NotNull(message = "{validation.user.id.NotNull}") Long id){
+    public void remove(@NotNull(message = "{validation.user.id.NotNull}") @PathVariable Long id){
         sysUserService.remove(id);
     }
 
@@ -101,8 +101,8 @@ public class SysUserController {
      * @param id 用户编号
      * @param newPassword 新密码
      */
-    @PostMapping("/rest_password")
-    public void restPassword(@NotNull(message = "{validation.user.id.NotNull}") Long id, @NotNull(message = "{validation.user.password.NotBlank}") String newPassword){
+    @PostMapping("/{id}/rest_password")
+    public void restPassword(@NotNull(message = "{validation.user.id.NotNull}") @PathVariable Long id, @NotNull(message = "{validation.user.password.NotBlank}") String newPassword){
         sysUserService.restPassword(id, newPassword);
         // 登出用户
         sysUserService.logout(String.valueOf(id));
@@ -112,9 +112,9 @@ public class SysUserController {
      * 启用用户
      * @param id 用户编号
      */
-    @PostMapping("/enable")
+    @PostMapping("/enable/{id}")
     @SaCheckPermission("system:user:edit")
-    public void enable(@NotNull(message = "{validation.user.id.NotNull}") Long id){
+    public void enable(@NotNull(message = "{validation.user.id.NotNull}") @PathVariable Long id){
         sysUserService.updateStatus(id, SysStatusEnum.NORMAL);
     }
 
@@ -122,9 +122,9 @@ public class SysUserController {
      * 禁用用户
      * @param id 用户编号
      */
-    @PostMapping("/disable")
+    @PostMapping("/disable/{id}")
     @SaCheckPermission("system:user:edit")
-    public void disable(@NotNull(message = "{validation.user.id.NotNull}") Long id){
+    public void disable(@NotNull(message = "{validation.user.id.NotNull}") @PathVariable Long id){
         sysUserService.updateStatus(id, SysStatusEnum.DISABLED);
     }
 

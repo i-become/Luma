@@ -30,7 +30,7 @@ public class SysMenuController {
      * @param name 菜单名称 模糊搜索
      * @return
      */
-    @GetMapping("/list")
+    @GetMapping
     public List<SysMenuListResp> list(String name){
         return sysMenuService.list(name);
     }
@@ -40,7 +40,7 @@ public class SysMenuController {
      * @param roleId 角色编号
      * @return
      */
-    @GetMapping("/base_list")
+    @GetMapping("/list")
     public List<SysMenuBaseListResp> baseList(@NotNull(message = "{validation.role.id.NotNull}") Long roleId){
         return sysMenuService.baseList(roleId);
     }
@@ -59,9 +59,9 @@ public class SysMenuController {
      * 删除菜单
      * @param id 菜单编号
      */
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @SaCheckPermission("system:menu:remove")
-    public void remove(@NotNull(message = "{validation.menu.id.NotNull}") Long id){
+    public void remove(@NotNull(message = "{validation.menu.id.NotNull}") @PathVariable Long id){
         sysMenuService.removeById(id);
     }
 

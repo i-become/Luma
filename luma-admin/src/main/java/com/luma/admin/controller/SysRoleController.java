@@ -41,20 +41,11 @@ public class SysRoleController {
     }
 
     /**
-     * 角色列表 （简易列表，主要用于下拉框）
-     * @return
-     */
-    @GetMapping("/base_list")
-    public List<SysRoleBaseListResp> list(){
-        return sysRoleService.getRoleList(null);
-    }
-
-    /**
      * 获取指定用户角色列表 （简易列表，主要用于下拉框）
      * @return
      */
-    @GetMapping("/user_role/base_list")
-    public List<SysRoleBaseListResp> list(@NotNull(message = "{validation.user.id.NotNull}") Long userId){
+    @GetMapping("/list")
+    public List<SysRoleBaseListResp> list(Long userId){
         return sysRoleService.getRoleList(userId);
     }
 
@@ -83,9 +74,9 @@ public class SysRoleController {
      * 删除角色
      * @param id 角色编号
      */
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @SaCheckPermission("system:role:remove")
-    public void remove(@NotNull(message = "{validation.role.id.NotNull}") Long id){
+    public void remove(@NotNull(message = "{validation.role.id.NotNull}") @PathVariable Long id){
         sysRoleService.remove(id);
     }
 
@@ -93,9 +84,9 @@ public class SysRoleController {
      * 启用角色
      * @param id 角色编号
      */
-    @PostMapping("/enable")
+    @PostMapping("/enable/{id}")
     @SaCheckPermission("system:role:edit")
-    public void enable(@NotNull(message = "{validation.role.id.NotNull}") Long id){
+    public void enable(@NotNull(message = "{validation.role.id.NotNull}") @PathVariable Long id){
         sysRoleService.updateStatus(id, SysStatusEnum.NORMAL);
     }
 
@@ -103,9 +94,9 @@ public class SysRoleController {
      * 禁用角色
      * @param id 角色编号
      */
-    @PostMapping("/disable")
+    @PostMapping("/disable/{id}")
     @SaCheckPermission("system:role:edit")
-    public void disable(@NotNull(message = "{validation.role.id.NotNull}") Long id){
+    public void disable(@NotNull(message = "{validation.role.id.NotNull}") @PathVariable Long id){
         sysRoleService.updateStatus(id, SysStatusEnum.DISABLED);
     }
 

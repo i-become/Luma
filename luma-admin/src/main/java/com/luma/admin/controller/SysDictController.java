@@ -53,9 +53,9 @@ public class SysDictController {
      * 删除字典及所有子孙节点
      * @param id 字典编号
      */
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @SaCheckPermission("system:dict:remove")
-    public void remove(Integer id){
+    public void remove(@PathVariable Integer id){
         sysDictService.remove(id);
     }
 
@@ -65,7 +65,7 @@ public class SysDictController {
      * @param level 指定层级
      * @return
      */
-    @GetMapping("/tree")
+    @GetMapping
     public List<SysDictTreeResp> tree(String key, Integer level){
         return sysDictService.tree(key, level);
     }
@@ -76,7 +76,7 @@ public class SysDictController {
      * @param level 指定层级
      * @return
      */
-    @GetMapping("/base_tree")
+    @GetMapping("/list")
     public List<SysDictBaseTreeResp> baseTree(String key, Integer level){
         return sysDictService.baseTree(key, level);
     }
