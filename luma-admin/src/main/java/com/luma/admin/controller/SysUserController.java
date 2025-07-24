@@ -21,7 +21,7 @@ import java.util.Objects;
  */
 @Validated
 @RestController
-@RequestMapping("/sys/user")
+@RequestMapping("/user")
 public class SysUserController {
 
     @Resource
@@ -53,7 +53,7 @@ public class SysUserController {
      * 获取当前登录人的用户信息
      * @return 用户信息
      */
-    @GetMapping("/self")
+    @GetMapping("/info")
     public SysUserInfoResp selfInfo(){
         return sysUserService.userInfo(UserUtil.getUserId());
     }

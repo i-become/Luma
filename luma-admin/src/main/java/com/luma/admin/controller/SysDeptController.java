@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Validated
 @RestController
-@RequestMapping("/sys/dept")
+@RequestMapping("/dept")
 public class SysDeptController {
 
     @Resource

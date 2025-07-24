@@ -25,6 +25,6 @@ public class SysLoginUserInfoResp {
     /**
      * 角色列表
      */
-    private List<String> role;
+    private List<String> roles;
 
 }

@@ -72,17 +72,17 @@ public class SysUserInfoResp {
     /**
      * 角色列表
      */
-    private List<SysRoleBaseListResp> roleList;
+    private List<SysRoleBaseListResp> roles;
 
     /**
      * 岗位列表
      */
-    private List<SysPostListResp> postList;
+    private List<SysPostListResp> posts;
 
     /**
      * 权限列表
      */
-    private List<String> permList;
+    private List<String> perms;
 
     /**
      * 租户编号

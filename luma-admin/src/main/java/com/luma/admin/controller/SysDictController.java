@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Validated
 @RestController
-@RequestMapping("/sys/dict")
+@RequestMapping("/dict")
 public class SysDictController {
 
     @Resource

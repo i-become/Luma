@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Validated
 @RestController
-@RequestMapping("/sys/role")
+@RequestMapping("/role")
 public class SysRoleController {
 
     @Resource

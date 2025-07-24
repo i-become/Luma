@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Validated
 @RestController
-@RequestMapping("/sys/menu")
+@RequestMapping("/menu")
 public class SysMenuController {
 
     @Resource

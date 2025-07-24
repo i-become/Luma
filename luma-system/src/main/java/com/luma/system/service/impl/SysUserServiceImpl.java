@@ -103,7 +103,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 .userInfo(SysLoginUserInfoResp.builder()
                         .userId(user.getId())
                         .username(user.getUsername())
-                        .role(StpUtil.getRoleList())
+                        .roles(StpUtil.getRoleList())
                         .build())
                 .build();
     }
@@ -169,11 +169,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new ISystemException("用户信息不存在");
         }
         // 角色信息
-        resp.setRoleList(sysRoleMapper.selectRoleList(UserUtil.getUserId().equals(id) ? null : id));
+        resp.setRoles(sysRoleMapper.selectRoleList(UserUtil.getUserId().equals(id) ? null : id));
         // 岗位信息
-        resp.setPostList(sysPostMapper.selectPostListByUserId(id));
+        resp.setPosts(sysPostMapper.selectPostListByUserId(id));
         // 权限信息
-        resp.setPermList(stpInterface.getPermissionList(id, null));
+        resp.setPerms(stpInterface.getPermissionList(id, null));
         // 租户别名
         resp.setTenantAlias(ChainWrappers.lambdaQueryChain(sysTenantMapper).select(SysTenant::getId, SysTenant::getAlias).eq(SysTenant::getId, resp.getTenantId()).one().getAlias());
         return resp;
