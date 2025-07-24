@@ -78,7 +78,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void add(SysRoleAddReq req){
+    public Long add(SysRoleAddReq req){
         // 判断权限字符是否重复
         if (lambdaQuery().eq(SysRole::getRoleKey, req.getRoleKey()).exists()){
             throw new ISystemException("角色权限标识已经存在");
@@ -88,7 +88,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
 
         // 保存角色
         SysRole sysRole = MapstructUtil.convert(req, SysRole.class);
-        sysRole.setId(IdUtil.getSnowflake().nextId());
+        sysRole.setId(IdUtil.getSnowflakeNextId());
         baseMapper.insert(sysRole);
         // 建立当前用户与当前角色的关系
         SysUserRole sysUserRole = new SysUserRole();
@@ -97,7 +97,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
         sysUserRoleMapper.insert(sysUserRole);
         // 保存角色和菜单的关系
         if (req.getMenuIdList() == null){
-            return;
+            return sysRole.getId();
         }
         List<SysRoleMenu> roleMenuList = new ArrayList<>();
         for (Long menuId : req.getMenuIdList()){
@@ -106,6 +106,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
             roleMenu.setMenuId(menuId);
         }
         sysRoleMenuMapper.insert(roleMenuList);
+        return sysRole.getId();
     }
 
     @Override

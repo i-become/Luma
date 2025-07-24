@@ -28,7 +28,7 @@ public class SysMenuController {
     /**
      * 获取当前用户的菜单列表
      * @param name 菜单名称 模糊搜索
-     * @return
+     * @return 菜单列表
      */
     @GetMapping
     public List<SysMenuListResp> list(String name){
@@ -38,7 +38,7 @@ public class SysMenuController {
     /**
      * 获取指定角色的菜单列表
      * @param roleId 角色编号
-     * @return
+     * @return 菜单列表
      */
     @GetMapping("/list")
     public List<SysMenuBaseListResp> baseList(@NotNull(message = "{validation.role.id.NotNull}") Long roleId){
@@ -47,12 +47,13 @@ public class SysMenuController {
 
     /**
      * 添加菜单
-     * @param req
+     * @param req 菜单信息
+     * @return 菜单编号
      */
     @PostMapping
     @SaCheckPermission("system:menu:add")
-    public void add(@Valid @RequestBody SysMenuAddReq req){
-        sysMenuService.add(req);
+    public Long add(@Valid @RequestBody SysMenuAddReq req){
+        return sysMenuService.add(req);
     }
 
     /**
@@ -68,7 +69,7 @@ public class SysMenuController {
     /**
      * 修改菜单
      * @param id 菜单编号
-     * @param req
+     * @param req 菜单信息
      */
     @PutMapping("/{id}")
     @SaCheckPermission("system:menu:edit")

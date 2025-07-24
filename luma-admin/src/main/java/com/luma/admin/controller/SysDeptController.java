@@ -30,7 +30,7 @@ public class SysDeptController {
      * 部门列表
      * @param name 部门名称 （模糊搜索）
      * @param status 部门状态 不传为所有
-     * @return
+     * @return 部门列表
      */
     @GetMapping
     @SaCheckPermission("system:dept:query")
@@ -42,7 +42,7 @@ public class SysDeptController {
      * 获取部门列表
      * 如果传入角色编号，会返回部门有没有关联该角色
      * @param roleId 角色编号
-     * @return
+     * @return 部门列表
      */
     @GetMapping("/list")
     public List<SysDeptBaseListResp> baseList(Long roleId){
@@ -51,18 +51,19 @@ public class SysDeptController {
 
     /**
      * 添加部门
-     * @param req
+     * @param req 部门信息
+     * @return 部门编号
      */
     @PostMapping
     @SaCheckPermission("system:dept:add")
-    public void add(@Valid @RequestBody SysDeptAddReq req){
-        sysDeptService.add(req);
+    public Long add(@Valid @RequestBody SysDeptAddReq req){
+        return sysDeptService.add(req);
     }
 
     /**
      * 编辑部门
      * @param id 部门编号
-     * @param req
+     * @param req 部门信息
      */
     @PutMapping("/{id}")
     @SaCheckPermission("system:dept:edit")

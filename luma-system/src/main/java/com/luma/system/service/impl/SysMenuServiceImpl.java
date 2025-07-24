@@ -61,7 +61,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
-    public void add(SysMenuAddReq req){
+    public Long add(SysMenuAddReq req){
         // 如果上级存在且不是0，那么获取上级信息，判断是否存在
         if (req.getParentId() != null && !req.getParentId().equals(BASE_ID)){
             if (!lambdaQuery().eq(SysMenu::getId, req.getParentId()).exists()){
@@ -72,8 +72,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         }
         // 入库
         SysMenu sysMenu = MapstructUtil.convert(req, SysMenu.class);
-        sysMenu.setId(IdUtil.getSnowflake().nextId());
+        sysMenu.setId(IdUtil.getSnowflakeNextId());
         this.save(sysMenu);
+        return sysMenu.getId();
     }
 
     @Override

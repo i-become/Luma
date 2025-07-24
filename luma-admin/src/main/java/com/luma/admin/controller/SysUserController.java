@@ -29,8 +29,8 @@ public class SysUserController {
 
     /**
      * 用户分页
-     * @param req
-     * @return
+     * @param req 查询信息
+     * @return 用户分页
      */
     @GetMapping("/page")
     @SaCheckPermission("system:user:query")
@@ -41,7 +41,7 @@ public class SysUserController {
     /**
      * 获取用户信息
      * @param id 用户编号
-     * @return
+     * @return 用户信息
      */
     @GetMapping("/{id}")
     @SaCheckPermission("system:user:query")
@@ -51,7 +51,7 @@ public class SysUserController {
 
     /**
      * 获取当前登录人的用户信息
-     * @return
+     * @return 用户信息
      */
     @GetMapping("/self")
     public SysUserInfoResp selfInfo(){
@@ -60,8 +60,8 @@ public class SysUserController {
 
     /**
      * 添加用户
-     * @param req
-     * @return
+     * @param req 用户信息
+     * @return 用户编号
      */
     @PostMapping
     @SaCheckPermission("system:user:add")
@@ -72,7 +72,7 @@ public class SysUserController {
     /**
      * 编辑用户
      * @param id 用户编号
-     * @param req
+     * @param req 用户信息
      */
     @PutMapping("/{id}")
     @SaCheckPermission("system:user:edit")

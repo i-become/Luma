@@ -11,13 +11,13 @@ public interface ClientService extends IService<Client> {
     /**
      * 获取客户端密钥和推送地址等信息
      * @param id 客户端编号
-     * @return
+     * @return 应用密钥信息
      */
     ClientKeyBo getClientKey(Long id);
 
     /**
      * 获取所有客户端密钥和推送地址等信息
-     * @return
+     * @return 应用密钥列表
      */
     List<ClientKeyBo> getClientKeyAll();
 }

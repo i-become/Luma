@@ -194,7 +194,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         checkData(req.getDeptId(), req.getRoleIdList(), req.getPostIdList());
         // 保存用户
         SysUser sysUser = MapstructUtil.convert(req, SysUser.class);
-        sysUser.setId(IdUtil.getSnowflake().nextId());
+        sysUser.setId(IdUtil.getSnowflakeNextId());
         sysUser.setPassword(SmUtil.sm3(req.getPassword()));
         baseMapper.insert(sysUser);
         // 保存用户和角色关系

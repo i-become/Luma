@@ -31,8 +31,8 @@ public class SysRoleController {
 
     /**
      * 角色分页
-     * @param req
-     * @return
+     * @param req 查询信息
+     * @return 角色分页
      */
     @GetMapping("/page")
     @SaCheckPermission("system:role:query")
@@ -42,7 +42,7 @@ public class SysRoleController {
 
     /**
      * 获取指定用户角色列表 （简易列表，主要用于下拉框）
-     * @return
+     * @return 角色列表
      */
     @GetMapping("/list")
     public List<SysRoleBaseListResp> list(Long userId){
@@ -51,18 +51,19 @@ public class SysRoleController {
 
     /**
      * 添加角色
-     * @param req
+     * @param req 角色信息
+     * @return 角色编号
      */
     @PostMapping
     @SaCheckPermission("system:role:add")
-    public void add(@Valid @RequestBody SysRoleAddReq req){
-        sysRoleService.add(req);
+    public Long add(@Valid @RequestBody SysRoleAddReq req){
+        return sysRoleService.add(req);
     }
 
     /**
      * 编辑角色
      * @param id 角色编号
-     * @param req
+     * @param req 角色信息
      */
     @PutMapping("/{id}")
     @SaCheckPermission("system:role:edit")

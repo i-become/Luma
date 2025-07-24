@@ -13,36 +13,31 @@ import java.util.List;
  */
 public interface SysMenuService extends IService<SysMenu> {
 
-//    /**
-//     * 获取当前用户自己的菜单树
-//     * @return
-//     */
-//    List<Tree<Long>> trees();
-
     /**
      * 获取当前用户的菜单列表
      * @param name 菜单名称 模糊搜索
-     * @return
+     * @return 菜单列表
      */
     List<SysMenuListResp> list(String name);
 
     /**
      * 获取指定角色的菜单列表
      * @param roleId 角色编号
-     * @return
+     * @return 菜单列表
      */
     List<SysMenuBaseListResp> baseList(Long roleId);
 
     /**
      * 添加菜单
-     * @param req
+     * @param req 菜单信息
+     * @return 菜单编号
      */
-    void add(SysMenuAddReq req);
+    Long add(SysMenuAddReq req);
 
     /**
      * 修改菜单
      * @param id 菜单编号
-     * @param req
+     * @param req 菜单信息
      */
     void edit(Long id, SysMenuAddReq req);
 }

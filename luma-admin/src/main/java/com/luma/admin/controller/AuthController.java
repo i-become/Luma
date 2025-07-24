@@ -29,9 +29,8 @@ public class AuthController {
 
     /**
      * 用户登录
-     * @param request
-     * @param req
-     * @return
+     * @param req 登录信息
+     * @return 登录成功信息
      */
     @PostMapping("/login")
     public SysUserLoginResp login(HttpServletRequest request, @Valid SysUserLoginReq req){

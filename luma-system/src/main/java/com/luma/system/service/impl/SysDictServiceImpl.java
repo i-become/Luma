@@ -33,10 +33,10 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict>
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void add(SysAddReq req){
+    public Integer add(SysAddReq req){
         // 如果上级节点不是顶级节点，判断节点是否存在
         SysDict sysDict = MapstructUtil.convert(req, SysDict.class);
-        String parentAncestors = null;
+        String parentAncestors;
         if (sysDict.getParentId() == null || sysDict.getParentId() == BASE_ID){
             sysDict.setParentId(BASE_ID);
             sysDict.setLevel(BASE_ID);
@@ -58,6 +58,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict>
         baseMapper.insert(sysDict);
         // 更新祖籍编号
         lambdaUpdate().set(SysDict::getAncestors, parentAncestors + sysDict.getId() + ",").eq(SysDict::getId, sysDict.getId()).update();
+        return sysDict.getId();
     }
 
     @Override

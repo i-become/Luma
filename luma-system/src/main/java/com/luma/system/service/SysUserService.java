@@ -8,16 +8,15 @@ import com.luma.system.enums.SysStatusEnum;
 
 /**
 * @author i-become
-* @description 针对表【sys_user(用户信息表)】的数据库操作Service
-* @createDate 2024-07-31 12:00:51
+* 针对表【sys_user(用户信息表)】的数据库操作Service
 */
 public interface SysUserService extends IService<SysUser> {
 
     /**
      * 用户登录
-     * @param req
-     * @param loginIp
-     * @return
+     * @param req 登录信息
+     * @param loginIp 登录编号
+     * @return 登录结果
      */
     SysUserLoginResp login(SysUserLoginReq req, String loginIp);
 
@@ -28,37 +27,36 @@ public interface SysUserService extends IService<SysUser> {
 
     /**
      * 用户分页
-     * @param req
-     * @return
+     * @param req 查询信息
+     * @return 用户分页
      */
     IPage<SysUserPageResp> page(SysUserPageReq req);
 
     /**
      * 用户信息
      * @param id 用户编号
-     * @return
+     * @return 用户信息
      */
     SysUserInfoResp userInfo(Long id);
 
     /**
      * 用户是否被禁用
      * @param userId 用户编号
-     * @return
+     * @return 是否成功
      */
     Boolean isDisable(Long userId);
 
     /**
      * 添加用户
-     * @param req
-     * @return
+     * @param req 用户信息
+     * @return 用户编号
      */
     Long add(SysUserAddReq req);
 
     /**
      * 编辑用户
      * @param id 用户编号
-     * @param req
-     * @return
+     * @param req 用户信息
      */
     void edit(Long id, SysUserEditReq req);
 

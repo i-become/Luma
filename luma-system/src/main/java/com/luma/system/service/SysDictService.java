@@ -17,9 +17,10 @@ public interface SysDictService extends IService<SysDict> {
 
     /**
      * 新增字典
-     * @param req
+     * @param req 字典信息
+     * @return 字典编号
      */
-    void add(SysAddReq req);
+    Integer add(SysAddReq req);
 
     /**
      * 删除字典及所有子孙节点
@@ -31,7 +32,7 @@ public interface SysDictService extends IService<SysDict> {
      * 获取字典树
      * @param key 指定key
      * @param level 指定层级
-     * @return
+     * @return 字典列表
      */
     List<SysDictTreeResp> tree(String key, Integer level);
 
@@ -39,7 +40,7 @@ public interface SysDictService extends IService<SysDict> {
      * 获取字典树（最小单元）
      * @param key 指定key
      * @param level 指定层级
-     * @return
+     * @return 字典列表
      */
     List<SysDictBaseTreeResp> baseTree(String key, Integer level);
 }

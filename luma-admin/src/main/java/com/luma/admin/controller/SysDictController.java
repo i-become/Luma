@@ -28,18 +28,19 @@ public class SysDictController {
 
     /**
      * 添加字典
-     * @param req
+     * @param req 字典信息
+     * @return 字典编号
      */
     @PostMapping
     @SaCheckPermission("system:dict:add")
-    public void add(@RequestBody SysAddReq req){
-        sysDictService.add(req);
+    public Integer add(@RequestBody SysAddReq req){
+        return sysDictService.add(req);
     }
 
     /**
      * 编辑字典
      * @param id 字典编号
-     * @param req
+     * @param req 字典信息
      */
     @PutMapping("/{id}")
     @SaCheckPermission("system:dict:edit")
@@ -63,7 +64,7 @@ public class SysDictController {
      * 获取字典树
      * @param key 指定key
      * @param level 指定层级
-     * @return
+     * @return 字典列表
      */
     @GetMapping
     public List<SysDictTreeResp> tree(String key, Integer level){
@@ -74,7 +75,7 @@ public class SysDictController {
      * 获取字典树（最小单元，用于下拉框选择）
      * @param key 指定key
      * @param level 指定层级
-     * @return
+     * @return 字典列表
      */
     @GetMapping("/list")
     public List<SysDictBaseTreeResp> baseTree(String key, Integer level){

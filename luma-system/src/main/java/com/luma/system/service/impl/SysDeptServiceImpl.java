@@ -48,7 +48,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept>
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void add(SysDeptAddReq req){
+    public Long add(SysDeptAddReq req){
         // 获取上级信息，判断是否有权限对其进行新增
         SysDept parentDept = lambdaQuery().select(SysDept::getId, SysDept::getAncestors).eq(SysDept::getId, req.getParentId()).one();
         if (!lambdaQuery().eq(SysDept::getId, req.getParentId()).exists()){
@@ -63,6 +63,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept>
         // 更新祖籍编号
         sysDept.setAncestors(parentDept.getAncestors() + sysDept.getId() + ",");
         baseMapper.updateById(sysDept);
+        return sysDept.getId();
     }
 
     @Override

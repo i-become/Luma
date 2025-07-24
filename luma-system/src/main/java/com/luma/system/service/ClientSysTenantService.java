@@ -11,7 +11,7 @@ public interface ClientSysTenantService extends IService<ClientSysTenant> {
     /**
      * 获取租户安装的应用列表
      * @param tenantId 租户编号
-     * @return
+     * @return 应用密钥列表
      */
     List<ClientKeyBo> getClientsByTenantId(Long tenantId);
 
