@@ -19,6 +19,9 @@
         <if test="req.loginName != null and req.loginName != ''">
             and u.login_name like concat('%', #{req.loginName}, '%')
         </if>
+        <if test="req.username != null and req.username != ''">
+            and u.username like concat('%', #{req.username}, '%')
+        </if>
         <if test="req.phone != null and req.phone != ''">
             and u.phone like concat('%', #{req.phone}, '%')
         </if>

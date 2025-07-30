@@ -72,7 +72,7 @@ public class SysUserInfoResp {
     /**
      * 角色列表
      */
-    private List<SysRoleBaseListResp> roles;
+    private List<String> roles;
 
     /**
      * 岗位列表

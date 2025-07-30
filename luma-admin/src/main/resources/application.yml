@@ -32,7 +32,7 @@ spring:
     # redis配置
     redis:
       # Redis数据库索引（默认为0）
-      database: 0
+      database: 3
       # Redis服务器地址
       host: 47.120.9.24
       # Redis服务器连接端口
@@ -63,9 +63,9 @@ spring:
       strict: false
       datasource:
         master:
-          url: jdbc:mysql://47.120.9.24:3306/is_tjx
+          url: jdbc:mysql://127.0.0.1:3306/luma
           username: root
-          password: mysql_WprEzR
+          password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
   thymeleaf:
     prefix: classpath:/templates/

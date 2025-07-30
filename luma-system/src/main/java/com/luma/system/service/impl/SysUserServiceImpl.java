@@ -169,7 +169,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new ISystemException("用户信息不存在");
         }
         // 角色信息
-        resp.setRoles(sysRoleMapper.selectRoleList(UserUtil.getUserId().equals(id) ? null : id));
+        resp.setRoles(StpUtil.getRoleList(id));
         // 岗位信息
         resp.setPosts(sysPostMapper.selectPostListByUserId(id));
         // 权限信息

@@ -20,6 +20,11 @@ public class SysUserPageReq extends BasePage {
     private String loginName;
 
     /**
+     * 用户名
+     */
+    private String username;
+
+    /**
      * 手机号码
      */
     private String phone;
