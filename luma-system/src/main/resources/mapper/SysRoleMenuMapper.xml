@@ -4,11 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.luma.system.mapper.SysRoleMenuMapper">
 
-    <resultMap id="BaseResultMap" type="com.luma.system.domain.entity.SysRoleMenu">
-            <id property="roleId" column="role_id" jdbcType="BIGINT"/>
-            <id property="menuId" column="menu_id" jdbcType="BIGINT"/>
-    </resultMap>
-
     <select id="selectRolePermissionListByRoleId" parameterType="java.lang.Long" resultType="java.lang.String" >
         select sm.perms from sys_menu sm
         inner join sys_role_menu srm on sm.id = srm.menu_id

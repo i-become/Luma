@@ -4,11 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.luma.system.mapper.SysUserRoleMapper">
 
-    <resultMap id="BaseResultMap" type="com.luma.system.domain.entity.SysUserRole">
-            <id property="userId" column="user_id" jdbcType="BIGINT"/>
-            <id property="roleId" column="role_id" jdbcType="BIGINT"/>
-    </resultMap>
-
     <select id="selectRoleDataScopeInfoListByUserId" parameterType="java.lang.Long" resultType="com.luma.common.domain.SysRoleDataScopeInfo" >
         select sr.id, sr.role_key, sr.data_scope from sys_role sr
         inner join sys_user_role sur on sr.id = sur.role_id
