@@ -2,6 +2,7 @@ package com.luma.system.domain.vo;
 
 import com.luma.system.domain.entity.SysUser;
 import com.luma.system.enums.SysStatusEnum;
+import com.luma.system.enums.SysUserSexEnum;
 import io.github.linpeilie.annotations.AutoMapper;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -50,9 +51,9 @@ public class SysUserAddReq {
     private String phone;
 
     /**
-     * 用户性别（0男 1女 2未知）
+     * 用户性别
      */
-    private Integer sex;
+    private SysUserSexEnum sex;
 
     /**
      * 头像路径
@@ -68,11 +69,11 @@ public class SysUserAddReq {
     /**
      * 角色编号列表
      */
-    private Set<Long> roleIdList;
+    private Set<Long> roleIds;
 
     /**
      * 岗位编号列表
      */
-    private Set<Long> postIdList;
+    private Set<Long> postIds;
 
 }

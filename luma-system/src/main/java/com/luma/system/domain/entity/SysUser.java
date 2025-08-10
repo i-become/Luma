@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 import com.luma.common.domain.TenantBaseEntity;
 import com.luma.system.enums.SysStatusEnum;
+import com.luma.system.enums.SysUserSexEnum;
 import lombok.Data;
 
 /**
@@ -57,9 +58,9 @@ public class SysUser extends TenantBaseEntity implements Serializable {
     private String phone;
 
     /**
-     * 用户性别（0男 1女 2未知）
+     * 用户性别
      */
-    private Integer sex;
+    private SysUserSexEnum sex;
 
     /**
      * 头像路径

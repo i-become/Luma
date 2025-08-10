@@ -20,6 +20,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,6 +48,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     public List<SysMenuListResp> list(String name){
         // 获取我拥有的所有菜单
         List<Long> roleIds = stpInterface.getRolePermissionList(UserUtil.getUserId()).stream().map(SysUserRolePermission::getId).toList();
+        if (roleIds.isEmpty()){
+            return new ArrayList<>();
+        }
         return sysRoleMenuMapper.selectMenuListByRoleIds(roleIds, name);
     }
 

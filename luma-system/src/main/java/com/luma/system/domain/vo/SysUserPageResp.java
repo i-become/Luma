@@ -2,6 +2,7 @@ package com.luma.system.domain.vo;
 
 import com.luma.system.domain.entity.SysUser;
 import com.luma.system.enums.SysStatusEnum;
+import com.luma.system.enums.SysUserSexEnum;
 import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
 
@@ -47,9 +48,9 @@ public class SysUserPageResp {
     private String phone;
 
     /**
-     * 用户性别（0男 1女 2未知）
+     * 用户性别
      */
-    private Integer sex;
+    private SysUserSexEnum sex;
 
     /**
      * 头像路径

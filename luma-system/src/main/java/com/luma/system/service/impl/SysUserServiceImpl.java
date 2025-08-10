@@ -58,9 +58,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private SysRoleMapper sysRoleMapper;
 
     @Resource
-    private SysMenuMapper sysMenuMapper;
-
-    @Resource
     private SysTenantMapper sysTenantMapper;
 
     @Resource
@@ -191,18 +188,18 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (lambdaQuery().eq(SysUser::getLoginName, req.getLoginName()).exists()){
             throw new ISystemException("该账号已存在");
         }
-        checkData(req.getDeptId(), req.getRoleIdList(), req.getPostIdList());
+        checkData(req.getDeptId(), req.getRoleIds(), req.getPostIds());
         // 保存用户
         SysUser sysUser = MapstructUtil.convert(req, SysUser.class);
         sysUser.setId(IdUtil.getSnowflakeNextId());
         sysUser.setPassword(SmUtil.sm3(req.getPassword()));
         baseMapper.insert(sysUser);
         // 保存用户和角色关系
-        if (req.getRoleIdList() == null){
+        if (req.getRoleIds() == null){
             return sysUser.getId();
         }
         List<SysUserRole> userRoleList = new ArrayList<>();
-        for (Long roleId : req.getRoleIdList()){
+        for (Long roleId : req.getRoleIds()){
             SysUserRole sysUserRole = new SysUserRole();
             sysUserRole.setUserId(sysUser.getId());
             sysUserRole.setRoleId(roleId);
@@ -210,11 +207,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
         sysUserRoleMapper.insert(userRoleList);
         // 保存用户和岗位关系
-        if (req.getPostIdList() == null){
+        if (req.getPostIds() == null){
             return sysUser.getId();
         }
         List<SysUserPost> sysUserPostList = new ArrayList<>();
-        for (Long postId : req.getPostIdList()){
+        for (Long postId : req.getPostIds()){
             SysUserPost sysUserPost = new SysUserPost();
             sysUserPost.setUserId(sysUser.getId());
             sysUserPost.setPostId(postId);
