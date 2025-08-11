@@ -10,6 +10,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.strategy.SaAnnotationStrategy;
 import com.luma.framework.interceptor.PermissionInterceptor;
 import com.luma.framework.interceptor.ThreadLocalCleanupFilter;
+import com.luma.framework.interceptor.UtcToLocalDateTimeDeserializer;
 import com.luma.framework.permission.TenantContextHolder;
 import com.luma.framework.utils.OAuth2Util;
 import com.luma.framework.utils.UserUtil;
@@ -19,6 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -101,7 +103,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     /**
      * 注册过滤器
-     * @return
      */
     @Bean
     public FilterRegistrationBean<ThreadLocalCleanupFilter> loggingFilter() {
@@ -110,6 +111,15 @@ public class WebConfig implements WebMvcConfigurer {
         registrationBean.addUrlPatterns("/*");
         registrationBean.setOrder(1);
         return registrationBean;
+    }
+
+    /**
+     * 注册转换器
+     */
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        // 注册utc时间转换器
+        registry.addConverter(UtcToLocalDateTimeDeserializer.instance);
     }
 
 }

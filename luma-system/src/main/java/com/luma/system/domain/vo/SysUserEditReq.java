@@ -56,11 +56,11 @@ public class SysUserEditReq {
     /**
      * 角色编号列表
      */
-    private Set<Long> roleIdList;
+    private Set<Long> roleIds;
 
     /**
      * 岗位编号列表
      */
-    private Set<Long> postIdList;
+    private Set<Long> postIds;
 
 }

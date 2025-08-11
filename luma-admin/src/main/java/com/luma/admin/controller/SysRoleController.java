@@ -41,15 +41,6 @@ public class SysRoleController {
     }
 
     /**
-     * 获取指定用户角色列表 （简易列表，主要用于下拉框）
-     * @return 角色列表
-     */
-    @GetMapping("/list")
-    public List<SysRoleBaseListResp> list(Long userId){
-        return sysRoleService.getRoleList(userId);
-    }
-
-    /**
      * 添加角色
      * @param req 角色信息
      * @return 角色编号

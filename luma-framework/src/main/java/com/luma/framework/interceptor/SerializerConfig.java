@@ -25,7 +25,11 @@ public class SerializerConfig {
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
         // 主要是对返回给前端的long类型转换为字符串
         return builder -> builder.serializerByType(Long.class, ToStringSerializer.instance)
-                .serializerByType(Long.TYPE, ToStringSerializer.instance);
+                .serializerByType(Long.TYPE, ToStringSerializer.instance)
+                // LocalDateTime 序列化：本地时间 → UTC 字符串
+                .serializerByType(LocalDateTime.class, LocalToUtcDateTimeSerializer.instance)
+                // LocalDateTime 反序列化：UTC 字符串 → 本地时间
+                .deserializerByType(LocalDateTime.class, UtcToLocalDateTimeDeserializer.instance);
     }
 
 }

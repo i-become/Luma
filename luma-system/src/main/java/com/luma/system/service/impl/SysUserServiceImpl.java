@@ -223,7 +223,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = "user:role:auth", key = "#id", condition = "#req.roleIdList != null")
+    @CacheEvict(cacheNames = "user:role:auth", key = "#id", condition = "#req.roleIds != null")
     public void edit(Long id, SysUserEditReq req){
         // 获取原有数据，判断权限是否满足
         SysUser sysUser = lambdaQuery().select(SysUser::getId, SysUser::getDeptId).eq(SysUser::getId, id).one();
@@ -234,7 +234,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (!iDeptIdList.contains(sysUser.getDeptId())){
             throw new ISystemException("权限不够");
         }
-        checkData(req.getDeptId(), req.getRoleIdList(), req.getPostIdList());
+        checkData(req.getDeptId(), req.getRoleIds(), req.getPostIds());
         // 如果是自己，不能修改启用状态
         if (Objects.equals(id, UserUtil.getUserId())){
             sysUser.setStatus(null);
@@ -248,31 +248,29 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             return;
         }
         // 保存用户和角色关系
-        ChainWrappers.lambdaUpdateChain(sysUserRoleMapper).eq(SysUserRole::getUserId, id).remove();
-        if (req.getRoleIdList() == null){
-            return;
+        if (req.getRoleIds() != null){
+            List<SysUserRole> userRoleList = new ArrayList<>();
+            for (Long roleId : req.getRoleIds()){
+                SysUserRole sysUserRole = new SysUserRole();
+                sysUserRole.setUserId(sysUser.getId());
+                sysUserRole.setRoleId(roleId);
+                userRoleList.add(sysUserRole);
+            }
+            ChainWrappers.lambdaUpdateChain(sysUserRoleMapper).eq(SysUserRole::getUserId, id).remove();
+            sysUserRoleMapper.insert(userRoleList);
         }
-        List<SysUserRole> userRoleList = new ArrayList<>();
-        for (Long roleId : req.getRoleIdList()){
-            SysUserRole sysUserRole = new SysUserRole();
-            sysUserRole.setUserId(sysUser.getId());
-            sysUserRole.setRoleId(roleId);
-            userRoleList.add(sysUserRole);
-        }
-        sysUserRoleMapper.insert(userRoleList);
         // 保存用户和岗位关系
-        ChainWrappers.lambdaUpdateChain(sysUserPostMapper).eq(SysUserPost::getUserId, id).remove();
-        if (req.getPostIdList() == null){
-            return;
+        if (req.getPostIds() != null){
+            ChainWrappers.lambdaUpdateChain(sysUserPostMapper).eq(SysUserPost::getUserId, id).remove();
+            List<SysUserPost> sysUserPostList = new ArrayList<>();
+            for (Long postId : req.getPostIds()){
+                SysUserPost sysUserPost = new SysUserPost();
+                sysUserPost.setUserId(sysUser.getId());
+                sysUserPost.setPostId(postId);
+                sysUserPostList.add(sysUserPost);
+            }
+            sysUserPostMapper.insert(sysUserPostList);
         }
-        List<SysUserPost> sysUserPostList = new ArrayList<>();
-        for (Long postId : req.getPostIdList()){
-            SysUserPost sysUserPost = new SysUserPost();
-            sysUserPost.setUserId(sysUser.getId());
-            sysUserPost.setPostId(postId);
-            sysUserPostList.add(sysUserPost);
-        }
-        sysUserPostMapper.insert(sysUserPostList);
     }
 
     @Override
@@ -315,24 +313,24 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     /**
      * 数据有效性校验
      * @param deptId 部门编号
-     * @param roleIdList 角色编号列表
-     * @param postIdList 岗位编号列表
+     * @param roleIds 角色编号列表
+     * @param postIds 岗位编号列表
      */
-    private void checkData(Long deptId, Set<Long> roleIdList, Set<Long> postIdList){
+    private void checkData(Long deptId, Set<Long> roleIds, Set<Long> postIds){
         // 部门有效性校验
         if (!sysDeptMapper.selectIdList().contains(deptId)){
             throw new ISystemException("部门填写错误，超出本人权限");
         }
         // 角色有效性校验
-        if (roleIdList != null && !roleIdList.isEmpty()){
-            if (!new HashSet<>(sysRoleMapper.selectRoleList(null).stream().map(SysRoleBaseListResp::getId).toList()).containsAll(roleIdList)){
+        if (roleIds != null && !roleIds.isEmpty()){
+            if (!new HashSet<>(sysRoleMapper.selectRoleList(null).stream().map(SysRoleBaseListResp::getId).toList()).containsAll(roleIds)){
                 throw new ISystemException("角色填写错误，超出本人权限");
             }
         }
         // 岗位有效性验证
-        if (postIdList != null && !postIdList.isEmpty()){
-            List<SysPost> postList = ChainWrappers.lambdaQueryChain(sysPostMapper).select(SysPost::getId, SysPost::getPostName, SysPost::getStatus).in(SysPost::getId, postIdList).list();
-            if (postList.size() != postIdList.size()){
+        if (postIds != null && !postIds.isEmpty()){
+            List<SysPost> postList = ChainWrappers.lambdaQueryChain(sysPostMapper).select(SysPost::getId, SysPost::getPostName, SysPost::getStatus).in(SysPost::getId, postIds).list();
+            if (postList.size() != postIds.size()){
                 throw new ISystemException("岗位信息错误");
             }
             for (SysPost post : postList){

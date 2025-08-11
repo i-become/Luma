@@ -6,6 +6,7 @@ import com.luma.framework.utils.UserUtil;
 import com.luma.system.domain.entity.SysUser;
 import com.luma.system.domain.vo.*;
 import com.luma.system.enums.SysStatusEnum;
+import com.luma.system.service.SysRoleService;
 import com.luma.system.service.SysUserService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -13,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -26,6 +28,9 @@ public class SysUserController {
 
     @Resource
     private SysUserService sysUserService;
+
+    @Resource
+    private SysRoleService sysRoleService;
 
     /**
      * 用户分页
@@ -101,7 +106,7 @@ public class SysUserController {
      * @param id 用户编号
      * @param newPassword 新密码
      */
-    @PostMapping("/{id}/rest_password")
+    @PutMapping("/{id}/rest_password")
     public void restPassword(@NotNull(message = "{validation.user.id.NotNull}") @PathVariable Long id, @NotNull(message = "{validation.user.password.NotBlank}") String newPassword){
         sysUserService.restPassword(id, newPassword);
         // 登出用户
@@ -112,7 +117,7 @@ public class SysUserController {
      * 启用用户
      * @param id 用户编号
      */
-    @PostMapping("/enable/{id}")
+    @PutMapping("/{id}/enable")
     @SaCheckPermission("system:user:edit")
     public void enable(@NotNull(message = "{validation.user.id.NotNull}") @PathVariable Long id){
         sysUserService.updateStatus(id, SysStatusEnum.NORMAL);
@@ -122,10 +127,29 @@ public class SysUserController {
      * 禁用用户
      * @param id 用户编号
      */
-    @PostMapping("/disable/{id}")
+    @PutMapping("/{id}/disable")
     @SaCheckPermission("system:user:edit")
     public void disable(@NotNull(message = "{validation.user.id.NotNull}") @PathVariable Long id){
         sysUserService.updateStatus(id, SysStatusEnum.DISABLED);
+    }
+
+    /**
+     * 获取自己的角色列表 （简易列表，主要用于下拉框）
+     * @return 角色列表
+     */
+    @GetMapping("/roles")
+    public List<SysRoleBaseListResp> list(){
+        return sysRoleService.getRoleList(null);
+    }
+
+    /**
+     * 获取指定用户角色列表 （简易列表，主要用于下拉框）
+     * @param id 用户编号
+     * @return 角色列表
+     */
+    @GetMapping("/{id}/roles")
+    public List<SysRoleBaseListResp> list(@PathVariable("id") Long id){
+        return sysRoleService.getRoleList(id);
     }
 
 }
