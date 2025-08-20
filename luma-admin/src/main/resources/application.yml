@@ -88,8 +88,6 @@ luma:
       exclude-path-patterns:
         - "/login"
         - "/error"
-        - "/live/event"
-        - "/mqtt/auth"
     open-api:
       prefix: /openapi/v1
       controller: "com.luma.openapi.controller.**"

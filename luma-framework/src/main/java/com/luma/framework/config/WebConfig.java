@@ -1,11 +1,13 @@
 package com.luma.framework.config;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.annotation.handler.SaAnnotationHandlerInterface;
 import cn.dev33.satoken.application.ApplicationInfo;
 import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.oauth2.SaOAuth2Manager;
 import cn.dev33.satoken.oauth2.template.SaOAuth2Util;
+import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.strategy.SaAnnotationStrategy;
 import com.luma.framework.interceptor.PermissionInterceptor;
@@ -65,6 +67,15 @@ public class WebConfig implements WebMvcConfigurer {
             StpUtil.checkLogin();
             TenantContextHolder.setTenantId(UserUtil.getTenantId());
             UserUtil.setCreateBy(UserUtil.getUsername());
+
+            // 如果 Method 或其所属 Class 上有 @SaIgnore 注解，则直接跳过整个校验过程
+            if(SaAnnotationStrategy.instance.isAnnotationPresent.apply(method, SaIgnore.class)) {
+                SaRouter.stop();
+            }
+            // 先校验 Method 所属 Class 上的注解
+            SaAnnotationStrategy.instance.checkElementAnnotation.accept(method.getDeclaringClass());
+            // 再校验 Method 上的注解
+            SaAnnotationStrategy.instance.checkElementAnnotation.accept(method);
         };
         // 登录拦截
         registry.addInterceptor(new SaInterceptor())

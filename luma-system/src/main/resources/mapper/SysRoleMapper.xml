@@ -30,14 +30,15 @@
     </select>
 
     <select id="selectRoleList" resultType="com.luma.system.domain.vo.SysRoleBaseListResp" >
-        select sr.id, any_value(sr.sort) as `sort`, any_value(sr.role_name) as `role_name`, any_value(sr.role_key) as `role_key`, any_value(sr.data_scope) as `data_scope`, any_value(sr.create_time) as `create_time` from sys_role sr
+        select sr.id, sr.sort, sr.role_name, sr.role_key, sr.data_scope, sr.create_time from sys_role sr
         left join sys_user_role sur on sr.id = sur.role_id
         left join sys_user su on sur.user_id = su.id
         where sr.del_flag = false
+        and sr.status = 0
         <if test="userId != null">
             and sur.user_id = #{userId}
         </if>
-        group by sr.id
+        group by sr.id, sr.sort, sr.role_name, sr.role_key, sr.data_scope, sr.create_time
         order by sort
     </select>
 

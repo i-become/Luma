@@ -147,8 +147,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
     @Transactional(rollbackFor = Exception.class)
     public void remove(Long id){
         // 权限校验
-        List<SysUserRolePermission> userRolePermissionList = stpInterface.getRolePermissionList(UserUtil.getUserId());
-        if (!userRolePermissionList.stream().map(SysUserRolePermission::getId).toList().contains(id)){
+        List<SysRoleBaseListResp> userRolePermissionList = baseMapper.selectRoleList(null);
+        if (!userRolePermissionList.stream().map(SysRoleBaseListResp::getId).toList().contains(id)){
             throw new ISystemException("没有该角色权限");
         }
         baseMapper.deleteById(id);
@@ -161,8 +161,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
     @Override
     public void updateStatus(Long id, SysStatusEnum status){
         // 权限校验
-        List<SysUserRolePermission> userRolePermissionList = stpInterface.getRolePermissionList(UserUtil.getUserId());
-        if (!userRolePermissionList.stream().map(SysUserRolePermission::getId).toList().contains(id)){
+        List<SysRoleBaseListResp> userRolePermissionList = baseMapper.selectRoleList(null);
+        if (!userRolePermissionList.stream().map(SysRoleBaseListResp::getId).toList().contains(id)){
             throw new ISystemException("没有该角色权限");
         }
         // 更新状态
@@ -179,25 +179,22 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
         // 获取当前用户所有的数据权限
         List<SysUserRolePermission> userRolePermissionList = stpInterface.getRolePermissionList(UserUtil.getUserId());
         List<DataScopeEnum> userDataScopeList = userRolePermissionList.stream().map(SysUserRolePermission::getDataScope).distinct().toList();
-        // 如果当前用户拥有全部数据权限，那不需要数据权限范围部分的判断
-        if (!userDataScopeList.contains(DataScopeEnum.ALL)){
-            // 先判断是否为自定义权限，自定义权限需要判断部门的包含关系
-            if (reqDataScope == DataScopeEnum.CUSTOM){
-                // 自定义权限，本人的部门必须全包含添加的角色的部门
-                Set<Long> deptIdList = req.getDeptIdList();
-                if (deptIdList == null || deptIdList.isEmpty()){
-                    throw new ISystemException("自定义权限部门不能为空");
-                }
-                if (!new HashSet<>(sysDeptMapper.selectIdList()).containsAll(deptIdList)){
-                    throw new ISystemException("自定义权限，部门权限超出");
-                }
-            }else {
-                // 非自定义权限，那就只剩下 1、3、4、5三种权限可能，使用大小进行判断
-                DataScopeEnum userDataScopeMax = userDataScopeList.stream().filter(o -> o != DataScopeEnum.CUSTOM).min((o1, o2) -> CompareUtil.compare(o1.getCode(), o2.getCode())).get();
-                if (reqDataScope.getCode() < userDataScopeMax.getCode()){
-                    // 超出本人权限范围
-                    throw new ISystemException("超出本人权限范围");
-                }
+        // 先判断是否为自定义权限，自定义权限需要判断部门的包含关系
+        if (reqDataScope == DataScopeEnum.CUSTOM){
+            // 自定义权限，本人的部门必须全包含添加的角色的部门
+            Set<Long> deptIdList = req.getDeptIdList();
+            if (deptIdList == null || deptIdList.isEmpty()){
+                throw new ISystemException("自定义权限部门不能为空");
+            }
+            if (!new HashSet<>(sysDeptMapper.selectIdList()).containsAll(deptIdList)){
+                throw new ISystemException("自定义权限，部门权限超出");
+            }
+        }else {
+            // 非自定义权限，那就只剩下 1、3、4、5三种权限可能，使用大小进行判断
+            DataScopeEnum userDataScopeMax = userDataScopeList.stream().filter(o -> o != DataScopeEnum.CUSTOM).min((o1, o2) -> CompareUtil.compare(o1.getCode(), o2.getCode())).get();
+            if (reqDataScope.getCode() < userDataScopeMax.getCode()){
+                // 超出本人权限范围
+                throw new ISystemException("超出本人权限范围");
             }
         }
 

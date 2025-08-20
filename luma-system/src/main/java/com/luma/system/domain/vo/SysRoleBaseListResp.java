@@ -1,6 +1,8 @@
 package com.luma.system.domain.vo;
 
+import com.luma.common.domain.SysUserRolePermission;
 import com.luma.common.enums.DataScopeEnum;
+import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -9,6 +11,7 @@ import java.time.LocalDateTime;
  * @author i-become
  */
 @Data
+@AutoMapper(target = SysUserRolePermission.class)
 public class SysRoleBaseListResp {
 
     /**
