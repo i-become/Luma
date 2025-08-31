@@ -2,6 +2,7 @@ package com.luma.system.domain.vo;
 
 import com.luma.common.domain.SysUserRolePermission;
 import com.luma.common.enums.DataScopeEnum;
+import com.luma.system.enums.SysStatusEnum;
 import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
 
@@ -38,5 +39,10 @@ public class SysRoleBaseListResp {
      * 创建时间
      */
     private LocalDateTime createTime;
+
+    /**
+     * 状态
+     */
+    private SysStatusEnum status;
 
 }

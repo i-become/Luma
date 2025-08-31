@@ -73,7 +73,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
 
     @Override
     public List<SysRoleBaseListResp> getRoleList(Long userId){
-        return baseMapper.selectRoleList(userId);
+        return baseMapper.selectRoleList(userId).stream().filter(o -> o.getStatus() == SysStatusEnum.NORMAL).toList();
     }
 
     @Override

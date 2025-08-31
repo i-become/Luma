@@ -3,11 +3,9 @@ package com.luma.admin.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.luma.framework.utils.UserUtil;
-import com.luma.system.domain.vo.SysRoleAddReq;
-import com.luma.system.domain.vo.SysRoleBaseListResp;
-import com.luma.system.domain.vo.SysRolePageReq;
-import com.luma.system.domain.vo.SysRolePageResp;
+import com.luma.system.domain.vo.*;
 import com.luma.system.enums.SysStatusEnum;
+import com.luma.system.service.SysMenuService;
 import com.luma.system.service.SysRoleService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -29,12 +27,15 @@ public class SysRoleController {
     @Resource
     private SysRoleService sysRoleService;
 
+    @Resource
+    private SysMenuService sysMenuService;
+
     /**
      * 角色分页
      * @param req 查询信息
      * @return 角色分页
      */
-    @GetMapping("/page")
+    @GetMapping
     @SaCheckPermission("system:role:query")
     public IPage<SysRolePageResp> page(SysRolePageReq req){
         return sysRoleService.page(req);
@@ -90,6 +91,16 @@ public class SysRoleController {
     @SaCheckPermission("system:role:edit")
     public void disable(@NotNull(message = "{validation.role.id.NotNull}") @PathVariable Long id){
         sysRoleService.updateStatus(id, SysStatusEnum.DISABLED);
+    }
+
+    /**
+     * 获取指定角色的菜单列表
+     * @param id 角色编号
+     * @return 菜单列表
+     */
+    @GetMapping("/{id}/menus")
+    public List<SysMenuBaseListResp> menus(@NotNull(message = "{validation.role.id.NotNull}") @PathVariable Long id){
+        return sysMenuService.baseList(id);
     }
 
 }

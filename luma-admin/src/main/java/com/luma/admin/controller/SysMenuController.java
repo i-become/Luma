@@ -36,16 +36,6 @@ public class SysMenuController {
     }
 
     /**
-     * 获取指定角色的菜单列表
-     * @param roleId 角色编号
-     * @return 菜单列表
-     */
-    @GetMapping("/list")
-    public List<SysMenuBaseListResp> baseList(@NotNull(message = "{validation.role.id.NotNull}") Long roleId){
-        return sysMenuService.baseList(roleId);
-    }
-
-    /**
      * 添加菜单
      * @param req 菜单信息
      * @return 菜单编号

@@ -37,7 +37,7 @@ public class SysUserController {
      * @param req 查询信息
      * @return 用户分页
      */
-    @GetMapping("/page")
+    @GetMapping
     @SaCheckPermission("system:user:query")
     public IPage<SysUserPageResp> page(SysUserPageReq req){
         return sysUserService.page(req);
@@ -50,7 +50,7 @@ public class SysUserController {
      */
     @GetMapping("/{id}")
     @SaCheckPermission("system:user:query")
-    public SysUserInfoResp userinfo(@NotNull(message = "{validation.user.id.NotNull}") @PathVariable Long id){
+    public SysUserInfoResp info(@NotNull(message = "{validation.user.id.NotNull}") @PathVariable Long id){
         return sysUserService.userInfo(id);
     }
 
@@ -59,7 +59,7 @@ public class SysUserController {
      * @return 用户信息
      */
     @GetMapping("/info")
-    public SysUserInfoResp selfInfo(){
+    public SysUserInfoResp info(){
         return sysUserService.userInfo(UserUtil.getUserId());
     }
 
@@ -138,7 +138,7 @@ public class SysUserController {
      * @return 角色列表
      */
     @GetMapping("/roles")
-    public List<SysRoleBaseListResp> list(){
+    public List<SysRoleBaseListResp> roles(){
         return sysRoleService.getRoleList(null);
     }
 
@@ -148,7 +148,7 @@ public class SysUserController {
      * @return 角色列表
      */
     @GetMapping("/{id}/roles")
-    public List<SysRoleBaseListResp> list(@PathVariable("id") Long id){
+    public List<SysRoleBaseListResp> roles(@PathVariable("id") Long id){
         return sysRoleService.getRoleList(id);
     }
 
