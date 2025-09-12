@@ -1,6 +1,5 @@
 package com.luma.system.mapper;
 
-import com.luma.common.domain.SysUserRolePermission;
 import com.luma.system.domain.entity.SysRoleMenu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.luma.system.domain.vo.SysMenuListResp;
@@ -19,17 +18,14 @@ public interface SysRoleMenuMapper extends BaseMapper<SysRoleMenu> {
     /**
      * 获取角色菜单权限标识列表
      * @param roleId 角色编号
-     * @return
      */
     List<String> selectRolePermissionListByRoleId(Long roleId);
 
     /**
      * 获取某些角色的所有菜单
      * @param roleIds 角色编号列表
-     * @param name 模糊搜索菜单名称
-     * @return
      */
-    List<SysMenuListResp> selectMenuListByRoleIds(@Param("roleIds") List<Long> roleIds, @Param("name") String name);
+    List<SysMenuListResp> selectMenuListByRoleIds(@Param("roleIds") List<Long> roleIds);
 
 }
 

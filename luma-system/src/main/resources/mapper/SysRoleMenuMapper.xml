@@ -17,9 +17,6 @@
         <foreach collection="roleIds" item="roleId" separator="," open="(" close=")" >
             #{roleId}
         </foreach>
-        <if test="name != null and name != ''">
-            and m.name like concat('%', #{name}, '%')
-        </if>
     </select>
 
 </mapper>

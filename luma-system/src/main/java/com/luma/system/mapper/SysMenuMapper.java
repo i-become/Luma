@@ -14,8 +14,8 @@ public interface SysMenuMapper extends BaseMapper<SysMenu> {
     /**
      * 获取指定角色的菜单列表
      * @param roleId 角色编号
-     * @return
+     * @return 菜单列表
      */
-    List<SysMenuBaseListResp> selectBaseList(Long roleId);
+    List<SysMenuBaseListResp> selectBaseListByRoleId(Long roleId);
 
 }

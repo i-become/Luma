@@ -24,11 +24,11 @@ public interface SysDeptService extends IService<SysDept> {
     List<SysDeptListResp> list(String name, SysStatusEnum status);
 
     /**
-     * 获取部门列表，如果传入角色编号，会返回部门有没有关联该角色
+     * 获取角色的部门列表
      * @param roleId 角色编号
      * @return 部门列表
      */
-    List<SysDeptBaseListResp> baseList(Long roleId);
+    List<SysDeptBaseListResp> getBaseListByRoleId(Long roleId);
 
     /**
      * 添加部门

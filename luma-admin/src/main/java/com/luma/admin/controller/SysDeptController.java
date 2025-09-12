@@ -39,17 +39,6 @@ public class SysDeptController {
     }
 
     /**
-     * 获取部门列表
-     * 如果传入角色编号，会返回部门有没有关联该角色
-     * @param roleId 角色编号
-     * @return 部门列表
-     */
-    @GetMapping("/list")
-    public List<SysDeptBaseListResp> baseList(Long roleId){
-        return sysDeptService.baseList(roleId);
-    }
-
-    /**
      * 添加部门
      * @param req 部门信息
      * @return 部门编号

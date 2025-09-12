@@ -8,13 +8,11 @@
         select id from sys_dept
     </select>
 
-    <select id="selectBaseList" resultType="com.luma.system.domain.vo.SysDeptBaseListResp" >
-        select d.id, d.dept_name, d.parent_id, rd.role_id is not null as checked from sys_dept d
-        left join sys_role_dept rd on d.id = rd.dept_id
+    <select id="selectBaseListByRoleId" resultType="com.luma.system.domain.vo.SysDeptBaseListResp" >
+        select d.id, d.dept_name, d.parent_id from sys_dept d
+        inner join sys_role_dept rd on d.id = rd.dept_id
         where d.status = 0 and d.del_flag = false
-        <if test="roleId != null">
-            and rd.role_id = #{roldId}
-        </if>
+        and rd.role_id = #{roldId}
         order by d.sort
     </select>
 

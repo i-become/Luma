@@ -2,9 +2,9 @@ package com.luma.admin.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.luma.framework.utils.UserUtil;
 import com.luma.system.domain.vo.*;
 import com.luma.system.enums.SysStatusEnum;
+import com.luma.system.service.SysDeptService;
 import com.luma.system.service.SysMenuService;
 import com.luma.system.service.SysRoleService;
 import jakarta.annotation.Resource;
@@ -29,6 +29,9 @@ public class SysRoleController {
 
     @Resource
     private SysMenuService sysMenuService;
+
+    @Resource
+    private SysDeptService sysDeptService;
 
     /**
      * 角色分页
@@ -100,7 +103,17 @@ public class SysRoleController {
      */
     @GetMapping("/{id}/menus")
     public List<SysMenuBaseListResp> menus(@NotNull(message = "{validation.role.id.NotNull}") @PathVariable Long id){
-        return sysMenuService.baseList(id);
+        return sysMenuService.getBaseListByRoleId(id);
+    }
+
+    /**
+     * 获取角色部门列表
+     * @param id 角色编号
+     * @return 部门列表
+     */
+    @GetMapping("/{id}/depts")
+    public List<SysDeptBaseListResp> depts(@PathVariable Long id){
+        return sysDeptService.getBaseListByRoleId(id);
     }
 
 }

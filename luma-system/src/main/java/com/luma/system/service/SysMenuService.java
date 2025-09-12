@@ -14,18 +14,18 @@ import java.util.List;
 public interface SysMenuService extends IService<SysMenu> {
 
     /**
-     * 获取当前用户的菜单列表
-     * @param name 菜单名称 模糊搜索
+     * 获取用户菜单列表
+     * @param userId 用户编号
      * @return 菜单列表
      */
-    List<SysMenuListResp> list(String name);
+    List<SysMenuListResp> list(Long userId);
 
     /**
      * 获取指定角色的菜单列表
      * @param roleId 角色编号
      * @return 菜单列表
      */
-    List<SysMenuBaseListResp> baseList(Long roleId);
+    List<SysMenuBaseListResp> getBaseListByRoleId(Long roleId);
 
     /**
      * 添加菜单

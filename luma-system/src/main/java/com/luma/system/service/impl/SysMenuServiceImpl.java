@@ -45,23 +45,23 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     @Override
     @Transactional(readOnly = true)
-    public List<SysMenuListResp> list(String name){
-        // 获取我拥有的所有菜单
-        List<Long> roleIds = stpInterface.getRolePermissionList(UserUtil.getUserId()).stream().map(SysUserRolePermission::getId).toList();
+    public List<SysMenuListResp> list(Long userId){
+        // 是否只获取自己关联的菜单，如果不是会获取自己有权限的菜单，这两个并不等同，自己关联的菜单是自己拥有角色关联的菜单集合，而自己有权限的菜单是指对菜单数据本身的操作权限，根据自己角色最大的权限范围决定
+        List<Long> roleIds = stpInterface.getRolePermissionList(userId).stream().map(SysUserRolePermission::getId).toList();
         if (roleIds.isEmpty()){
             return new ArrayList<>();
         }
-        return sysRoleMenuMapper.selectMenuListByRoleIds(roleIds, name);
+        return sysRoleMenuMapper.selectMenuListByRoleIds(roleIds);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<SysMenuBaseListResp> baseList(Long roleId){
+    public List<SysMenuBaseListResp> getBaseListByRoleId(Long roleId){
         // 判断是否有该角色权限
         if (!sysRoleMapper.selectRoleList(null).stream().map(SysRoleBaseListResp::getId).toList().contains(roleId)) {
             throw new ISystemException("没有该角色权限");
         }
-        return baseMapper.selectBaseList(roleId);
+        return baseMapper.selectBaseListByRoleId(roleId);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.luma.framework.utils.UserUtil;
 import com.luma.system.domain.entity.SysUser;
 import com.luma.system.domain.vo.*;
 import com.luma.system.enums.SysStatusEnum;
+import com.luma.system.service.SysMenuService;
 import com.luma.system.service.SysRoleService;
 import com.luma.system.service.SysUserService;
 import jakarta.annotation.Resource;
@@ -31,6 +32,9 @@ public class SysUserController {
 
     @Resource
     private SysRoleService sysRoleService;
+
+    @Resource
+    private SysMenuService sysMenuService;
 
     /**
      * 用户分页
@@ -150,6 +154,15 @@ public class SysUserController {
     @GetMapping("/{id}/roles")
     public List<SysRoleBaseListResp> roles(@PathVariable("id") Long id){
         return sysRoleService.getRoleList(id);
+    }
+
+    /**
+     * 获取当前用户的菜单列表
+     * @return 菜单列表
+     */
+    @GetMapping("/menus")
+    public List<SysMenuListResp> menus(){
+        return sysMenuService.list(UserUtil.getUserId());
     }
 
 }

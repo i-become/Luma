@@ -23,9 +23,4 @@ public class SysDeptBaseListResp {
      */
     private String deptName;
 
-    /**
-     * 是否选关联该角色
-     */
-    private Boolean checked;
-
 }

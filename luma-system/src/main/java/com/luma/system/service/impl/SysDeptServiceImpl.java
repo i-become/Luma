@@ -10,9 +10,12 @@ import com.luma.system.domain.entity.SysDept;
 import com.luma.system.domain.vo.SysDeptAddReq;
 import com.luma.system.domain.vo.SysDeptBaseListResp;
 import com.luma.system.domain.vo.SysDeptListResp;
+import com.luma.system.domain.vo.SysRoleBaseListResp;
 import com.luma.system.enums.SysStatusEnum;
+import com.luma.system.mapper.SysRoleMapper;
 import com.luma.system.service.SysDeptService;
 import com.luma.system.mapper.SysDeptMapper;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +30,8 @@ import java.util.List;
 public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept>
     implements SysDeptService{
 
+    @Resource
+    private SysRoleMapper sysRoleMapper;
 
     @Override
     @DataScope(deptIdColumnName = "id")
@@ -42,8 +47,12 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept>
 
     @Override
     @Transactional(readOnly = true)
-    public List<SysDeptBaseListResp> baseList(Long roleId){
-        return baseMapper.selectBaseList(roleId);
+    public List<SysDeptBaseListResp> getBaseListByRoleId(Long roleId){
+        // 判断是否有该角色权限
+        if (!sysRoleMapper.selectRoleList(null).stream().map(SysRoleBaseListResp::getId).toList().contains(roleId)) {
+            throw new ISystemException("没有该角色权限");
+        }
+        return baseMapper.selectBaseListByRoleId(roleId);
     }
 
     @Override

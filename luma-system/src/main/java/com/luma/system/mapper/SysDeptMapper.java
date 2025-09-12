@@ -24,12 +24,12 @@ public interface SysDeptMapper extends BaseMapper<SysDept> {
     List<Long> selectIdList();
 
     /**
-     * 获取部门列表，如果传入角色编号，会返回部门有没有关联该角色
+     * 获取角色部门列表
      * @param roleId 角色编号
-     * @return
+     * @return 部门列表
      */
     @DataScope(deptAlias = "d", deptIdColumnName = "id", autoSql = false)
-    List<SysDeptBaseListResp> selectBaseList(Long roleId);
+    List<SysDeptBaseListResp> selectBaseListByRoleId(Long roleId);
 
     /**
      * 更新祖籍编号

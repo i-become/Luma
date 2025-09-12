@@ -38,9 +38,4 @@ public class SysMenuBaseListResp {
      */
     private String perms;
 
-    /**
-     * 是否选关联该角色
-     */
-    private Boolean checked;
-
 }

@@ -1,6 +1,8 @@
 package com.luma.admin.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.luma.common.utils.MapstructUtil;
+import com.luma.system.domain.entity.SysMenu;
 import com.luma.system.domain.vo.SysMenuAddReq;
 import com.luma.system.domain.vo.SysMenuBaseListResp;
 import com.luma.system.domain.vo.SysMenuListResp;
@@ -26,13 +28,17 @@ public class SysMenuController {
     private SysMenuService sysMenuService;
 
     /**
-     * 获取当前用户的菜单列表
-     * @param name 菜单名称 模糊搜索
+     * 获取系统菜单列表
      * @return 菜单列表
      */
     @GetMapping
-    public List<SysMenuListResp> list(String name){
-        return sysMenuService.list(name);
+    @SaCheckPermission("system:menu:query")
+    public List<SysMenuListResp> list(){
+        List<SysMenu> list = sysMenuService.lambdaQuery().select(SysMenu::getId, SysMenu::getParentId, SysMenu::getName, SysMenu::getRedirect, SysMenu::getComponent,
+                        SysMenu::getIcon, SysMenu::getSort, SysMenu::getTitle, SysMenu::getTarget, SysMenu::getActive, SysMenu::getType, SysMenu::getPath,
+                        SysMenu::getIsHide, SysMenu::getIsFull, SysMenu::getIsAffix, SysMenu::getIsKeepAlive, SysMenu::getTag, SysMenu::getPerms)
+                .list();
+        return MapstructUtil.convert(list, SysMenuListResp.class);
     }
 
     /**
