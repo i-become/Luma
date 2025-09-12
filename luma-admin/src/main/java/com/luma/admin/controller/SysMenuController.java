@@ -59,7 +59,7 @@ public class SysMenuController {
     @DeleteMapping("/{id}")
     @SaCheckPermission("system:menu:remove")
     public void remove(@NotNull(message = "{validation.menu.id.NotNull}") @PathVariable Long id){
-        sysMenuService.removeById(id);
+        sysMenuService.remove(id);
     }
 
     /**

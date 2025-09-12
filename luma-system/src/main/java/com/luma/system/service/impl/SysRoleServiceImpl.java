@@ -22,6 +22,7 @@ import com.luma.system.enums.SysStatusEnum;
 import com.luma.system.mapper.*;
 import com.luma.system.service.SysRoleService;
 import jakarta.annotation.Resource;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,17 +98,16 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
         sysUserRole.setUserId(UserUtil.getUserId());
         sysUserRoleMapper.insert(sysUserRole);
         // 保存角色和菜单的关系
-        if (req.getMenuIdList() == null){
-            return sysRole.getId();
+        if (req.getMenuIdList() != null){
+            List<SysRoleMenu> roleMenuList = new ArrayList<>();
+            for (Long menuId : req.getMenuIdList()){
+                SysRoleMenu roleMenu = new SysRoleMenu();
+                roleMenu.setRoleId(sysRole.getId());
+                roleMenu.setMenuId(menuId);
+                roleMenuList.add(roleMenu);
+            }
+            sysRoleMenuMapper.insert(roleMenuList);
         }
-        List<SysRoleMenu> roleMenuList = new ArrayList<>();
-        for (Long menuId : req.getMenuIdList()){
-            SysRoleMenu roleMenu = new SysRoleMenu();
-            roleMenu.setRoleId(sysRole.getId());
-            roleMenu.setMenuId(menuId);
-            roleMenuList.add(roleMenu);
-        }
-        sysRoleMenuMapper.insert(roleMenuList);
         // 如果是自定义权限，需要关联角色和菜单
         if (req.getDataScope() == DataScopeEnum.CUSTOM){
             List<SysRoleDept> roleDeptList = new ArrayList<>();
@@ -124,6 +124,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(cacheNames = "luma:role:perms", key = "#id", condition = "req.menuIdList != null")
     public void edit(Long id, SysRoleAddReq req){
         // 对原有的角色进行判断
         if (!lambdaQuery().eq(SysRole::getId, id).exists()){
@@ -141,19 +142,18 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
         SysRole sysRole = MapstructUtil.convert(req, SysRole.class);
         sysRole.setId(id);
         baseMapper.updateById(sysRole);
-        // 更新角色和菜单关系
-        ChainWrappers.lambdaUpdateChain(sysRoleMenuMapper).eq(SysRoleMenu::getRoleId, id).remove();
-        if (req.getMenuIdList() == null){
-            return;
+        if (req.getMenuIdList() != null){
+            // 更新角色和菜单关系
+            ChainWrappers.lambdaUpdateChain(sysRoleMenuMapper).eq(SysRoleMenu::getRoleId, id).remove();
+            List<SysRoleMenu> roleMenuList = new ArrayList<>();
+            for (Long menuId : req.getMenuIdList()){
+                SysRoleMenu roleMenu = new SysRoleMenu();
+                roleMenu.setRoleId(sysRole.getId());
+                roleMenu.setMenuId(menuId);
+                roleMenuList.add(roleMenu);
+            }
+            sysRoleMenuMapper.insert(roleMenuList);
         }
-        List<SysRoleMenu> roleMenuList = new ArrayList<>();
-        for (Long menuId : req.getMenuIdList()){
-            SysRoleMenu roleMenu = new SysRoleMenu();
-            roleMenu.setRoleId(sysRole.getId());
-            roleMenu.setMenuId(menuId);
-            roleMenuList.add(roleMenu);
-        }
-        sysRoleMenuMapper.insert(roleMenuList);
         // 如果是自定义权限，需要关联角色和菜单
         ChainWrappers.lambdaUpdateChain(sysRoleDeptMapper).eq(SysRoleDept::getRoleId, id).remove();
         if (req.getDataScope() == DataScopeEnum.CUSTOM){
@@ -170,6 +170,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(cacheNames = "luma:role:perms", key = "#id")
     public void remove(Long id){
         // 权限校验
         List<SysRoleBaseListResp> userRolePermissionList = baseMapper.selectRoleList(null);

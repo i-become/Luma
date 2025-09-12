@@ -2,12 +2,15 @@ package com.luma.system.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers;
 import com.luma.common.domain.SysUserRolePermission;
 import com.luma.common.exception.system.ISystemException;
 import com.luma.common.utils.MapstructUtil;
 import com.luma.framework.permission.IStpInterface;
+import com.luma.framework.utils.RedisUtil;
 import com.luma.framework.utils.UserUtil;
 import com.luma.system.domain.entity.SysMenu;
+import com.luma.system.domain.entity.SysRoleMenu;
 import com.luma.system.domain.vo.SysMenuAddReq;
 import com.luma.system.domain.vo.SysMenuBaseListResp;
 import com.luma.system.domain.vo.SysMenuListResp;
@@ -17,10 +20,12 @@ import com.luma.system.mapper.SysRoleMapper;
 import com.luma.system.mapper.SysRoleMenuMapper;
 import com.luma.system.service.SysMenuService;
 import jakarta.annotation.Resource;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -65,6 +70,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
+    @CacheEvict(cacheNames = "luma:role:perms", key = "T(com.luma.framework.utils.UserUtil).ADMIN_ROLE_ID")
     public Long add(SysMenuAddReq req){
         // 如果上级存在且不是0，那么获取上级信息，判断是否存在
         if (req.getParentId() != null && !req.getParentId().equals(BASE_ID)){
@@ -78,10 +84,16 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         SysMenu sysMenu = MapstructUtil.convert(req, SysMenu.class);
         sysMenu.setId(IdUtil.getSnowflakeNextId());
         this.save(sysMenu);
+        // 新增菜单关联上超级管理员
+        SysRoleMenu sysRoleMenu = new SysRoleMenu();
+        sysRoleMenu.setMenuId(sysMenu.getId());
+        sysRoleMenu.setRoleId(UserUtil.ADMIN_ROLE_ID);
+        sysRoleMenuMapper.insert(sysRoleMenu);
         return sysMenu.getId();
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void edit(Long id, SysMenuAddReq req){
         // 获取原有菜单，判断是否存在
         SysMenu sysMenu = lambdaQuery().select(SysMenu::getId, SysMenu::getParentId).eq(SysMenu::getId, id).one();
@@ -97,6 +109,58 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         SysMenu newMenu = MapstructUtil.convert(req, SysMenu.class);
         newMenu.setId(id);
         this.updateById(newMenu);
+        // 清除权限缓存
+        removeRolePermsByMenuIds(Collections.singletonList(id));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void remove(Long id){
+        // 获取子孙节点id
+        List<Long> allIds = new ArrayList<>();
+        allIds.add(id);
+        List<Long> ids = new ArrayList<>();
+        ids.add(id);
+        while (!ids.isEmpty()){
+            ids = getChildIdList(ids);
+            allIds.addAll(ids);
+        }
+        baseMapper.deleteByIds(allIds);
+        // 清除权限缓存
+        removeRolePermsByMenuIds(allIds);
+    }
+
+    /**
+     * 获取子级菜单列表
+     * @param ids 本级菜单id列表
+     * @return 子级菜单列表
+     */
+    private List<Long> getChildIdList(List<Long> ids){
+        return lambdaQuery().select(SysMenu::getId)
+                .in(SysMenu::getParentId, ids)
+                .list()
+                .stream()
+                .map(SysMenu::getId)
+                .toList();
+    }
+
+    /**
+     * 清除所有与该菜单关联的权限缓存
+     * @param ids 菜单编号
+     */
+    private void removeRolePermsByMenuIds(List<Long> ids){
+        // 清除所有与该菜单关联的权限缓存
+        List<Long> roleIds = ChainWrappers.lambdaQueryChain(sysRoleMenuMapper)
+                .select(SysRoleMenu::getRoleId)
+                .in(SysRoleMenu::getMenuId, ids)
+                .list()
+                .stream()
+                .map(SysRoleMenu::getRoleId)
+                .distinct()
+                .toList();
+        for (Long roleId: roleIds) {
+            RedisUtil.deleteObject("luma:role:perms:" + roleId);
+        }
     }
 
 }

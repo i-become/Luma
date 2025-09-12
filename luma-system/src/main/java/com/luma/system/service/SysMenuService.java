@@ -40,4 +40,10 @@ public interface SysMenuService extends IService<SysMenu> {
      * @param req 菜单信息
      */
     void edit(Long id, SysMenuAddReq req);
+
+    /**
+     * 删除菜单
+     * @param id 菜单编号
+     */
+    void remove(Long id);
 }
