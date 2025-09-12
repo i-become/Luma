@@ -8,6 +8,7 @@ import com.luma.common.utils.MapstructUtil;
 import com.luma.framework.permission.IStpInterface;
 import com.luma.framework.utils.UserUtil;
 import com.luma.system.domain.entity.SysMenu;
+import com.luma.system.domain.entity.SysRoleMenu;
 import com.luma.system.domain.vo.SysMenuAddReq;
 import com.luma.system.domain.vo.SysMenuBaseListResp;
 import com.luma.system.domain.vo.SysMenuListResp;
@@ -78,6 +79,11 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         SysMenu sysMenu = MapstructUtil.convert(req, SysMenu.class);
         sysMenu.setId(IdUtil.getSnowflakeNextId());
         this.save(sysMenu);
+        // 新增菜单关联上超级管理员
+        SysRoleMenu sysRoleMenu = new SysRoleMenu();
+        sysRoleMenu.setMenuId(sysMenu.getId());
+        sysRoleMenu.setRoleId(UserUtil.ADMIN_ROLE_ID);
+        sysRoleMenuMapper.insert(sysRoleMenu);
         return sysMenu.getId();
     }
 

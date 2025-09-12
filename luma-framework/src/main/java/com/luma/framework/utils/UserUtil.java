@@ -14,6 +14,11 @@ import java.util.List;
 public class UserUtil {
 
     /**
+     * 超级管理员roleId
+     */
+    public static final long ADMIN_ROLE_ID = 1L;
+
+    /**
      * 用于存储当前线程的createBy
      */
     private static final ThreadLocal<String> CREATE_BY_THREAD_LOCAL = new TransmittableThreadLocal<>();
