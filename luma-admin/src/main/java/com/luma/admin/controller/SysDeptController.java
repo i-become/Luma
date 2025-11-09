@@ -33,7 +33,6 @@ public class SysDeptController {
      * @return 部门列表
      */
     @GetMapping
-    @SaCheckPermission("system:dept:query")
     public List<SysDeptListResp> list(String name, SysStatusEnum status){
         return sysDeptService.list(name, status);
     }
