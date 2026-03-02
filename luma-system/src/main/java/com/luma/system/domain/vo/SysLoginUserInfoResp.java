@@ -18,9 +18,9 @@ public class SysLoginUserInfoResp {
     private Long userId;
 
     /**
-     * 用户名
+     * 用户昵称
      */
-    private String username;
+    private String nickname;
 
     /**
      * 角色列表

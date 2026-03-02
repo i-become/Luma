@@ -3,6 +3,7 @@ package com.luma.system.domain.vo;
 import com.luma.system.domain.entity.SysUser;
 import com.luma.system.enums.SysStatusEnum;
 import com.luma.system.enums.SysUserSexEnum;
+import com.luma.system.enums.UserTypeEnum;
 import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
 
@@ -41,9 +42,9 @@ public class SysUserInfoResp {
     private String username;
 
     /**
-     * 用户类型（0系统用户 1注册用户）
+     * 用户类型
      */
-    private Integer userType;
+    private UserTypeEnum userType;
 
     /**
      * 用户邮箱

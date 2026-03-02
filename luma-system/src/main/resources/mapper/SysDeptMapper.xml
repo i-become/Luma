@@ -11,13 +11,16 @@
     <select id="selectBaseListByRoleId" resultType="com.luma.system.domain.vo.SysDeptBaseListResp" >
         select d.id, d.dept_name, d.parent_id from sys_dept d
         inner join sys_role_dept rd on d.id = rd.dept_id
-        where d.status = 0 and d.del_flag = false
+        where d.status = 0 and d.del_flag = 0
         and rd.role_id = #{roldId}
         order by d.sort
     </select>
 
     <update id="updateDeptAncestors" >
-        update sys_dept set ancestors = CONCAT(#{parentAncestors}, SUBSTRING(ancestors, #{oldParentAncestorsLength})) WHERE del_flag = false and id = #{id} or find_in_set( #{id} , ancestors )
+        update sys_dept 
+        set ancestors = CONCAT(#{parentAncestors}, SUBSTRING(ancestors, #{oldParentAncestorsLength})) 
+        WHERE del_flag = 0 
+        and (id = #{id} or ancestors LIKE CONCAT('%,', #{id}, ',%'))
     </update>
 
 </mapper>

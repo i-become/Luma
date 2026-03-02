@@ -43,12 +43,12 @@ public class UserinfoScopeHandler implements SaOAuth2ScopeHandlerInterface {
     @Override
     public void workAccessToken(AccessTokenModel at) {
         TenantContextHolder.disableNext();
-        SysUser user = sysUserService.lambdaQuery().select(SysUser::getId, SysUser::getUsername, SysUser::getLoginName, SysUser::getPhone, SysUser::getTenantId).eq(SysUser::getId, Long.valueOf(String.valueOf(at.getLoginId()))).one();
+        SysUser user = sysUserService.lambdaQuery().select(SysUser::getId, SysUser::getNickname, SysUser::getLoginName, SysUser::getPhone, SysUser::getTenantId).eq(SysUser::getId, Long.valueOf(String.valueOf(at.getLoginId()))).one();
         Client client = clientService.lambdaQuery().select(Client::getId, Client::getSecret).eq(Client::getId, Long.valueOf(at.getClientId())).one();
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("userId", user.getId());
         map.put("openId", saOAuth2DataLoader.getOpenid(at.getClientId(), at.getLoginId()));
-        map.put("username", user.getUsername());
+        map.put("nickname", user.getNickname());
         map.put("loginName", user.getLoginName());
         map.put("tenantId", user.getTenantId());
         if (StringUtils.isNotBlank(user.getPhone())){

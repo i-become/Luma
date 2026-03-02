@@ -43,7 +43,7 @@ public class SysRole extends TenantBaseEntity implements Serializable {
     private DataScopeEnum dataScope;
 
     /**
-     * 角色状态（0正常 1停用）
+     * 角色状态
      */
     private SysStatusEnum status;
 

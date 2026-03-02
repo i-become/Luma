@@ -40,12 +40,12 @@ public class SysTenant extends BaseEntity implements Serializable {
     private String url;
 
     /**
-     * 租户状态（0正常 1停用）
+     * 租户状态
      */
     private SysStatusEnum status;
 
     /**
-     * 删除标志（0代表存在 1代表删除）
+     * 删除标志
      */
     @TableLogic
     private Boolean delFlag;

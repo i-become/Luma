@@ -57,12 +57,12 @@ public class SysDept extends TenantBaseEntity implements Serializable {
     private String email;
 
     /**
-     * 部门状态（0正常 1停用）
+     * 部门状态
      */
     private SysStatusEnum status;
 
     /**
-     * 删除标志（0代表存在 1代表删除）
+     * 删除标志
      */
     @TableLogic
     private Boolean delFlag;

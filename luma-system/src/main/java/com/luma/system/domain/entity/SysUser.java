@@ -1,23 +1,22 @@
 package com.luma.system.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
+import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.luma.common.domain.TenantBaseEntity;
 import com.luma.system.enums.SysStatusEnum;
 import com.luma.system.enums.SysUserSexEnum;
+import com.luma.system.enums.UserTypeEnum;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 用户信息表
  * @author i-become
  * @TableName sys_user
  */
-@TableName(value ="sys_user")
+@TableName(value = "sys_user")
 @Data
 public class SysUser extends TenantBaseEntity implements Serializable {
 
@@ -40,12 +39,12 @@ public class SysUser extends TenantBaseEntity implements Serializable {
     /**
      * 用户昵称
      */
-    private String username;
+    private String nickname;
 
     /**
-     * 用户类型（0系统用户 1注册用户）
+     * 用户类型
      */
-    private Integer userType;
+    private UserTypeEnum userType;
 
     /**
      * 用户邮箱
@@ -70,15 +69,19 @@ public class SysUser extends TenantBaseEntity implements Serializable {
     /**
      * 密码
      */
+    @JsonIgnore
+    @TableField(select = false)
     private String password;
 
     /**
      * 盐加密
      */
+    @JsonIgnore
+    @TableField(select = false)
     private String salt;
 
     /**
-     * 帐号状态（0正常 1停用）
+     * 帐号状态
      */
     private SysStatusEnum status;
 

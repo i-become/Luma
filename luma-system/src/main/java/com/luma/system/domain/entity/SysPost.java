@@ -2,6 +2,7 @@ package com.luma.system.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 
@@ -38,8 +39,14 @@ public class SysPost extends TenantBaseEntity implements Serializable {
     private Integer sort;
 
     /**
-     * 状态（0正常 1停用）
+     * 状态
      */
     private SysStatusEnum status;
+    
+    /**
+     * 删除标志
+     */
+    @TableLogic
+    private Boolean delFlag;
 
 }

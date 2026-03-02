@@ -64,22 +64,15 @@ public class SysDictController {
      * 获取字典树
      * @param key 指定key
      * @param level 指定层级
+     * @param format 返回格式：full(完整信息，默认) 或 simple(简化信息，用于下拉框)
      * @return 字典列表
      */
     @GetMapping
-    public List<SysDictTreeResp> tree(String key, Integer level){
+    public Object tree(String key, Integer level, @RequestParam(defaultValue = "full") String format){
+        if ("simple".equals(format)) {
+            return sysDictService.baseTree(key, level);
+        }
         return sysDictService.tree(key, level);
-    }
-
-    /**
-     * 获取字典树（最小单元，用于下拉框选择）
-     * @param key 指定key
-     * @param level 指定层级
-     * @return 字典列表
-     */
-    @GetMapping("/list")
-    public List<SysDictBaseTreeResp> baseTree(String key, Integer level){
-        return sysDictService.baseTree(key, level);
     }
 
 }

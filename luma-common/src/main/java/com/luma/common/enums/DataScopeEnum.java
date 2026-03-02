@@ -37,7 +37,7 @@ public enum DataScopeEnum {
     /**
      * 部门及以下数据权限
      */
-    DEPT_AND_CHILD(3, " OR {}{} IN ( SELECT id FROM sys_dept WHERE id = {} or find_in_set( {} , ancestors ) )") {
+    DEPT_AND_CHILD(3, " OR {}{} IN ( SELECT id FROM sys_dept WHERE id = {} or ancestors LIKE CONCAT('%,', {}, ',%') )") {
         @Override
         public String generateSql(String deptAlias, String deptIdColumnName, List<String> customRoleIdList, Long deptId, String userAlias, String userIdColumnName, Long userId) {
             return StrUtil.format(this.getSqlTemplate(), deptAlias, deptIdColumnName, deptId, deptId);

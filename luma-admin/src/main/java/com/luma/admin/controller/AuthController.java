@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
  * 鉴权相关接口
  */
 @RestController
+@RequestMapping("/auth")
 public class AuthController {
 
     @Resource
@@ -33,7 +34,7 @@ public class AuthController {
      * @return 登录成功信息
      */
     @PostMapping("/login")
-    public SysUserLoginResp login(HttpServletRequest request, @Valid SysUserLoginReq req){
+    public SysUserLoginResp login(HttpServletRequest request, @Valid @RequestBody SysUserLoginReq req){
         if (StringUtils.isBlank(req.getTenantAlias())){
             req.setTenantId(TenantContextHolder.SYS_TENANT_ID);
         }else {
@@ -49,7 +50,7 @@ public class AuthController {
     /**
      * 用户登出
      */
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     public void logout(){
         sysUserService.logout(StpUtil.getLoginIdAsString());
     }

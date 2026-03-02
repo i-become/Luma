@@ -15,6 +15,7 @@ import com.luma.system.domain.vo.SysMenuAddReq;
 import com.luma.system.domain.vo.SysMenuBaseListResp;
 import com.luma.system.domain.vo.SysMenuListResp;
 import com.luma.system.domain.vo.SysRoleBaseListResp;
+import com.luma.system.enums.MenuTypeEnum;
 import com.luma.system.mapper.SysMenuMapper;
 import com.luma.system.mapper.SysRoleMapper;
 import com.luma.system.mapper.SysRoleMenuMapper;
@@ -70,8 +71,11 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
-    @CacheEvict(cacheNames = "luma:role:perms", key = "T(com.luma.framework.utils.UserUtil).ADMIN_ROLE_ID")
+    @CacheEvict(cacheNames = "luma:role:perms", key = "T(com.luma.framework.utils.UserUtil).getAdminRoleId()")
     public Long add(SysMenuAddReq req){
+        // 校验菜单类型和权限标识
+        validateMenuPermission(req.getType(), req.getPerms());
+        
         // 如果上级存在且不是0，那么获取上级信息，判断是否存在
         if (req.getParentId() != null && !req.getParentId().equals(BASE_ID)){
             if (!lambdaQuery().eq(SysMenu::getId, req.getParentId()).exists()){
@@ -87,7 +91,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         // 新增菜单关联上超级管理员
         SysRoleMenu sysRoleMenu = new SysRoleMenu();
         sysRoleMenu.setMenuId(sysMenu.getId());
-        sysRoleMenu.setRoleId(UserUtil.ADMIN_ROLE_ID);
+        sysRoleMenu.setRoleId(UserUtil.getAdminRoleId());
         sysRoleMenuMapper.insert(sysRoleMenu);
         return sysMenu.getId();
     }
@@ -95,6 +99,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void edit(Long id, SysMenuAddReq req){
+        // 校验菜单类型和权限标识
+        validateMenuPermission(req.getType(), req.getPerms());
+        
         // 获取原有菜单，判断是否存在
         SysMenu sysMenu = lambdaQuery().select(SysMenu::getId, SysMenu::getParentId).eq(SysMenu::getId, id).one();
         if (sysMenu == null){
@@ -160,6 +167,23 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                 .toList();
         for (Long roleId: roleIds) {
             RedisUtil.deleteObject("luma:role:perms:" + roleId);
+        }
+    }
+
+    /**
+     * 校验菜单类型和权限标识
+     * @param type 菜单类型
+     * @param perms 权限标识
+     */
+    private void validateMenuPermission(MenuTypeEnum type, String perms) {
+        // 按钮类型必须有权限标识
+        if (type == MenuTypeEnum.BUTTON && (perms == null || perms.trim().isEmpty())) {
+            throw new IllegalArgumentException("按钮类型的菜单必须设置权限标识");
+        }
+        
+        // 外链类型不应该有权限标识
+        if (type == MenuTypeEnum.LINK && perms != null && !perms.trim().isEmpty()) {
+            throw new IllegalArgumentException("外链类型的菜单不应该设置权限标识");
         }
     }
 

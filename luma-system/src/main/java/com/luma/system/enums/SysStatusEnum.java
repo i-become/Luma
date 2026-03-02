@@ -1,25 +1,35 @@
 package com.luma.system.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 /**
- * 系统通用状态
+ * 系统通用状态枚举
  * @author i-become
  */
 @Getter
-@AllArgsConstructor
 public enum SysStatusEnum {
 
     /**
-     * 状态（NORMAL 正常 DISABLED 停用）
+     * 正常
      */
-    NORMAL(0),
-    DISABLED(1);
+    NORMAL(0, "正常"),
+    
+    /**
+     * 停用
+     */
+    DISABLED(1, "停用");
 
     @EnumValue
-    private final int status;
+    @JsonValue
+    private final Integer code;
+    
+    private final String description;
 
+    SysStatusEnum(Integer code, String description) {
+        this.code = code;
+        this.description = description;
+    }
 
 }

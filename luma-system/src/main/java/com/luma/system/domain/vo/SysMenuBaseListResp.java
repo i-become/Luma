@@ -3,6 +3,7 @@ package com.luma.system.domain.vo;
 import lombok.Data;
 
 /**
+ * 菜单基础列表响应（简化版）
  * @author i-become
  */
 @Data
@@ -14,7 +15,7 @@ public class SysMenuBaseListResp {
     private Long id;
 
     /**
-     * 父菜单ID，约定顶层为0
+     * 父菜单ID，顶层为0
      */
     private Long parentId;
 
@@ -24,14 +25,14 @@ public class SysMenuBaseListResp {
     private Integer sort;
 
     /**
-     * 路由标题 (用作 document.title || 菜单的名称)
+     * 菜单标题 (用作document.title和菜单显示名称)
      */
     private String title;
 
     /**
      * 是否在菜单中隐藏
      */
-    private Boolean isHide;
+    private Boolean hidden;
 
     /**
      * 权限标识

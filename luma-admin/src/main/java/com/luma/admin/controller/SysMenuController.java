@@ -35,8 +35,9 @@ public class SysMenuController {
     @SaCheckPermission("system:menu:query")
     public List<SysMenuListResp> list(){
         List<SysMenu> list = sysMenuService.lambdaQuery().select(SysMenu::getId, SysMenu::getParentId, SysMenu::getName, SysMenu::getRedirect, SysMenu::getComponent,
-                        SysMenu::getIcon, SysMenu::getSort, SysMenu::getTitle, SysMenu::getTarget, SysMenu::getActive, SysMenu::getType, SysMenu::getPath,
-                        SysMenu::getIsHide, SysMenu::getIsFull, SysMenu::getIsAffix, SysMenu::getIsKeepAlive, SysMenu::getTag, SysMenu::getPerms)
+                        SysMenu::getIcon, SysMenu::getSort, SysMenu::getTitle, SysMenu::getTarget, SysMenu::getActiveMenu, SysMenu::getType, SysMenu::getPath,
+                        SysMenu::getLinkUrl, SysMenu::getHidden, SysMenu::getFullscreen, SysMenu::getAffix, SysMenu::getKeepAlive, SysMenu::getBadge, 
+                        SysMenu::getBadgeType, SysMenu::getPerms, SysMenu::getStatus, SysMenu::getRemark)
                 .list();
         return MapstructUtil.convert(list, SysMenuListResp.class);
     }

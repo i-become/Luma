@@ -5,7 +5,7 @@
 <mapper namespace="com.luma.system.mapper.SysMenuMapper">
 
     <select id="selectBaseListByRoleId" resultType="com.luma.system.domain.vo.SysMenuBaseListResp" >
-        select m.id, m.parent_id, m.sort, m.title, m.is_hide, m.perms from sys_menu m
+        select m.id, m.parent_id, m.sort, m.title, m.hidden, m.perms from sys_menu m
         inner join sys_role_menu rm on m.id = rm.menu_id
         where rm.role_id = #{roldId}
         order by m.sort

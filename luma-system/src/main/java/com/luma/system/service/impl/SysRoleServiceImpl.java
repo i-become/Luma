@@ -12,6 +12,7 @@ import com.luma.common.enums.DataScopeEnum;
 import com.luma.common.exception.system.ISystemException;
 import com.luma.common.utils.MapstructUtil;
 import com.luma.framework.permission.IStpInterface;
+import com.luma.framework.utils.RedisUtil;
 import com.luma.framework.utils.UserUtil;
 import com.luma.system.domain.entity.SysRole;
 import com.luma.system.domain.entity.SysRoleDept;
@@ -138,6 +139,12 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
         // 校验当前用户是否有权限编辑当前角色
         check(req);
 
+        // 仅当数据权限变更时，需要清除用户角色缓存（因为用户角色缓存中包含数据权限信息）
+        SysRole oldRole = lambdaQuery().select(SysRole::getDataScope).eq(SysRole::getId, id).one();
+        if (req.getDataScope() != null && !req.getDataScope().equals(oldRole.getDataScope())) {
+            clearUserRoleCacheByRoleId(id);
+        }
+
         // 更新角色
         SysRole sysRole = MapstructUtil.convert(req, SysRole.class);
         sysRole.setId(id);
@@ -177,6 +184,10 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
         if (!userRolePermissionList.stream().map(SysRoleBaseListResp::getId).toList().contains(id)){
             throw new ISystemException("没有该角色权限");
         }
+        
+        // 删除角色之前先清除用户角色缓存
+        clearUserRoleCacheByRoleId(id);
+        
         baseMapper.deleteById(id);
         // 删除菜单关系
         ChainWrappers.lambdaUpdateChain(sysRoleMenuMapper).eq(SysRoleMenu::getRoleId, id).remove();
@@ -185,6 +196,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
     }
 
     @Override
+    @CacheEvict(cacheNames = "luma:role:perms", key = "#id")
     public void updateStatus(Long id, SysStatusEnum status){
         // 权限校验
         List<SysRoleBaseListResp> userRolePermissionList = baseMapper.selectRoleList(null);
@@ -193,6 +205,20 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
         }
         // 更新状态
         lambdaUpdate().set(SysRole::getStatus, status).eq(SysRole::getId, id).update();
+        
+        // 清除所有拥有该角色的用户的角色缓存
+        clearUserRoleCacheByRoleId(id);
+    }
+
+    /**
+     * 清除所有拥有指定角色的用户的角色缓存
+     * 注意：只清除 luma:user:roles，不清除 luma:role:perms
+     */
+    private void clearUserRoleCacheByRoleId(Long roleId) {
+        List<Long> userIds = sysUserRoleMapper.selectUserIdsByRoleId(roleId);
+        for (Long userId : userIds) {
+            RedisUtil.deleteObject("luma:user:roles:" + userId);
+        }
     }
 
     /**

@@ -62,7 +62,7 @@ public class SysDict extends TenantBaseEntity implements Serializable {
     private String value;
 
     /**
-     * 状态（0：正常，1：禁用）
+     * 状态
      */
     private SysStatusEnum status;
 

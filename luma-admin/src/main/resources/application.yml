@@ -78,8 +78,24 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 配置默认枚举处理器
+    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
+  # 枚举类扫描包路径
+  type-enums-package: com.luma.system.enums
 
 luma:
+  # 系统配置
+  system:
+    # 超级管理员角色ID
+    admin-role-id: 1
+    # 超级管理员用户ID
+    admin-user-id: 1
+    # 系统租户ID
+    system-tenant-id: 1
+    # 是否启用多租户
+    multi-tenant-enabled: true
+    # 是否启用数据权限
+    data-scope-enabled: true
   # 请求前缀
   api:
     web-api:

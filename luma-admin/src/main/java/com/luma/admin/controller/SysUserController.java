@@ -62,8 +62,8 @@ public class SysUserController {
      * 获取当前登录人的用户信息
      * @return 用户信息
      */
-    @GetMapping("/info")
-    public SysUserInfoResp info(){
+    @GetMapping("/me")
+    public SysUserInfoResp currentUserInfo(){
         return sysUserService.userInfo(UserUtil.getUserId());
     }
 
@@ -110,39 +110,32 @@ public class SysUserController {
      * @param id 用户编号
      * @param newPassword 新密码
      */
-    @PutMapping("/{id}/rest_password")
-    public void restPassword(@NotNull(message = "{validation.user.id.NotNull}") @PathVariable Long id, @NotNull(message = "{validation.user.password.NotBlank}") String newPassword){
+    @PatchMapping("/{id}/password")
+    public void resetPassword(@NotNull(message = "{validation.user.id.NotNull}") @PathVariable Long id, 
+                               @NotNull(message = "{validation.user.password.NotBlank}") @RequestParam String newPassword){
         sysUserService.restPassword(id, newPassword);
         // 登出用户
         sysUserService.logout(String.valueOf(id));
     }
 
     /**
-     * 启用用户
+     * 更新用户状态
      * @param id 用户编号
+     * @param status 状态值
      */
-    @PutMapping("/{id}/enable")
+    @PatchMapping("/{id}/status")
     @SaCheckPermission("system:user:edit")
-    public void enable(@NotNull(message = "{validation.user.id.NotNull}") @PathVariable Long id){
-        sysUserService.updateStatus(id, SysStatusEnum.NORMAL);
+    public void updateStatus(@NotNull(message = "{validation.user.id.NotNull}") @PathVariable Long id,
+                              @NotNull @RequestParam SysStatusEnum status){
+        sysUserService.updateStatus(id, status);
     }
 
     /**
-     * 禁用用户
-     * @param id 用户编号
-     */
-    @PutMapping("/{id}/disable")
-    @SaCheckPermission("system:user:edit")
-    public void disable(@NotNull(message = "{validation.user.id.NotNull}") @PathVariable Long id){
-        sysUserService.updateStatus(id, SysStatusEnum.DISABLED);
-    }
-
-    /**
-     * 获取自己的角色列表 （简易列表，主要用于下拉框）
+     * 获取当前用户的角色列表 （简易列表，主要用于下拉框）
      * @return 角色列表
      */
-    @GetMapping("/roles")
-    public List<SysRoleBaseListResp> roles(){
+    @GetMapping("/me/roles")
+    public List<SysRoleBaseListResp> currentUserRoles(){
         return sysRoleService.getRoleList(null);
     }
 
@@ -152,7 +145,7 @@ public class SysUserController {
      * @return 角色列表
      */
     @GetMapping("/{id}/roles")
-    public List<SysRoleBaseListResp> roles(@PathVariable("id") Long id){
+    public List<SysRoleBaseListResp> userRoles(@PathVariable("id") Long id){
         return sysRoleService.getRoleList(id);
     }
 
@@ -160,8 +153,8 @@ public class SysUserController {
      * 获取当前用户的菜单列表
      * @return 菜单列表
      */
-    @GetMapping("/menus")
-    public List<SysMenuListResp> menus(){
+    @GetMapping("/me/menus")
+    public List<SysMenuListResp> currentUserMenus(){
         return sysMenuService.list(UserUtil.getUserId());
     }
 

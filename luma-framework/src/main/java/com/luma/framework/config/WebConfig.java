@@ -66,7 +66,7 @@ public class WebConfig implements WebMvcConfigurer {
         SaAnnotationStrategy.instance.checkMethodAnnotation = (method) -> {
             StpUtil.checkLogin();
             TenantContextHolder.setTenantId(UserUtil.getTenantId());
-            UserUtil.setCreateBy(UserUtil.getUsername());
+            UserUtil.setCreateBy(UserUtil.getNickname());
 
             // 如果 Method 或其所属 Class 上有 @SaIgnore 注解，则直接跳过整个校验过程
             if(SaAnnotationStrategy.instance.isAnnotationPresent.apply(method, SaIgnore.class)) {

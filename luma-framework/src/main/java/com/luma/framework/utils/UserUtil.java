@@ -2,21 +2,37 @@ package com.luma.framework.utils;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import java.util.List;
+import com.luma.framework.config.SystemConfig;
+import org.springframework.stereotype.Component;
 
 /**
  * 用户工具
  */
+@Component
 public class UserUtil {
 
+    private static SystemConfig systemConfig;
+
     /**
-     * 超级管理员roleId
+     * 注入SystemConfig
      */
-    public static final long ADMIN_ROLE_ID = 1L;
+    public UserUtil(SystemConfig systemConfig) {
+        UserUtil.systemConfig = systemConfig;
+    }
+
+    /**
+     * 获取超级管理员角色ID
+     */
+    public static Long getAdminRoleId() {
+        return systemConfig.getAdminRoleId();
+    }
+
+    /**
+     * 获取超级管理员用户ID
+     */
+    public static Long getAdminUserId() {
+        return systemConfig.getAdminUserId();
+    }
 
     /**
      * 用于存储当前线程的createBy
@@ -55,12 +71,12 @@ public class UserUtil {
     }
 
     /**
-     * 获取用户名称
+     * 获取用户昵称
      * @return
      */
-    public static String getUsername(){
+    public static String getNickname(){
         try {
-            return String.valueOf(StpUtil.getExtra("username"));
+            return String.valueOf(StpUtil.getExtra("nickname"));
         }catch (Exception e){
             return null;
         }

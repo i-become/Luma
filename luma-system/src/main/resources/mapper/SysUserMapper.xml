@@ -9,9 +9,9 @@
         from sys_user u
         inner join sys_dept d on u.dept_id = d.id
         left join sys_user_role ur on ur.user_id = u.id
-        where u.del_flag = false
+        where u.del_flag = 0
         <if test="req.deptId != null">
-            and d.id IN ( SELECT id FROM sys_dept WHERE id = #{req.deptId} or find_in_set( #{req.deptId} , ancestors ) )
+            and (d.id = #{req.deptId} or d.ancestors LIKE CONCAT('%,', #{req.deptId}, ',%'))
         </if>
         <if test="req.status != null">
             and u.status = #{req.status}

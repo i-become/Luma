@@ -77,23 +77,15 @@ public class SysRoleController {
     }
 
     /**
-     * 启用角色
+     * 更新角色状态
      * @param id 角色编号
+     * @param status 状态值
      */
-    @PutMapping("/{id}/enable")
+    @PatchMapping("/{id}/status")
     @SaCheckPermission("system:role:edit")
-    public void enable(@NotNull(message = "{validation.role.id.NotNull}") @PathVariable Long id){
-        sysRoleService.updateStatus(id, SysStatusEnum.NORMAL);
-    }
-
-    /**
-     * 禁用角色
-     * @param id 角色编号
-     */
-    @PutMapping("/{id}/disable")
-    @SaCheckPermission("system:role:edit")
-    public void disable(@NotNull(message = "{validation.role.id.NotNull}") @PathVariable Long id){
-        sysRoleService.updateStatus(id, SysStatusEnum.DISABLED);
+    public void updateStatus(@NotNull(message = "{validation.role.id.NotNull}") @PathVariable Long id, 
+                              @NotNull @RequestParam SysStatusEnum status){
+        sysRoleService.updateStatus(id, status);
     }
 
     /**

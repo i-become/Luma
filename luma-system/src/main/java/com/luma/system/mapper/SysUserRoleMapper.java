@@ -19,6 +19,13 @@ public interface SysUserRoleMapper extends BaseMapper<SysUserRole> {
      */
     List<SysRoleDataScopeInfo> selectRoleDataScopeInfoListByUserId(Long userId);
 
+    /**
+     * 根据角色ID查询用户ID列表
+     * @param roleId 角色ID
+     * @return 用户ID列表
+     */
+    List<Long> selectUserIdsByRoleId(Long roleId);
+
 }
 
 

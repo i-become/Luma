@@ -1,8 +1,15 @@
 package com.luma.system.domain.vo;
 
+import com.luma.system.enums.MenuStatusEnum;
+import com.luma.system.enums.MenuTargetEnum;
+import com.luma.system.enums.MenuTypeEnum;
+import lombok.Data;
+
 /**
+ * 用户菜单列表响应
  * @author i-become
  */
+@Data
 public class SysUserMenuListResp {
 
     /**
@@ -16,7 +23,7 @@ public class SysUserMenuListResp {
     private Long parentId;
 
     /**
-     * 路由 name (对应页面组件 name, 可用作 KeepAlive 缓存标识 && 按钮权限筛选)
+     * 路由名称 (对应页面组件name，用作KeepAlive缓存标识)
      */
     private String name;
 
@@ -31,7 +38,7 @@ public class SysUserMenuListResp {
     private String component;
 
     /**
-     * 菜单和面包屑对应的图标
+     * 菜单图标
      */
     private String icon;
 
@@ -41,58 +48,73 @@ public class SysUserMenuListResp {
     private Integer sort;
 
     /**
-     * 路由标题 (用作 document.title || 菜单的名称)
+     * 菜单标题 (用作document.title和菜单显示名称)
      */
     private String title;
 
     /**
-     * 打开方式(T页签 N新窗口)
+     * 打开方式
      */
-    private String target;
+    private MenuTargetEnum target;
 
     /**
-     * 菜单栏高亮,默认激活菜单的 index
+     * 高亮菜单路径 (当前路由不在菜单中时，指定高亮的菜单路径)
      */
-    private String active;
+    private String activeMenu;
 
     /**
-     * 菜单类型（M目录 C菜单 F按钮 L外链）
+     * 菜单类型
      */
-    private String type;
+    private MenuTypeEnum type;
 
     /**
      * 路由访问路径
      */
     private String path;
+    
+    /**
+     * 外链URL (当type为LINK时使用)
+     */
+    private String linkUrl;
 
     /**
      * 是否在菜单中隐藏
      */
-    private Boolean isHide;
+    private Boolean hidden;
 
     /**
-     * 菜单是否全屏
+     * 是否全屏显示
      */
-    private Boolean isFull;
+    private Boolean fullscreen;
 
     /**
-     * 菜单是否固定在标签页中 (首页通常是固定项)
+     * 是否固定在标签页 (如首页)
      */
-    private Boolean isAffix;
+    private Boolean affix;
 
     /**
      * 是否缓存路由
      */
-    private Boolean isKeepAlive;
+    private Boolean keepAlive;
 
     /**
-     * 标签，会在菜单栏中显示红色角标
+     * 菜单角标文本 (如"NEW"、"HOT")
      */
-    private String tag;
+    private String badge;
+    
+    /**
+     * 菜单角标类型 (如"success"、"warning"、"danger")
+     */
+    private String badgeType;
 
     /**
      * 权限标识
      */
     private String perms;
+    
+    /**
+     * 菜单状态
+     */
+    private MenuStatusEnum status;
 
 }

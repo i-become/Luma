@@ -32,8 +32,8 @@ public class SysUserAddReq {
     /**
      * 用户昵称
      */
-    @NotBlank(message = "{validation.user.username.NotBlank}")
-    private String username;
+    @NotBlank(message = "{validation.user.nickname.NotBlank}")
+    private String nickname;
 
     /**
      * 帐号状态（0正常 1停用） 默认正常

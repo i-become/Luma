@@ -68,7 +68,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public SysUserLoginResp login(SysUserLoginReq req, String loginIp){
         // 密码校验
         TenantContextHolder.setTenantId(req.getTenantId());
-        SysUser user = lambdaQuery().select(SysUser::getId, SysUser::getUsername, SysUser::getPassword, SysUser::getStatus, SysUser::getDeptId, SysUser::getTenantId)
+        SysUser user = lambdaQuery().select(SysUser::getId, SysUser::getNickname, SysUser::getPassword, SysUser::getStatus, SysUser::getDeptId, SysUser::getTenantId)
                 .eq(SysUser::getLoginName, req.getLoginName())
                 .one();
         if (user == null){
@@ -87,7 +87,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         StpUtil.login(user.getId(), SaLoginParameter.create()
                 .setExtra("deptId", user.getDeptId())
                 .setExtra("tenantId", user.getTenantId())
-                .setExtra("username", user.getUsername()));
+                .setExtra("nickname", user.getNickname()));
         SysUser loginUser = new SysUser();
         loginUser.setId(user.getId());
         loginUser.setLoginIp(loginIp);
@@ -99,7 +99,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 .expiresIn(StpUtil.getTokenActiveTimeout())
                 .userInfo(SysLoginUserInfoResp.builder()
                         .userId(user.getId())
-                        .username(user.getUsername())
+                        .nickname(user.getNickname())
                         .roles(StpUtil.getRoleList())
                         .build())
                 .build();
@@ -223,7 +223,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = "user:role:auth", key = "#id", condition = "#req.roleIds != null")
+    @CacheEvict(cacheNames = "luma:user:roles", key = "#id", condition = "#req.roleIds != null")
     public void edit(Long id, SysUserEditReq req){
         // 获取原有数据，判断权限是否满足
         SysUser sysUser = lambdaQuery().select(SysUser::getId, SysUser::getDeptId).eq(SysUser::getId, id).one();
@@ -275,6 +275,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(cacheNames = "luma:user:roles", key = "#id")
     public void remove(Long id){
         // 获取原有数据，判断权限是否满足
         SysUser sysUser = lambdaQuery().select(SysUser::getId, SysUser::getDeptId).eq(SysUser::getId, id).one();
@@ -300,6 +301,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
+    @CacheEvict(cacheNames = "luma:user:roles", key = "#id")
     public void updateStatus(Long id, SysStatusEnum status){
         // 如果是自己，不能修改启用状态
         if (Objects.equals(id, UserUtil.getUserId())){
