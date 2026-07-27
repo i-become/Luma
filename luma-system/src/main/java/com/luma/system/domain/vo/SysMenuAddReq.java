@@ -86,6 +86,11 @@ public class SysMenuAddReq {
     private Boolean hidden;
 
     /**
+     * 是否默认展开 (仅目录类型有效)
+     */
+    private Boolean alwaysShow;
+
+    /**
      * 是否全屏显示
      */
     private Boolean fullscreen;

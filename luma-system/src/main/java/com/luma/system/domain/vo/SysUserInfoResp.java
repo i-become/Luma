@@ -39,7 +39,7 @@ public class SysUserInfoResp {
     /**
      * 用户昵称
      */
-    private String username;
+    private String nickname;
 
     /**
      * 用户类型
@@ -67,7 +67,7 @@ public class SysUserInfoResp {
     private String avatar;
 
     /**
-     * 帐号状态（0正常 1停用）
+     * 帐号状态
      */
     private SysStatusEnum status;
 

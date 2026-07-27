@@ -37,7 +37,7 @@ public class SysMenuController {
         List<SysMenu> list = sysMenuService.lambdaQuery().select(SysMenu::getId, SysMenu::getParentId, SysMenu::getName, SysMenu::getRedirect, SysMenu::getComponent,
                         SysMenu::getIcon, SysMenu::getSort, SysMenu::getTitle, SysMenu::getTarget, SysMenu::getActiveMenu, SysMenu::getType, SysMenu::getPath,
                         SysMenu::getLinkUrl, SysMenu::getHidden, SysMenu::getFullscreen, SysMenu::getAffix, SysMenu::getKeepAlive, SysMenu::getBadge, 
-                        SysMenu::getBadgeType, SysMenu::getPerms, SysMenu::getStatus, SysMenu::getRemark)
+                        SysMenu::getBadgeType, SysMenu::getPerms, SysMenu::getStatus, SysMenu::getRemark, SysMenu::getAlwaysShow)
                 .list();
         return MapstructUtil.convert(list, SysMenuListResp.class);
     }

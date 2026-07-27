@@ -31,7 +31,7 @@ public class SysUserPageResp {
     /**
      * 用户昵称
      */
-    private String username;
+    private String nickname;
 
     /**
      * 用户类型

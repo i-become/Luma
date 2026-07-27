@@ -22,7 +22,7 @@ public class SysUserPageReq extends BasePage {
     /**
      * 用户名
      */
-    private String username;
+    private String nickname;
 
     /**
      * 手机号码

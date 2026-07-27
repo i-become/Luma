@@ -2,6 +2,7 @@ package com.luma.system.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -9,6 +10,7 @@ import lombok.Getter;
  * @author i-become
  */
 @Getter
+@AllArgsConstructor
 public enum SysUserSexEnum {
 
     /**
@@ -31,10 +33,5 @@ public enum SysUserSexEnum {
     private final Integer code;
     
     private final String description;
-
-    SysUserSexEnum(Integer code, String description) {
-        this.code = code;
-        this.description = description;
-    }
 
 }

@@ -6,27 +6,26 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 系统通用状态枚举
+ * 菜单打开方式枚举
  * @author i-become
  */
 @Getter
 @AllArgsConstructor
-public enum SysStatusEnum {
-
-    /**
-     * 正常
-     */
-    NORMAL(0, "正常"),
+public enum MenuTargetEnum {
     
     /**
-     * 停用
+     * 页签
      */
-    DISABLED(1, "停用");
-
+    TAB("T", "页签"),
+    
+    /**
+     * 新窗口
+     */
+    NEW_WINDOW("N", "新窗口");
+    
     @EnumValue
     @JsonValue
-    private final Integer code;
+    private final String code;
     
     private final String description;
-
 }

@@ -11,7 +11,7 @@
     </select>
 
     <select id="selectMenuListByRoleIds" resultType="com.luma.system.domain.vo.SysMenuListResp" >
-        select distinct m.id, m.parent_id, m.name, m.redirect, m.component, m.icon, m.sort, m.title, m.target, m.active_menu, m.type, m.path, m.link_url, m.hidden, m.fullscreen, m.affix, m.keep_alive, m.badge, m.badge_type, m.perms, m.status, m.remark from sys_menu m
+        select distinct m.id, m.parent_id, m.name, m.redirect, m.component, m.icon, m.sort, m.title, m.target, m.active_menu, m.type, m.path, m.link_url, m.hidden, m.fullscreen, m.affix, m.keep_alive, m.badge, m.badge_type, m.perms, m.status, m.remark, m.always_show from sys_menu m
         inner join sys_role_menu rm on m.id = rm.menu_id
         where rm.role_id in
         <foreach collection="roleIds" item="roleId" separator="," open="(" close=")" >

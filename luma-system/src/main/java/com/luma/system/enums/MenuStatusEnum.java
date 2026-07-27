@@ -6,27 +6,27 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 系统通用状态枚举
+ * 菜单状态枚举
  * @author i-become
  */
 @Getter
 @AllArgsConstructor
-public enum SysStatusEnum {
-
+public enum MenuStatusEnum {
+    
     /**
      * 正常
      */
-    NORMAL(0, "正常"),
+    NORMAL("0", "正常"),
     
     /**
-     * 停用
+     * 禁用
      */
-    DISABLED(1, "停用");
-
+    DISABLED("1", "禁用");
+    
     @EnumValue
     @JsonValue
-    private final Integer code;
+    private final String code;
     
     private final String description;
-
+    
 }

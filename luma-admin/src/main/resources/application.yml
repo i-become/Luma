@@ -38,7 +38,7 @@ spring:
       # Redis服务器连接端口
       port: 6379
       # Redis服务器连接密码（默认为空）
-#      password: redis_a3cDZQ
+      password: redis123
       # 连接超时时间
       timeout: 5s
       lettuce:
@@ -102,7 +102,7 @@ luma:
       prefix: /api/v1
       controller: "com.luma.admin.controller.**"
       exclude-path-patterns:
-        - "/login"
+        - "/auth/login"
         - "/error"
     open-api:
       prefix: /openapi/v1

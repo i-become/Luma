@@ -10,6 +10,7 @@ import cn.dev33.satoken.oauth2.template.SaOAuth2Util;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.strategy.SaAnnotationStrategy;
+import com.luma.framework.interceptor.JacksonEnumConverterFactory;
 import com.luma.framework.interceptor.PermissionInterceptor;
 import com.luma.framework.interceptor.ThreadLocalCleanupFilter;
 import com.luma.framework.interceptor.UtcToLocalDateTimeDeserializer;
@@ -42,6 +43,9 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Resource
     private WebProperties webProperties;
+
+    @Resource
+    private JacksonEnumConverterFactory jacksonEnumConverterFactory;
 
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
@@ -131,6 +135,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addFormatters(FormatterRegistry registry) {
         // 注册utc时间转换器
         registry.addConverter(UtcToLocalDateTimeDeserializer.instance);
+        registry.addConverterFactory(jacksonEnumConverterFactory);
     }
 
 }

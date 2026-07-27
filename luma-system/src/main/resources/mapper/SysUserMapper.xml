@@ -5,7 +5,7 @@
 <mapper namespace="com.luma.system.mapper.SysUserMapper">
 
     <select id="selectUserPage" parameterType="com.luma.system.domain.vo.SysUserPageReq" resultType="com.luma.system.domain.vo.SysUserPageResp" >
-        select distinct u.id, u.dept_id, u.login_name, u.username, u.user_type, u.email, u.phone, u.sex, u.avatar, u.status, u.login_ip, u.login_date, u.create_time, u.create_by, u.update_time, u.update_by
+        select distinct u.id, u.dept_id, u.login_name, u.nickname, u.user_type, u.email, u.phone, u.sex, u.avatar, u.status, u.login_ip, u.login_date, u.create_time, u.create_by, u.update_time, u.update_by
         from sys_user u
         inner join sys_dept d on u.dept_id = d.id
         left join sys_user_role ur on ur.user_id = u.id
@@ -19,8 +19,8 @@
         <if test="req.loginName != null and req.loginName != ''">
             and u.login_name like concat('%', #{req.loginName}, '%')
         </if>
-        <if test="req.username != null and req.username != ''">
-            and u.username like concat('%', #{req.username}, '%')
+        <if test="req.nickname != null and req.nickname != ''">
+            and u.nickname like concat('%', #{req.nickname}, '%')
         </if>
         <if test="req.phone != null and req.phone != ''">
             and u.phone like concat('%', #{req.phone}, '%')
@@ -37,7 +37,7 @@
     </select>
 
     <select id="selectUserinfo" parameterType="java.lang.Long" resultType="com.luma.system.domain.vo.SysUserInfoResp" >
-        select u.id, u.login_name, u.username, u.user_type, u.email, u.phone, u.sex, u.avatar, u.status, u.dept_id, u.tenant_id, d.dept_name from sys_user u
+        select u.id, u.login_name, u.nickname, u.user_type, u.email, u.phone, u.sex, u.avatar, u.status, u.dept_id, u.tenant_id, d.dept_name from sys_user u
         inner join sys_dept d on u.dept_id = d.id
         where u.id = #{id}
     </select>

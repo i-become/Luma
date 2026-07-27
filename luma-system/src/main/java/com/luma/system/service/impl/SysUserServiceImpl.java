@@ -295,7 +295,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public void restPassword(Long id, String newPassword){
+    public void resetPassword(Long id, String newPassword){
         // 修改密码
         lambdaUpdate().set(SysUser::getPassword, SmUtil.sm3(newPassword)).set(SysUser::getPwdUpdateDate, LocalDateTime.now()).eq(SysUser::getId, id).update();
     }

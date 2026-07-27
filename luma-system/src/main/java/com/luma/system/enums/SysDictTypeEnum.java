@@ -2,6 +2,7 @@ package com.luma.system.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -9,6 +10,7 @@ import lombok.Getter;
  * @author i-become
  */
 @Getter
+@AllArgsConstructor
 public enum SysDictTypeEnum {
 
     /**
@@ -36,10 +38,5 @@ public enum SysDictTypeEnum {
     private final String code;
     
     private final String description;
-
-    SysDictTypeEnum(String code, String description) {
-        this.code = code;
-        this.description = description;
-    }
 
 }

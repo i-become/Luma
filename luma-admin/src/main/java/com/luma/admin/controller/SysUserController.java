@@ -111,9 +111,10 @@ public class SysUserController {
      * @param newPassword 新密码
      */
     @PatchMapping("/{id}/password")
+    @SaCheckPermission("system:user:edit")
     public void resetPassword(@NotNull(message = "{validation.user.id.NotNull}") @PathVariable Long id, 
                                @NotNull(message = "{validation.user.password.NotBlank}") @RequestParam String newPassword){
-        sysUserService.restPassword(id, newPassword);
+        sysUserService.resetPassword(id, newPassword);
         // 登出用户
         sysUserService.logout(String.valueOf(id));
     }

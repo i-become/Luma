@@ -6,23 +6,23 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 系统通用状态枚举
+ * 用户类型枚举
  * @author i-become
  */
 @Getter
 @AllArgsConstructor
-public enum SysStatusEnum {
-
-    /**
-     * 正常
-     */
-    NORMAL(0, "正常"),
+public enum UserTypeEnum {
     
     /**
-     * 停用
+     * 系统用户
      */
-    DISABLED(1, "停用");
-
+    SYSTEM(0, "系统用户"),
+    
+    /**
+     * 注册用户
+     */
+    REGISTERED(1, "注册用户");
+    
     @EnumValue
     @JsonValue
     private final Integer code;
