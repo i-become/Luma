@@ -84,7 +84,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
     public Long add(SysRoleAddReq req){
         // 判断权限字符是否重复
         if (lambdaQuery().eq(SysRole::getRoleKey, req.getRoleKey()).exists()){
-            throw new ISystemException("角色权限标识已经存在");
+            throw new ISystemException("exception.role.roleKey.exists");
         }
         // 校验当前用户是否有权限添加该角色
         check(req);
@@ -125,15 +125,15 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = "luma:role:perms", key = "#id", condition = "req.menuIdList != null")
+    @CacheEvict(cacheNames = "luma:role:perms", key = "#id", condition = "#req.menuIdList != null")
     public void edit(Long id, SysRoleAddReq req){
         // 对原有的角色进行判断
         if (!lambdaQuery().eq(SysRole::getId, id).exists()){
-            throw new IllegalArgumentException("角色不存在");
+            throw new ISystemException("exception.role.notFound");
         }
         // 判断权限字符是否重复
         if (lambdaQuery().eq(SysRole::getRoleKey, req.getRoleKey()).ne(SysRole::getId, id).exists()){
-            throw new ISystemException("角色权限标识已经存在");
+            throw new ISystemException("exception.role.roleKey.exists");
         }
 
         // 校验当前用户是否有权限编辑当前角色
@@ -182,7 +182,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
         // 权限校验
         List<SysRoleBaseListResp> userRolePermissionList = baseMapper.selectRoleList(null);
         if (!userRolePermissionList.stream().map(SysRoleBaseListResp::getId).toList().contains(id)){
-            throw new ISystemException("没有该角色权限");
+            throw new ISystemException("exception.role.noPermission");
         }
         
         // 删除角色之前先清除用户角色缓存
@@ -201,7 +201,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
         // 权限校验
         List<SysRoleBaseListResp> userRolePermissionList = baseMapper.selectRoleList(null);
         if (!userRolePermissionList.stream().map(SysRoleBaseListResp::getId).toList().contains(id)){
-            throw new ISystemException("没有该角色权限");
+            throw new ISystemException("exception.role.noPermission");
         }
         // 更新状态
         lambdaUpdate().set(SysRole::getStatus, status).eq(SysRole::getId, id).update();
@@ -236,17 +236,17 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
             // 自定义权限，本人的部门必须全包含添加的角色的部门
             Set<Long> deptIdList = req.getDeptIdList();
             if (deptIdList == null || deptIdList.isEmpty()){
-                throw new ISystemException("自定义权限部门不能为空");
+                throw new ISystemException("exception.role.customDept.empty");
             }
             if (!new HashSet<>(sysDeptMapper.selectIdList()).containsAll(deptIdList)){
-                throw new ISystemException("自定义权限，部门权限超出");
+                throw new ISystemException("exception.role.customDept.exceed");
             }
         }else {
             // 非自定义权限，那就只剩下 1、3、4、5三种权限可能，使用大小进行判断
             DataScopeEnum userDataScopeMax = userDataScopeList.stream().filter(o -> o != DataScopeEnum.CUSTOM).min((o1, o2) -> CompareUtil.compare(o1.getCode(), o2.getCode())).get();
             if (reqDataScope.getCode() < userDataScopeMax.getCode()){
                 // 超出本人权限范围
-                throw new ISystemException("超出本人权限范围");
+                throw new ISystemException("exception.role.dataScope.exceed");
             }
         }
 
@@ -256,7 +256,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
             List<Long> userRoleIdList = stpInterface.getRolePermissionList(UserUtil.getUserId()).stream().map(SysUserRolePermission::getId).toList();
             List<SysMenuListResp> menuList = sysRoleMenuMapper.selectMenuListByRoleIds(userRoleIdList);
             if (!new HashSet<>(menuList.stream().map(SysMenuListResp::getId).toList()).containsAll(req.getMenuIdList())){
-                throw new ISystemException("超出本人菜单权限");
+                throw new ISystemException("exception.role.menu.exceed");
             }
         }
     }

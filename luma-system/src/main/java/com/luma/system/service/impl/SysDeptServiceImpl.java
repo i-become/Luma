@@ -50,7 +50,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept>
     public List<SysDeptBaseListResp> getBaseListByRoleId(Long roleId){
         // 判断是否有该角色权限
         if (!sysRoleMapper.selectRoleList(null).stream().map(SysRoleBaseListResp::getId).toList().contains(roleId)) {
-            throw new ISystemException("没有该角色权限");
+            throw new ISystemException("exception.dept.noRolePermission");
         }
         return baseMapper.selectBaseListByRoleId(roleId);
     }
@@ -61,10 +61,10 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept>
         // 获取上级信息，判断是否有权限对其进行新增
         SysDept parentDept = lambdaQuery().select(SysDept::getId, SysDept::getAncestors).eq(SysDept::getId, req.getParentId()).one();
         if (!lambdaQuery().eq(SysDept::getId, req.getParentId()).exists()){
-            throw new ISystemException("上级部门不存在");
+            throw new ISystemException("exception.dept.parent.notFound");
         }
         if (!baseMapper.selectIdList().contains(req.getParentId())){
-            throw new ISystemException("无上级部门权限");
+            throw new ISystemException("exception.dept.noParentPermission");
         }
         // 保存部门数据
         SysDept sysDept = MapstructUtil.convert(req, SysDept.class);
@@ -80,22 +80,22 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept>
     public void edit(Long id, SysDeptAddReq req){
         SysDept sysDept = lambdaQuery().select(SysDept::getId, SysDept::getParentId).eq(SysDept::getId, id).one();
         if (sysDept == null){
-            throw new ISystemException("无此部门权限");
+            throw new ISystemException("exception.dept.noPermission");
         }
         // 是否有该部门权限
         List<Long> deptIds = baseMapper.selectIdList();
         if (!deptIds.contains(id)){
-            throw new ISystemException("无此部门权限");
+            throw new ISystemException("exception.dept.noPermission");
         }
         // 判断是否需要修改上级部门编号
         if (!sysDept.getParentId().equals(req.getParentId())){
             // 获取上级信息，判断是否有权限对其进行新增
             SysDept parentDept = lambdaQuery().select(SysDept::getId, SysDept::getAncestors).eq(SysDept::getId, req.getParentId()).one();
             if (!lambdaQuery().eq(SysDept::getId, req.getParentId()).exists()){
-                throw new ISystemException("上级部门不存在");
+                throw new ISystemException("exception.dept.parent.notFound");
             }
             if (!deptIds.contains(req.getParentId())){
-                throw new ISystemException("无上级部门权限");
+                throw new ISystemException("exception.dept.noParentPermission");
             }
             // 上级部门发生变动，需要将本级以及本级下所有子孙节点的祖籍进行修改
             SysDept oldParentDept = lambdaQuery().select(SysDept::getId, SysDept::getAncestors).eq(SysDept::getId, sysDept.getParentId()).one();
@@ -112,11 +112,11 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept>
         // 是否有该部门权限
         List<Long> deptIds = baseMapper.selectIdList();
         if (!deptIds.contains(id)){
-            throw new ISystemException("无此部门权限");
+            throw new ISystemException("exception.dept.noPermission");
         }
         SysDept sysDept = lambdaQuery().select(SysDept::getId, SysDept::getAncestors).eq(SysDept::getId, id).one();
         if (sysDept == null){
-            throw new ISystemException("部门不存在");
+            throw new ISystemException("exception.dept.notFound");
         }
         // 删除该部门以及子孙节点
         lambdaUpdate().likeRight(SysDept::getAncestors, sysDept.getAncestors()).or().eq(SysDept::getId, id).remove();

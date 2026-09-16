@@ -16,26 +16,26 @@ public enum SysDictTypeEnum {
     /**
      * 菜单
      */
-    MENU("MENU", "菜单"),
+    MENU(0, "菜单"),
 
     /**
      * 数值
      */
-    NUMBER("NUMBER", "数值"),
+    NUMBER(1, "数值"),
 
     /**
      * 字符串
      */
-    STRING("STRING", "字符串"),
+    STRING(2, "字符串"),
 
     /**
      * 数组
      */
-    ARRAY("ARRAY", "数组");
+    ARRAY(3, "数组");
 
     @EnumValue
     @JsonValue
-    private final String code;
+    private final int code;
     
     private final String description;
 

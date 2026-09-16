@@ -8,7 +8,7 @@
         select sd.id, sd.parent_id, sd.name, sd.type, sd.parent_key, sd.key, sd.value, sd.status, sd.sys, sd.sort, sd.remark, sd.create_time
         from sys_dict sd
         <if test="key != null and key != ''">
-            join (select id, ancestors from sys_dict where key = #{key} and del_flag = 0) tmp
+            join (select id, ancestors from sys_dict where `key` = #{key} and del_flag = 0) tmp
             on sd.id = tmp.id OR sd.ancestors LIKE CONCAT('%,', tmp.id, ',%')
         </if>
         where del_flag = 0
@@ -21,7 +21,7 @@
         select sd.id, sd.parent_id, sd.name, sd.type, sd.parent_key, sd.key, sd.value, sd.sort
         from sys_dict sd
         <if test="key != null and key != ''">
-            join (select id, ancestors from sys_dict where key = #{key} and status = 0 and del_flag = 0) tmp
+            join (select id, ancestors from sys_dict where `key` = #{key} and status = 0 and del_flag = 0) tmp
             on sd.id = tmp.id OR sd.ancestors LIKE CONCAT('%,', tmp.id, ',%')
         </if>
         where sd.status = 0 and del_flag = 0

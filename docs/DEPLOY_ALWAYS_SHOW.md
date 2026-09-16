@@ -48,7 +48,7 @@ mvn clean compile
 #### 5.1 测试菜单列表 API
 ```bash
 # 获取菜单列表，检查返回数据中是否包含 alwaysShow 字段
-curl -X GET "http://localhost:1998/api/v1/menu" \
+curl -X GET "http://localhost:2025/api/v1/menu" \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 

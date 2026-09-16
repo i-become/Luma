@@ -31,7 +31,7 @@ public class OpenTenantController {
     public SysTenantInfoResp info(@RequestParam Long id) {
         SysTenant sysTenant = sysTenantService.lambdaQuery().select(SysTenant::getId, SysTenant::getAlias, SysTenant::getName, SysTenant::getStatus).eq(SysTenant::getId, id).one();
         if (sysTenant == null) {
-            throw new ISystemException("租户不存在");
+            throw new ISystemException("exception.tenant.notFound");
         }
         return MapstructUtil.convert(sysTenant, SysTenantInfoResp.class);
     }

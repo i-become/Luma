@@ -4,10 +4,38 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.luma.system.mapper.SysPostMapper">
 
+    <select id="selectPostPage" parameterType="com.luma.system.domain.vo.SysPostPageReq" resultType="com.luma.system.domain.vo.SysPostPageResp" >
+        select p.id, p.code, p.post_name, p.sort, p.status, p.create_time, p.create_by, p.update_time, p.update_by
+        from sys_post p
+        where p.del_flag = 0
+        <if test="req.code != null and req.code != ''">
+            and p.code like concat('%', #{req.code}, '%')
+        </if>
+        <if test="req.postName != null and req.postName != ''">
+            and p.post_name like concat('%', #{req.postName}, '%')
+        </if>
+        <if test="req.status != null">
+            and p.status = #{req.status}
+        </if>
+        <if test="req.startCreateTime != null">
+            and p.create_time >= #{req.startCreateTime}
+        </if>
+        <if test="req.endCreateTime != null">
+            and p.create_time &lt;= #{req.endCreateTime}
+        </if>
+        order by p.sort
+    </select>
+
     <select id="selectPostListByUserId" parameterType="java.lang.Long" resultType="com.luma.system.domain.vo.SysPostListResp" >
         select p.id, p.code, p.post_name from sys_post p
         inner join sys_user_post up on p.id = up.post_id
         where up.user_id = #{userId}
+        order by p.sort
+    </select>
+
+    <select id="selectPostBaseList" resultType="com.luma.system.domain.vo.SysPostBaseListResp" >
+        select p.id, p.code, p.post_name, p.sort, p.status from sys_post p
+        where p.del_flag = 0
         order by p.sort
     </select>
 

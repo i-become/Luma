@@ -12,7 +12,7 @@ import java.io.Serializable;
 
 /**
  * 租户表
- * @TableName sys_dept
+ * @TableName sys_tenant
  */
 @TableName(value ="sys_tenant")
 @Data

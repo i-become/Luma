@@ -73,15 +73,15 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 .one();
         if (user == null){
             // 用户不存在
-            throw new ISystemException("用户名或密码错误");
+            throw new ISystemException("exception.user.loginFailed");
         }
         if (!SmUtil.sm3(req.getPassword()).equals(user.getPassword())){
             // 密码校验失败
-            throw new ISystemException("用户名或密码错误");
+            throw new ISystemException("exception.user.loginFailed");
         }
         // 密码校验通过，校验用户状态
         if (SysStatusEnum.DISABLED == user.getStatus()){
-            throw new ISystemException("用户处于被禁用状态");
+            throw new ISystemException("exception.user.disabled");
         }
         // 登录，保存登录信息
         StpUtil.login(user.getId(), SaLoginParameter.create()
@@ -163,7 +163,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         checkEditUser(id);
         SysUserInfoResp resp = baseMapper.selectUserinfo(id);
         if (resp == null){
-            throw new ISystemException("用户信息不存在");
+            throw new ISystemException("exception.user.info.notFound");
         }
         // 角色信息
         resp.setRoles(StpUtil.getRoleList(id));
@@ -186,7 +186,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public Long add(SysUserAddReq req){
         // 账号重复性校验
         if (lambdaQuery().eq(SysUser::getLoginName, req.getLoginName()).exists()){
-            throw new ISystemException("该账号已存在");
+            throw new ISystemException("exception.user.loginName.exists");
         }
         checkData(req.getDeptId(), req.getRoleIds(), req.getPostIds());
         // 保存用户
@@ -228,11 +228,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         // 获取原有数据，判断权限是否满足
         SysUser sysUser = lambdaQuery().select(SysUser::getId, SysUser::getDeptId).eq(SysUser::getId, id).one();
         if (sysUser == null){
-            throw new ISystemException("用户不存在");
+            throw new ISystemException("exception.user.notFound");
         }
         List<Long> iDeptIdList = sysDeptMapper.selectIdList();
         if (!iDeptIdList.contains(sysUser.getDeptId())){
-            throw new ISystemException("权限不够");
+            throw new ISystemException("exception.user.permission.denied");
         }
         checkData(req.getDeptId(), req.getRoleIds(), req.getPostIds());
         // 如果是自己，不能修改启用状态
@@ -280,11 +280,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         // 获取原有数据，判断权限是否满足
         SysUser sysUser = lambdaQuery().select(SysUser::getId, SysUser::getDeptId).eq(SysUser::getId, id).one();
         if (sysUser == null){
-            throw new ISystemException("用户不存在");
+            throw new ISystemException("exception.user.notFound");
         }
         List<Long> iDeptIdList = sysDeptMapper.selectIdList();
         if (!iDeptIdList.contains(sysUser.getDeptId())){
-            throw new ISystemException("权限不够");
+            throw new ISystemException("exception.user.permission.denied");
         }
         // 删除用户
         baseMapper.deleteById(id);
@@ -305,7 +305,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public void updateStatus(Long id, SysStatusEnum status){
         // 如果是自己，不能修改启用状态
         if (Objects.equals(id, UserUtil.getUserId())){
-            throw new ISystemException("无法修改自身状态");
+            throw new ISystemException("exception.user.cannotChangeSelfStatus");
         }
         checkEditUser(id);
         // 修改用户状态
@@ -321,23 +321,23 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private void checkData(Long deptId, Set<Long> roleIds, Set<Long> postIds){
         // 部门有效性校验
         if (!sysDeptMapper.selectIdList().contains(deptId)){
-            throw new ISystemException("部门填写错误，超出本人权限");
+            throw new ISystemException("exception.user.dept.exceed");
         }
         // 角色有效性校验
         if (roleIds != null && !roleIds.isEmpty()){
             if (!new HashSet<>(sysRoleMapper.selectRoleList(null).stream().map(SysRoleBaseListResp::getId).toList()).containsAll(roleIds)){
-                throw new ISystemException("角色填写错误，超出本人权限");
+                throw new ISystemException("exception.user.role.exceed");
             }
         }
         // 岗位有效性验证
         if (postIds != null && !postIds.isEmpty()){
             List<SysPost> postList = ChainWrappers.lambdaQueryChain(sysPostMapper).select(SysPost::getId, SysPost::getPostName, SysPost::getStatus).in(SysPost::getId, postIds).list();
             if (postList.size() != postIds.size()){
-                throw new ISystemException("岗位信息错误");
+                throw new ISystemException("exception.user.post.invalid");
             }
             for (SysPost post : postList){
                 if (post.getStatus() == SysStatusEnum.DISABLED){
-                    throw new ISystemException(String.format("岗位“%s”被停用", post.getPostName()));
+                    throw new ISystemException("exception.user.post.disabled", post.getPostName());
                 }
             }
         }
@@ -352,7 +352,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (!Objects.equals(userId, UserUtil.getUserId())){
             SysUser sysUser = lambdaQuery().select(SysUser::getId, SysUser::getDeptId).eq(SysUser::getId, userId).one();
             if (!sysDeptMapper.selectIdList().contains(sysUser.getDeptId())){
-                throw new ISystemException("您无此用户权限");
+                throw new ISystemException("exception.user.noPermission");
             }
         }
     }

@@ -8,7 +8,7 @@
 -- 1. 初始化租户数据
 -- =============================================
 INSERT INTO sys_tenant (id, name, alias, url, status, del_flag, create_by, create_time) VALUES
-(1, '系统租户', 'system', 'http://localhost:1998', 0, 0, 'system', CURRENT_TIMESTAMP);
+(1, '系统租户', 'system', 'http://localhost:2025', 0, 0, 'system', CURRENT_TIMESTAMP);
 
 -- =============================================
 -- 2. 初始化部门数据

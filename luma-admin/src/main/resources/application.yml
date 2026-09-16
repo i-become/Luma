@@ -128,6 +128,7 @@ luma:
 
 # 亚马逊s3配置
 aws:
+  enable: ${OSS_ENABLE:false}
   provider: ${OSS_PROVIDER:minio}
   access-key-id: ${OSS_USERNAME:minio}
   secret-access-key: ${OSS_PASSWORD:123456}

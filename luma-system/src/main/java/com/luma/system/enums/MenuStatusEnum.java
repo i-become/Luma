@@ -16,17 +16,17 @@ public enum MenuStatusEnum {
     /**
      * 正常
      */
-    NORMAL("0", "正常"),
+    NORMAL(0, "正常"),
     
     /**
      * 禁用
      */
-    DISABLED("1", "禁用");
-    
+    DISABLED(0, "禁用");
+
     @EnumValue
     @JsonValue
-    private final String code;
-    
+    private final int code;
+
     private final String description;
     
 }

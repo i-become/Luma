@@ -51,7 +51,7 @@ public class SaOAuth2DataLoaderImpl implements SaOAuth2DataLoader {
                 .eq(ClientSysUser::getUserId, Long.valueOf(String.valueOf(loginId)))
                 .exists();
         if (!exists){
-            throw new ISystemException("您没有该应用权限");
+            throw new ISystemException("exception.oauth.noAppPermission");
         }
         // 关联用户登录应用
         String userId = String.valueOf(loginId);

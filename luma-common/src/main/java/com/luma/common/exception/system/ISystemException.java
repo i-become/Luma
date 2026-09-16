@@ -24,8 +24,13 @@ public class ISystemException extends BaseException {
         this.setModule(MODULE);
     }
 
-    public ISystemException(String message){
-        super(message);
+    /**
+     * 国际化业务异常
+     * @param messageKey 消息键
+     * @param args 消息参数
+     */
+    public ISystemException(String messageKey, Object... args){
+        super(messageKey, args);
         this.setModule(MODULE);
     }
 

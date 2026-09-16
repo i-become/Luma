@@ -95,7 +95,7 @@
 //            }else {
 //                SysTenant tenant = sysTenantService.lambdaQuery().select(SysTenant::getId).eq(SysTenant::getAlias, tenantAlias).one();
 //                if (tenant == null){
-//                    throw new ISystemException("账号信息错误");
+//                    throw new ISystemException("exception.auth.account.error");
 //                }
 //                req.setTenantId(tenant.getId());
 //            }

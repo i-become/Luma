@@ -65,7 +65,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     public List<SysMenuBaseListResp> getBaseListByRoleId(Long roleId){
         // 判断是否有该角色权限
         if (!sysRoleMapper.selectRoleList(null).stream().map(SysRoleBaseListResp::getId).toList().contains(roleId)) {
-            throw new ISystemException("没有该角色权限");
+            throw new ISystemException("exception.menu.noRolePermission");
         }
         return baseMapper.selectBaseListByRoleId(roleId);
     }
@@ -79,7 +79,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         // 如果上级存在且不是0，那么获取上级信息，判断是否存在
         if (req.getParentId() != null && !req.getParentId().equals(BASE_ID)){
             if (!lambdaQuery().eq(SysMenu::getId, req.getParentId()).exists()){
-                throw new IllegalArgumentException("parentId 错误，不存在该菜单");
+                throw new ISystemException("exception.menu.parentId.invalid");
             }
         }else {
             req.setParentId(BASE_ID);
@@ -105,12 +105,12 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         // 获取原有菜单，判断是否存在
         SysMenu sysMenu = lambdaQuery().select(SysMenu::getId, SysMenu::getParentId).eq(SysMenu::getId, id).one();
         if (sysMenu == null){
-            throw new IllegalArgumentException("id 错误，不存在该菜单");
+            throw new ISystemException("exception.menu.id.invalid");
         }
         // 判断上级编号是否变化，如果变化，需要重新判断上级是否存在
         if (req.getParentId() != null && !req.getParentId().equals(sysMenu.getParentId()) && !req.getParentId().equals(BASE_ID)){
             if (!lambdaQuery().eq(SysMenu::getId, req.getParentId()).exists()){
-                throw new IllegalArgumentException("parentId 错误，不存在该菜单");
+                throw new ISystemException("exception.menu.parentId.invalid");
             }
         }
         SysMenu newMenu = MapstructUtil.convert(req, SysMenu.class);
@@ -178,12 +178,12 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     private void validateMenuPermission(MenuTypeEnum type, String perms) {
         // 按钮类型必须有权限标识
         if (type == MenuTypeEnum.BUTTON && (perms == null || perms.trim().isEmpty())) {
-            throw new IllegalArgumentException("按钮类型的菜单必须设置权限标识");
+            throw new ISystemException("exception.menu.button.permsRequired");
         }
         
         // 外链类型不应该有权限标识
         if (type == MenuTypeEnum.LINK && perms != null && !perms.trim().isEmpty()) {
-            throw new IllegalArgumentException("外链类型的菜单不应该设置权限标识");
+            throw new ISystemException("exception.menu.link.permsNotAllowed");
         }
     }
 

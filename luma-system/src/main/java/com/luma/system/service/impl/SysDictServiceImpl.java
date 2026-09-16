@@ -44,7 +44,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict>
         }else {
             SysDict parentDict = lambdaQuery().select(SysDict::getId, SysDict::getLevel, SysDict::getAncestors, SysDict::getKey).eq(SysDict::getId, sysDict.getParentId()).one();
             if (parentDict == null){
-                throw new ISystemException("上级字典不存在");
+                throw new ISystemException("exception.dict.parent.notFound");
             }
             sysDict.setLevel(parentDict.getLevel() + 1);
             sysDict.setParentKey(parentDict.getKey());
@@ -52,7 +52,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict>
         }
         // 判断键是否重复
         if (lambdaQuery().eq(SysDict::getKey, sysDict.getKey()).exists()){
-            throw new ISystemException("该字典键已经存在");
+            throw new ISystemException("exception.dict.key.exists");
         }
         // 保存数据
         baseMapper.insert(sysDict);
@@ -65,7 +65,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict>
     public void remove(Integer id){
         SysDict sysDict = lambdaQuery().select(SysDict::getId, SysDict::getAncestors).eq(SysDict::getId, id).one();
         if (sysDict == null){
-            throw new ISystemException("该字典不存在");
+            throw new ISystemException("exception.dict.notFound");
         }
         lambdaUpdate().likeRight(SysDict::getAncestors, sysDict.getAncestors()).remove();
     }

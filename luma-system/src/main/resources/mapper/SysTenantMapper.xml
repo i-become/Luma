@@ -4,5 +4,26 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.luma.system.mapper.SysTenantMapper">
 
+    <select id="selectTenantPage" parameterType="com.luma.system.domain.vo.SysTenantPageReq" resultType="com.luma.system.domain.vo.SysTenantPageResp" >
+        select t.id, t.name, t.alias, t.url, t.status, t.create_time, t.create_by, t.update_time, t.update_by
+        from sys_tenant t
+        where t.del_flag = 0
+        <if test="req.name != null and req.name != ''">
+            and t.name like concat('%', #{req.name}, '%')
+        </if>
+        <if test="req.alias != null and req.alias != ''">
+            and t.alias like concat('%', #{req.alias}, '%')
+        </if>
+        <if test="req.status != null">
+            and t.status = #{req.status}
+        </if>
+        <if test="req.startCreateTime != null">
+            and t.create_time >= #{req.startCreateTime}
+        </if>
+        <if test="req.endCreateTime != null">
+            and t.create_time &lt;= #{req.endCreateTime}
+        </if>
+        order by t.id
+    </select>
 
 </mapper>

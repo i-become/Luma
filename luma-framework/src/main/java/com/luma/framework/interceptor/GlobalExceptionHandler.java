@@ -4,6 +4,7 @@ import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;
 import com.luma.common.domain.R;
 import com.luma.common.exception.BaseException;
+import com.luma.framework.utils.I18nUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.BadSqlGrammarException;
@@ -44,10 +45,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({BaseException.class})
     @ResponseStatus(HttpStatus.OK)
     public <T> R<T> handlerBaseException(BaseException e){
+        String message = I18nUtils.resolve(e);
         if (e.getCode() == null){
-            return R.fail(e.getMessage());
+            return R.fail(message);
         }
-        return R.fail(e.getMessage(), e.getCode());
+        return R.fail(message, e.getCode());
     }
 
     /**
@@ -84,7 +86,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.OK)
     public <T> R<T> sqlSyntaxErrorException(BadSqlGrammarException e){
         log.error("SQL 语法错误异常：", e);
-        return R.fail("排序字段错误");
+        return R.fail(I18nUtils.getMessage("exception.common.sortField.error"));
     }
 
     /**

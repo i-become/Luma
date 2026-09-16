@@ -162,7 +162,7 @@ public class AwsS3Util {
             );
         } catch (AwsServiceException e) {
             log.error("文件存储失败", e);
-            throw new BaseException("文件存储失败");
+            throw new BaseException("exception.file.storage.failed");
         }
     }
 
@@ -189,7 +189,7 @@ public class AwsS3Util {
             putObject(bucket, objectName, in, -1, 5 * 1024 * 1024, -1, "application/octet-stream");
         } catch (Exception e) {
             log.error("文件存储失败", e);
-            throw new BaseException("文件存储失败");
+            throw new BaseException("exception.file.storage.failed");
         }
     }
 
@@ -215,7 +215,7 @@ public class AwsS3Util {
 
         }catch (Exception e){
             log.error("文件存储失败", e);
-            throw new BaseException("文件存储失败");
+            throw new BaseException("exception.file.storage.failed");
         }
     }
 
@@ -265,7 +265,7 @@ public class AwsS3Util {
             );
         }catch (Exception e){
             log.error("文件获取失败", e);
-            throw new BaseException("文件获取失败");
+            throw new BaseException("exception.file.fetch.failed");
         }
     }
 
@@ -323,7 +323,7 @@ public class AwsS3Util {
                     .build());
         }catch (Exception e){
             log.error("文件复制失败", e);
-            throw new BaseException("文件复制失败");
+            throw new BaseException("exception.file.copy.failed");
         }
     }
 
@@ -459,7 +459,7 @@ public class AwsS3Util {
             );
         } catch (AwsServiceException e) {
             log.error("文件删除失败", e);
-            throw new BaseException("文件删除失败");
+            throw new BaseException("exception.file.delete.failed");
         }
     }
 
@@ -498,7 +498,7 @@ public class AwsS3Util {
             );
         } catch (AwsServiceException e) {
             log.error("文件删除失败", e);
-            throw new BaseException("文件删除失败");
+            throw new BaseException("exception.file.delete.failed");
         }
     }
 
