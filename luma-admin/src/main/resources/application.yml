@@ -1,16 +1,16 @@
 server:
-  port: 1998
+  port: ${SERVER_PORT:2025}
 
 ############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
 sa-token:
   # token 名称（同时也是 cookie 名称）
-  token-name: is-token
+  token-name: luma-token
   # token 有效期（单位：秒） 默认30天，-1 代表永久有效
-  timeout: 2592000
+  timeout: ${USER_TOKEN_TIMEOUT:2592000}
   # token 最低活跃频率（单位：秒），如果 token 超过此时间没有访问系统就会被冻结，默认-1 代表不限制，永不冻结
-  active-timeout: 3600
+  active-timeout: -1
   # 是否允许同一账号多地同时登录 （为 true 时允许一起登录, 为 false 时新登录挤掉旧登录）
-  is-concurrent: true
+  is-concurrent: ${USER_IS_CONCURRENT:true}
   # 在多人登录同一账号时，是否共用一个 token （为 true 时所有登录共用一个 token, 为 false 时每次登录新建一个 token）
   is-share: true
   # token 风格（默认可取值：uuid、simple-uuid、random-32、random-64、random-128、tik）
@@ -18,7 +18,7 @@ sa-token:
   # 是否输出操作日志
   is-log: true
   # jwt秘钥
-  jwt-secret-key: NdGf1890NYas9fO1ND
+  jwt-secret-key: ${JWT_SECRET_KEY:NdGfsNYas9fss01sa1ND}
   oauth2-server:
     # 是否在返回值中隐藏默认的状态字段 (code、msg、data)
     hide-status-field: true
@@ -28,29 +28,38 @@ sa-token:
     lower-scope: openid
 
 spring:
+  servlet:
+    multipart:
+      #是否启用http上传处理
+      enabled: true
+      #设置总上传的数据大小，最大请求文件的大小
+      max-request-size: ${MAX_REQUEST_SIZE:100MB}
+      # 设置单个文件最大长度
+      max-file-size: ${MAX_FILE_SIZE:20MB}
   data:
     # redis配置
     redis:
       # Redis数据库索引（默认为0）
-      database: 0
+      database: ${REDIS_DB_INDEX:0}
       # Redis服务器地址
-      host: 127.0.0.1
+      host: ${REDIS_HOST:127.0.0.1}
       # Redis服务器连接端口
-      port: 6379
+      port: ${REDIS_PORT:6379}
       # Redis服务器连接密码（默认为空）
-      password: redis123
+      password: ${REDIS_PASSWORD:redis123}
       # 连接超时时间
-      timeout: 5s
+      timeout: 30s
       lettuce:
         pool:
           # 连接池最大连接数
-          max-active: 100
+          max-active: ${REDIS_POOL_MAX_ACTIVE:100}
           # 连接池最大阻塞等待时间（使用-1表示没有限制）
-          max-wait: 5000ms
+          max-wait: 10000ms
           # 连接池中的最大空闲连接
-          max-idle: 10
+          max-idle: ${REDIS_POOL_MAX_ACTIVE:10}
           # 连接池中的最小空闲连接
           min-idle: 1
+        shutdown-timeout: 10s
         cluster:
           refresh:
             # 开启自适应刷新节点拓扑关系 最短周期20秒
@@ -63,9 +72,9 @@ spring:
       strict: false
       datasource:
         master:
-          url: jdbc:mysql://127.0.0.1:3306/luma
-          username: root
-          password: 123456
+          url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/luma?rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai
+          username: ${MYSQL_USERNAME:root}
+          password: ${MYSQL_PASSWORD:123456}
           driver-class-name: com.mysql.cj.jdbc.Driver
   thymeleaf:
     prefix: classpath:/templates/
@@ -74,10 +83,13 @@ spring:
     basename: i18n.messages
     encoding: UTF-8
 
+logging:
+  level:
+    root: ${LOGGING_LEVEL:INFO}
 
 mybatis-plus:
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: ${MYBATIS_LOG_IMPL:org.apache.ibatis.logging.stdout.StdOutImpl}
     # 配置默认枚举处理器
     default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
   # 枚举类扫描包路径
@@ -116,11 +128,10 @@ luma:
 
 # 亚马逊s3配置
 aws:
-  provider: minio
-  access-key-id: minio
-  secret-access-key: minio123456
-  end-point: http://127.0.0.1:9000
-  region: main
-  object-key-prefix: prefix
-  bucket:
-    resource: resource
+  provider: ${OSS_PROVIDER:minio}
+  access-key-id: ${OSS_USERNAME:minio}
+  secret-access-key: ${OSS_PASSWORD:123456}
+  endpoint: ${OSS_ADDR:http://127.0.0.1:9000}
+  region: ${OSS_REGION:main}
+  bucket: ${OSS_BUCKET:luma}
+  nginx-url: ${OSS_NGINX_URL:http://127.0.0.1:9000}

@@ -33,17 +33,20 @@ public class AwsS3Config {
     @Value("${aws.secret-access-key}")
     private String secretAccessKey;
 
-    @Value("${aws.end-point}")
+    @Value("${aws.endpoint}")
     private String endPoint;
 
     @Value("${aws.region}")
     private String region;
 
-    @Value("${aws.object-key-prefix}")
-    private String objectKeyPrefix;
-
     @Value("${aws.provider}")
     private String provider;
+
+    @Value("${aws.bucket}")
+    private String bucket;
+
+    @Value("${aws.nginx-url}")
+    private String nginxUrl;
 
     /**
      * S3客户端
