@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -127,6 +128,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "luma:role:perms", key = "#id", condition = "#req.menuIdList != null")
     public void edit(Long id, SysRoleAddReq req){
+        checkSystemRoleEdit(id);
         // 对原有的角色进行判断
         if (!lambdaQuery().eq(SysRole::getId, id).exists()){
             throw new ISystemException("exception.role.notFound");
@@ -179,6 +181,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "luma:role:perms", key = "#id")
     public void remove(Long id){
+        checkSystemRoleDelete(id);
         // 权限校验
         List<SysRoleBaseListResp> userRolePermissionList = baseMapper.selectRoleList(null);
         if (!userRolePermissionList.stream().map(SysRoleBaseListResp::getId).toList().contains(id)){
@@ -198,6 +201,9 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
     @Override
     @CacheEvict(cacheNames = "luma:role:perms", key = "#id")
     public void updateStatus(Long id, SysStatusEnum status){
+        if (Objects.equals(id, UserUtil.getAdminRoleId()) && status == SysStatusEnum.DISABLED) {
+            throw new ISystemException("exception.role.system.cannotDisable");
+        }
         // 权限校验
         List<SysRoleBaseListResp> userRolePermissionList = baseMapper.selectRoleList(null);
         if (!userRolePermissionList.stream().map(SysRoleBaseListResp::getId).toList().contains(id)){
@@ -218,6 +224,24 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
         List<Long> userIds = sysUserRoleMapper.selectUserIdsByRoleId(roleId);
         for (Long userId : userIds) {
             RedisUtil.deleteObject("luma:user:roles:" + userId);
+        }
+    }
+
+    /**
+     * 系统默认角色不可编辑
+     */
+    private void checkSystemRoleEdit(Long roleId) {
+        if (Objects.equals(roleId, UserUtil.getAdminRoleId())) {
+            throw new ISystemException("exception.role.system.cannotEdit");
+        }
+    }
+
+    /**
+     * 系统默认角色不可删除
+     */
+    private void checkSystemRoleDelete(Long roleId) {
+        if (Objects.equals(roleId, UserUtil.getAdminRoleId())) {
+            throw new ISystemException("exception.role.system.cannotDelete");
         }
     }
 

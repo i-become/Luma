@@ -47,6 +47,8 @@ public class SysTenantServiceImpl extends ServiceImpl<SysTenantMapper, SysTenant
         }
         SysTenant sysTenant = MapstructUtil.convert(req, SysTenant.class);
         baseMapper.insert(sysTenant);
+        // 给租户添加一个默认用户
+
         return sysTenant.getId();
     }
 

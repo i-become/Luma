@@ -225,6 +225,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "luma:user:roles", key = "#id", condition = "#req.roleIds != null")
     public void edit(Long id, SysUserEditReq req){
+        if (Objects.equals(id, UserUtil.getAdminUserId())) {
+            throw new ISystemException("exception.user.system.cannotEdit");
+        }
         // 获取原有数据，判断权限是否满足
         SysUser sysUser = lambdaQuery().select(SysUser::getId, SysUser::getDeptId).eq(SysUser::getId, id).one();
         if (sysUser == null){
@@ -277,6 +280,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "luma:user:roles", key = "#id")
     public void remove(Long id){
+        if (Objects.equals(id, UserUtil.getAdminUserId())) {
+            throw new ISystemException("exception.user.system.cannotDelete");
+        }
         // 获取原有数据，判断权限是否满足
         SysUser sysUser = lambdaQuery().select(SysUser::getId, SysUser::getDeptId).eq(SysUser::getId, id).one();
         if (sysUser == null){
@@ -306,6 +312,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         // 如果是自己，不能修改启用状态
         if (Objects.equals(id, UserUtil.getUserId())){
             throw new ISystemException("exception.user.cannotChangeSelfStatus");
+        }
+        if (Objects.equals(id, UserUtil.getAdminUserId()) && status == SysStatusEnum.DISABLED) {
+            throw new ISystemException("exception.user.system.cannotDisable");
         }
         checkEditUser(id);
         // 修改用户状态
