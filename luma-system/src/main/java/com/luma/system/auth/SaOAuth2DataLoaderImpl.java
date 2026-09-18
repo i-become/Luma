@@ -34,6 +34,10 @@ public class SaOAuth2DataLoaderImpl implements SaOAuth2DataLoader {
 
         Client client = clientService.getById(Long.valueOf(clientId));
 
+        if (client == null){
+            throw new ISystemException("exception.oauth.noClient");
+        }
+
         return new SaClientModel()
                 .setClientId(clientId)
                 .setClientSecret(client.getSecret())

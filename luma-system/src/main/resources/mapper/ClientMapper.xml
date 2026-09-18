@@ -4,5 +4,26 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.luma.system.mapper.ClientMapper">
 
+    <select id="selectClientPage" parameterType="com.luma.system.domain.vo.ClientPageReq" resultType="com.luma.system.domain.vo.ClientPageResp">
+        select c.id, c.name, c.is_confirm, c.logout_call, c.push_url, c.create_time, c.create_by, c.update_time, c.update_by
+        from client c
+        where c.del_flag = 0
+        <if test="req.name != null and req.name != ''">
+            and c.name like concat('%', #{req.name}, '%')
+        </if>
+        <if test="req.startCreateTime != null">
+            and c.create_time >= #{req.startCreateTime}
+        </if>
+        <if test="req.endCreateTime != null">
+            and c.create_time &lt;= #{req.endCreateTime}
+        </if>
+        order by c.id desc
+    </select>
+
+    <select id="selectClientBaseList" resultType="com.luma.system.domain.vo.ClientBaseListResp">
+        select c.id, c.name from client c
+        where c.del_flag = 0
+        order by c.id
+    </select>
 
 </mapper>

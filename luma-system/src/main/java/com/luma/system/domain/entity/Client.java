@@ -10,7 +10,8 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 应用表
+ * 针对表【client(应用表)】的数据库实体，用于第三方平台 OAuth2 接入
+ * @author i-become
  */
 @Data
 @TableName(value ="client")

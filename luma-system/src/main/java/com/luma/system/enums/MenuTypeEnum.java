@@ -16,26 +16,26 @@ public enum MenuTypeEnum {
     /**
      * 目录
      */
-    DIRECTORY("M", "目录"),
+    DIRECTORY(0, "目录"),
     
     /**
      * 菜单
      */
-    MENU("C", "菜单"),
+    MENU(1, "菜单"),
     
     /**
      * 按钮
      */
-    BUTTON("F", "按钮"),
+    BUTTON(2, "按钮"),
     
     /**
      * 外链
      */
-    LINK("L", "外链");
+    LINK(3, "外链");
     
     @EnumValue
     @JsonValue
-    private final String code;
+    private final int code;
     
     private final String description;
 

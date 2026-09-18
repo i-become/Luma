@@ -50,7 +50,8 @@ INSERT INTO sys_menu (id, parent_id, name, title, type, path, component, icon, s
 (104, 1, 'Dept', '部门管理', 1, '/system/dept', 'system/dept/index', 'tree', 4, 'system:dept:list', 0, 1, 0, 'system', CURRENT_TIMESTAMP),
 (105, 1, 'Post', '岗位管理', 1, '/system/post', 'system/post/index', 'post', 5, 'system:post:list', 0, 1, 0, 'system', CURRENT_TIMESTAMP),
 (106, 1, 'Dict', '字典管理', 1, '/system/dict', 'system/dict/index', 'dict', 6, 'system:dict:list', 0, 1, 0, 'system', CURRENT_TIMESTAMP),
-(107, 1, 'Tenant', '租户管理', 1, '/system/tenant', 'system/tenant/index', 'company', 7, 'system:tenant:list', 0, 1, 0, 'system', CURRENT_TIMESTAMP);
+(107, 1, 'Tenant', '租户管理', 1, '/system/tenant', 'system/tenant/index', 'company', 7, 'system:tenant:list', 0, 1, 0, 'system', CURRENT_TIMESTAMP),
+(108, 1, 'Client', '应用管理', 1, '/system/client', 'system/client/index', 'link', 8, 'system:client:list', 0, 1, 0, 'system', CURRENT_TIMESTAMP);
 
 -- 用户管理按钮
 INSERT INTO sys_menu (id, parent_id, name, title, type, perms, sort, status, create_by, create_time) VALUES
@@ -104,6 +105,13 @@ INSERT INTO sys_menu (id, parent_id, name, title, type, perms, sort, status, cre
 (1072, 107, '', '租户新增', 2, 'system:tenant:add', 2, 0, 'system', CURRENT_TIMESTAMP),
 (1073, 107, '', '租户修改', 2, 'system:tenant:edit', 3, 0, 'system', CURRENT_TIMESTAMP),
 (1074, 107, '', '租户删除', 2, 'system:tenant:remove', 4, 0, 'system', CURRENT_TIMESTAMP);
+
+-- 应用管理按钮
+INSERT INTO sys_menu (id, parent_id, name, title, type, perms, sort, status, create_by, create_time) VALUES
+(1081, 108, '', '应用查询', 2, 'system:client:query', 1, 0, 'system', CURRENT_TIMESTAMP),
+(1082, 108, '', '应用新增', 2, 'system:client:add', 2, 0, 'system', CURRENT_TIMESTAMP),
+(1083, 108, '', '应用修改', 2, 'system:client:edit', 3, 0, 'system', CURRENT_TIMESTAMP),
+(1084, 108, '', '应用删除', 2, 'system:client:remove', 4, 0, 'system', CURRENT_TIMESTAMP);
 
 -- =============================================
 -- 6. 初始化岗位数据
